@@ -33,12 +33,21 @@ def get_file_info(filepath: str):
     return {"filename": filename, "size": size, "creation_date": creation_date}
 
 def get_func_filename(filepath: str) -> str:
+    """
+    Get a string as input (filepath) and returns another string as output.
+    If the string contains the pattern "MESSAGE_XUD_DTYPE",  
+    returns "MESSAGE_XUD_DTYPE_TB_TIMESTAMP_READ". If contains the pattern "CW1" 
+    returns the string "CW1_REQUEST_XUD_TIMESTAMP_READ"
+    """
     if re.search(r'MESSAGE_XUD_DTYPE', filepath):
         return "MESSAGE_XUD_DTYPE_TB_TIMESTAMP_READ"
     elif re.search(r'CW1', filepath):
         return "CW1_REQUEST_XUD_TIMESTAMP_READ"
 
 def get_write_func_filename(option: str) -> str:
+    """
+    Given a string as input (option), returns another string as output according to the dictionary
+    """
     mapper = {
         "input_a_0": "CW1_REQUEST_XUD_TIMESTAMP_WRITE",
         "input_b_0": "MESSAGE_XUD_DTYPE_TB_TIMESTAMP_WRITE"
@@ -48,12 +57,19 @@ def get_write_func_filename(option: str) -> str:
     
 @app.get("/")
 async def index(request: Request):
+    """
+    gets the list of files from the directory, creates a list of dictionaries with the name and size fields, and returns an HTML response
+    with the generated file list
+    """
     file_list = os.listdir("test_files")
     files = [{"name": file, "size": os.path.getsize(os.path.join("test_files", file))} for file in file_list]
     return templates.TemplateResponse("index.html", {"request": request, "files": files})
 
 @app.get("/download/{filename}")
 async def download_file(filename: str):
+    """
+    Endpoint that returns the content of a file as a download
+    """
     file_path = os.path.join("test_files", filename)
     return FileResponse(file_path, media_type="application/octet-stream", filename=filename)
 
@@ -108,6 +124,10 @@ async def post_form(request: Request):
 
 @app.post("/formpost")
 async def process_form(data: dict, request: Request):
+    """
+    Given a dictonary, a new dictionary is created with the corresponding keys and values,
+    and a function is called to write the data to an XML file.
+    """
     option = list(data.keys())[0]
     if option == "input_a_1":
         data = {    
@@ -148,3 +168,6 @@ async def process_form(data: dict, request: Request):
     xml_writer = getattr(business, get_write_func_filename(option))
     datafile = await xml_writer(data)
     return {"message": "XML file successfully created"}
+
+# esto es una pruba
+# esto es otra pruba
