@@ -135,35 +135,19 @@
 		const url = '/formpost';
 		const body = {};
 		if (options === 'a') {
-			body.input_a_0 = formData.get('input-a-0');
-			body.input_a_1 = formData.get('input-a-1');
-			body.input_a_2 = formData.get('input-a-2');
-			body.input_a_3 = formData.get('input-a-3');
-			body.input_a_4 = formData.get('input-a-4');
-			body.input_a_5 = formData.get('input-a-5');
-			body.input_a_6 = formData.get('input-a-6');
-			body.input_a_7 = formData.get('input-a-7');
+			const formGroup = document.querySelector('#form-a');
+  			const inputCount = formGroup.querySelectorAll('input').length;
+			for (let i = 0; i < inputCount; i++) {
+				const inputName = `input-a-${i}`;
+				body[`input_a_${i}`] = formData.get(inputName);
+			}
 		} else if (options === 'b') {
-			body.input_b_0 = formData.get('input-b-0');
-			body.input_b_1 = formData.get('input-b-1');
-			body.input_b_2 = formData.get('input-b-2');
-			body.input_b_3 = formData.get('input-b-3');
-			body.input_b_4 = formData.get('input-b-4');
-			body.input_b_5 = formData.get('input-b-5');
-			body.input_b_6 = formData.get('input-b-6');
-			body.input_b_7 = formData.get('input-b-7');
-			body.input_b_8 = formData.get('input-b-8');
-			body.input_b_9 = formData.get('input-b-9');
-			body.input_b_10 = formData.get('input-b-10');
-			body.input_b_11 = formData.get('input-b-11');
-			body.input_b_12 = formData.get('input-b-12');
-			body.input_b_13 = formData.get('input-b-13');
-			body.input_b_14 = formData.get('input-b-14');
-			body.input_b_15 = formData.get('input-b-15');
-			body.input_b_16 = formData.get('input-b-16');
-			body.input_b_17 = formData.get('input-b-17');
-			body.input_b_18 = formData.get('input-b-18');
-			body.input_b_19 = formData.get('input-b-19');
+			const formGroup = document.querySelector('#form-b');
+  			const inputCount = formGroup.querySelectorAll('input').length;
+			for (let i = 0; i < inputCount; i++) {
+				const inputName = `input-b-${i}`;
+				body[`input_a_${i}`] = formData.get(inputName);
+			}
 		}
 		try {
 			const response = await fetch(url, {

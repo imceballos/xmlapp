@@ -1,12 +1,14 @@
-from fastapi import FastAPI, Request, Form, File, UploadFile
+from fastapi import FastAPI, Request, Form, File, UploadFile, Depends, HTTPException
 from starlette.responses import RedirectResponse
 from fastapi.responses import FileResponse
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from fastapi.responses import HTMLResponse, Response
 
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from typing import List
+from typing import List, Annotated
+
 import business as business
 from datetime import datetime
 from pydantic import BaseModel
@@ -16,6 +18,24 @@ import re
 import xml.etree.ElementTree as ET
 import uuid
 
+fake_users_db = {
+    "iceballos": {
+        "username": "iceballos",
+        "full_name": "Israel Ceballos",
+        "email": "iceballos@uc.uc",
+        "hashed_password": "fakehashedsecret",
+        "disabled": False,
+    },
+    "andrei": {
+        "username": "andrei",
+        "full_name": "Andrei Popescu",
+        "email": "andrei@spvirgogroup.com",
+        "hashed_password": "fakehashedsecret2",
+        "disabled": True,
+    },
+}
+
+
 app = FastAPI()
 
 # Mount static and template files
@@ -23,7 +43,57 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 
-def get_file_info(filepath: str):
+def fake_hash_password(password: str):
+    return "fakehashed" + password
+
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+
+class User(BaseModel):
+    username: str
+    email: str | None = None
+    full_name: str | None = None
+    disabled: bool | None = None
+
+
+class UserInDB(User):
+    hashed_password: str
+
+
+def get_user(db, username: str):
+    if username in db:
+        user_dict = db[username]
+        return UserInDB(**user_dict)
+
+
+def fake_decode_token(token):
+    # This doesn't provide any security at all
+    # Check the next version
+    user = get_user(fake_users_db, token)
+    return user
+
+
+async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+    user = fake_decode_token(token)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authentication credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    return user
+
+
+async def get_current_active_user(
+    current_user: Annotated[User, Depends(get_current_user)]
+):
+    if current_user.disabled:
+        raise HTTPException(status_code=400, detail="Inactive user")
+    return current_user
+
+
+def get_file_info(filepath: str) -> dict:
     """
     Given a filepath, return the filename, size, and creation date of the file
     """
@@ -33,6 +103,10 @@ def get_file_info(filepath: str):
     return {"filename": filename, "size": size, "creation_date": creation_date}
 
 def get_func_filename(filepath: str) -> str:
+    """
+    The function receives a filepath and return any
+    Input variables: filepath: str
+    """
     if re.search(r'MESSAGE_XUD_DTYPE', filepath):
         return "MESSAGE_XUD_DTYPE_TB_TIMESTAMP_READ"
     elif re.search(r'CW1', filepath):
@@ -97,6 +171,19 @@ async def process_form(file: UploadFile, request: Request):
     
     return templates.TemplateResponse("table.html", {"data": data, "request": request})
 
+@app.post("/delete_file/{filename}")
+async def delete_file(filename: str, request: Request):
+    file_path = os.path.join("test_files", filename)
+    try:
+        os.remove(file_path)
+        return {"message": f"Successfully deleted {filename}"}
+        #file_list = os.listdir("test_files")
+        #files = [{"name": file, "size": os.path.getsize(os.path.join("test_files", file))} for file in file_list]
+        #return templates.TemplateResponse("index.html", {"request": request, "files": files, "message": f"Successfully deleted {filename}"})
+    except FileNotFoundError:
+        return {"error": f"File not found: {filename}"}
+    except Exception as e:
+        return {"error": str(e)}
 
 @app.get("/formpost", response_class=HTMLResponse)
 async def post_form(request: Request):
@@ -109,8 +196,8 @@ async def post_form(request: Request):
 @app.post("/formpost")
 async def process_form(data: dict, request: Request):
     option = list(data.keys())[0]
-    if option == "input_a_1":
-        data = {    
+    if option == "input_a_0":
+        datas = {    
                     "option": option, 
                     "filename": data.get("input_a_0"), 
                     "data_target_type": data.get("input_a_1"), 
@@ -121,7 +208,7 @@ async def process_form(data: dict, request: Request):
                     "enterprise_id": data.get("input_a_6"),
                     "server_id": data.get("input_a_7")
                 }
-    elif option == "input_b_1":
+    elif option == "input_b_0":
         data = {
                     "option": option, 
                     "filename": data.get("input_b_0"), 
@@ -135,7 +222,7 @@ async def process_form(data: dict, request: Request):
                     "event_time": data.get("input_b_8"),
                     "event_type": data.get("input_b_9"),
                     "is_estimate": data.get("input_b_10"),
-                    "filename": data.get("input_b_11"),
+                    "filename_attached": data.get("input_b_11"),
                     "image_data": data.get("input_b_12"),
                     "document_type_code": data.get("input_b_13"),
                     "document_type_description": data.get("input_b_14"),
@@ -148,3 +235,22 @@ async def process_form(data: dict, request: Request):
     xml_writer = getattr(business, get_write_func_filename(option))
     datafile = await xml_writer(data)
     return {"message": "XML file successfully created"}
+
+@app.post("/token")
+async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
+    user_dict = fake_users_db.get(form_data.username)
+    if not user_dict:
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
+    user = UserInDB(**user_dict)
+    hashed_password = fake_hash_password(form_data.password)
+    if not hashed_password == user.hashed_password:
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
+
+    return {"access_token": user.username, "token_type": "bearer"}
+
+
+@app.get("/users/me")
+async def read_users_me(
+    current_user: Annotated[User, Depends(get_current_active_user)]
+):
+    return current_user

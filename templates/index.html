@@ -69,18 +69,40 @@
         {% for file in files %}
             <tr>
                 <td>{{ file.name }}</td>
-                <td>{{ file.size }}</td>
+                <td>{{ file.size / 1024  | round(2) }}</td>
                 <td>
                     <a href="{{ url_for('download_file', filename=file.name) }}">
                         <div class="download-icon"></div>
                     </a>
+                </td>
+                <td>
+                    <button type="button" class="delete-button" onclick="deleteFile('{{ file.name }}')">Delete</button>
+                    </form>
                 </td>
             </tr>
         {% endfor %}
     </table>
     <a href="{{ url_for('show_form') }}" class="download-button">Read .xml</a>
     <a href="{{ url_for('post_form') }}" class="download-button">Write .xml</a>
-
+    <script>
+        function deleteFile(filename) {
+            fetch('/delete_file/' + filename, {
+                method: 'POST'
+            }).then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Failed to delete file');
+                }
+            }).then(data => {
+                console.log(data.message);
+                location.reload(); // reload the page to update the file list
+            }).catch(error => {
+                console.error(error);
+                alert('Failed to delete file');
+            });
+        }
+    </script>
 </body>
 </html>
 
