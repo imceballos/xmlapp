@@ -1,39 +1,30 @@
-from fastapi import FastAPI, Request, Form, File, UploadFile, Depends, HTTPException
+from fastapi import FastAPI, Request, Form, File, UploadFile, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from starlette.responses import RedirectResponse
 from fastapi.responses import FileResponse
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from passlib.context import CryptContext
 
 from fastapi.responses import HTMLResponse, Response
 
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from typing import List, Annotated
+from jose import JWTError, jwt
 
-import business as business
-from datetime import datetime
-from pydantic import BaseModel
+from datetime import datetime, timedelta
 
 import os
 import re
 import xml.etree.ElementTree as ET
+from typing import Dict
 import uuid
 
-fake_users_db = {
-    "iceballos": {
-        "username": "iceballos",
-        "full_name": "Israel Ceballos",
-        "email": "iceballos@uc.uc",
-        "hashed_password": "fakehashedsecret",
-        "disabled": False,
-    },
-    "andrei": {
-        "username": "andrei",
-        "full_name": "Andrei Popescu",
-        "email": "andrei@spvirgogroup.com",
-        "hashed_password": "fakehashedsecret2",
-        "disabled": True,
-    },
-}
+from utils.auth import OAuth2PasswordBearerWithCookie
+from utils.auth import AuthenticationMethods
+from utils.settings import Settings
+from utils.models import User, get_user
+from utils.login import LoginForm
+import business as business
 
 
 app = FastAPI()
@@ -41,56 +32,21 @@ app = FastAPI()
 # Mount static and template files
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
+settings = Settings()
+auth_method = AuthenticationMethods(settings)
+
+oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl="token", settings = settings)
 
 
-def fake_hash_password(password: str):
-    return "fakehashed" + password
+def get_current_user_from_token(token: str = Depends(oauth2_scheme)) -> User:
+    """
+    Get the current user from the cookies in a request.
 
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-
-class User(BaseModel):
-    username: str
-    email: str | None = None
-    full_name: str | None = None
-    disabled: bool | None = None
-
-
-class UserInDB(User):
-    hashed_password: str
-
-
-def get_user(db, username: str):
-    if username in db:
-        user_dict = db[username]
-        return UserInDB(**user_dict)
-
-
-def fake_decode_token(token):
-    # This doesn't provide any security at all
-    # Check the next version
-    user = get_user(fake_users_db, token)
+    Use this function when you want to lock down a route so that only 
+    authenticated users can see access the route.
+    """
+    user = auth_method.decode_token(token)
     return user
-
-
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
-    user = fake_decode_token(token)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authentication credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    return user
-
-
-async def get_current_active_user(
-    current_user: Annotated[User, Depends(get_current_user)]
-):
-    if current_user.disabled:
-        raise HTTPException(status_code=400, detail="Inactive user")
-    return current_user
 
 
 def get_file_info(filepath: str) -> dict:
@@ -126,7 +82,7 @@ def get_write_func_filename(option: str) -> str:
     return mapper.get(option, "")
     
 @app.get("/")
-async def index(request: Request):
+async def index(request: Request, user: User = Depends(get_current_user_from_token)):
     """
     gets the list of files from the directory, creates a list of dictionaries with the name and size fields, and returns an HTML response
     with the generated file list
@@ -157,7 +113,7 @@ async def read_file(filename: str):
 
 
 @app.get("/form", response_class=HTMLResponse)
-async def show_form(request: Request):
+async def show_form(request: Request, user: User = Depends(get_current_user_from_token)):
     """
     View that displays a form with an input field for uploading a file
     """
@@ -166,7 +122,7 @@ async def show_form(request: Request):
 
 
 @app.post("/form", response_class=HTMLResponse)
-async def process_form(file: UploadFile, request: Request):
+async def process_form(file: UploadFile, request: Request, user: User = Depends(get_current_user_from_token)):
     """
     Endpoint that processes the uploaded file and saves it to disk
     """
@@ -189,16 +145,13 @@ async def delete_file(filename: str, request: Request):
     try:
         os.remove(file_path)
         return {"message": f"Successfully deleted {filename}"}
-        #file_list = os.listdir("test_files")
-        #files = [{"name": file, "size": os.path.getsize(os.path.join("test_files", file))} for file in file_list]
-        #return templates.TemplateResponse("index.html", {"request": request, "files": files, "message": f"Successfully deleted {filename}"})
     except FileNotFoundError:
         return {"error": f"File not found: {filename}"}
     except Exception as e:
         return {"error": str(e)}
 
 @app.get("/formpost", response_class=HTMLResponse)
-async def post_form(request: Request):
+async def post_form(request: Request, user: User = Depends(get_current_user_from_token)):
     """
     View that displays a form with an input field for uploading a file
     """
@@ -206,14 +159,14 @@ async def post_form(request: Request):
 
 
 @app.post("/formpost")
-async def process_form(data: dict, request: Request):
+async def process_form(data: dict, request: Request, user: User = Depends(get_current_user_from_token)):
     """
     Given a dictonary, a new dictionary is created with the corresponding keys and values,
     and a function is called to write the data to an XML file.
     """
     option = list(data.keys())[0]
     if option == "input_a_0":
-        datas = {    
+        data = {    
                     "option": option, 
                     "filename": data.get("input_a_0"), 
                     "data_target_type": data.get("input_a_1"), 
@@ -253,20 +206,90 @@ async def process_form(data: dict, request: Request):
     return {"message": "XML file successfully created"}
 
 @app.post("/token")
-async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
-    user_dict = fake_users_db.get(form_data.username)
-    if not user_dict:
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
-    user = UserInDB(**user_dict)
-    hashed_password = fake_hash_password(form_data.password)
-    if not hashed_password == user.hashed_password:
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
+def login_for_access_token(
+    response: Response, 
+    form_data: OAuth2PasswordRequestForm = Depends()
+) -> Dict[str, str]:
+    user = auth_method.authenticate_user(form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password")
+    access_token = auth_method.create_access_token(data={"username": user.username})
+    
+    # Set an HttpOnly cookie in the response. `httponly=True` prevents 
+    # JavaScript from reading the cookie.
+    response.set_cookie(
+        key=settings.COOKIE_NAME, 
+        value=f"Bearer {access_token}", 
+        httponly=True
+    )  
+    return {settings.COOKIE_NAME: access_token, "token_type": "bearer"}
 
-    return {"access_token": user.username, "token_type": "bearer"}
+@app.get("/auth/login", response_class=HTMLResponse)
+def login_get(request: Request):
+    expires = request.cookies
+    print("sfdjknfsrjkf")
+    print(expires)
+    is_user = auth_method.get_current_user_from_cookie(request)
+    if is_user is None:
+        context = {
+            "request": request,
+        }
+        return templates.TemplateResponse("login.html", context)
+    return RedirectResponse(url="/")
 
 
-@app.get("/users/me")
-async def read_users_me(
-    current_user: Annotated[User, Depends(get_current_active_user)]
-):
-    return current_user
+
+@app.post("/auth/login", response_class=HTMLResponse)
+async def login_post(request: Request):
+    form = LoginForm(request)
+    await form.load_data()
+    if await form.is_valid():
+        try:
+            response = RedirectResponse("/", status.HTTP_302_FOUND)
+            login_for_access_token(response=response, form_data=form)
+            form.__dict__.update(msg="Login Successful!")
+            return response
+        except HTTPException:
+            form.__dict__.update(msg="")
+            form.__dict__.get("errors").append("Incorrect Email or Password")
+            return templates.TemplateResponse("login.html", form.__dict__)
+    return templates.TemplateResponse("login.html", form.__dict__)
+
+
+@app.get("/auth/logout", response_class=HTMLResponse)
+def login_get():
+    response = RedirectResponse(url="/")
+    response.delete_cookie(settings.COOKIE_NAME)
+    return response
+
+@app.get("/profile", response_class=HTMLResponse)
+def index(request: Request, user: User = Depends(get_current_user_from_token)):
+    context = {
+        "user": user,
+        "request": request
+    }
+    return templates.TemplateResponse("profile.html", context)
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request, exc):
+    """
+    Exception handler for HTTPExceptions. Redirects the user to the login page if they are not authenticated.
+    """
+    if exc.status_code == status.HTTP_401_UNAUTHORIZED:
+        # user is not authenticated, redirect to the login view
+        return RedirectResponse(url="/auth/login")
+
+    # for all other HTTPExceptions, return the exception as is
+    return exc
+
+
+@app.get("/view_xml/{filename}", response_class=HTMLResponse)
+async def view_xml(request: Request, filename: str):
+    file_path = os.path.join("test_files", filename)
+    with open(file_path, "r") as file:
+        contents = file.read()
+
+    xml_parser = getattr(business, get_func_filename(filename))
+    data = await xml_parser(contents)
+
+    return templates.TemplateResponse("table.html", {"data": data, "request": request, "filename": filename})
