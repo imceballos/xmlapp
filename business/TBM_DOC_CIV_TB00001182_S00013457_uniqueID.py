@@ -58,8 +58,8 @@ async def TBM_DOC_CIV_TB00001182_S00013457_uniqueID_WRITE(data: dict):
     codigo_pais = empresa.find('ns:Country/ns:Code', ns)
 
     empresa.text = data.get("empresa","")
-    nombre_empresa.text = data.get("nombre_empresa","")
-    codigo_pais.text = data.get("codigo_pais","")
+    nombre_empresa.text = data.get("nombre_empresa", "")
+    codigo_pais.text = data.get("codigo_pais", "")
 
     contexto = evento.find('ns:ContextCollection', ns)
     hawb_num = contexto.find('ns:Context[ns:Type="HAWBNumber"]/ns:Value', ns)
@@ -68,12 +68,12 @@ async def TBM_DOC_CIV_TB00001182_S00013457_uniqueID_WRITE(data: dict):
     hbol_origen = contexto.find('ns:Context[ns:Type="HBOLOriginUNLOCO"]/ns:Value', ns)
     hbol_destino = contexto.find('ns:Context[ns:Type="HBOLDestinationUNLOCO"]/ns:Value', ns)
 
-    contexto.text = data.get("contexto","")
-    hawb_num.text = data.get("hawb_num","")
-    hawb_origen.text = data.get("haw_origen","")
-    hawb_destino.text = data.get("hawb_destino","")
-    hbol_origen.text = data.get("hbol_origen","")
-    hbol_destino.text = data.get("hbol_destino","")
+    contexto.text = data.get("contexto", "")
+    hawb_num.text = data.get("hawb_num", "")
+    hawb_origen.text = data.get("haw_origen", "")
+    hawb_destino.text = data.get("hawb_destino", "")
+    hbol_origen.text = data.get("hbol_origen", "")
+    hbol_destino.text = data.get("hbol_destino", "")
 
     filename_xml = data.get("filename", "")
     file_path = f'test_files\{filename_xml}'
