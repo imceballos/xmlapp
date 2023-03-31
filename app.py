@@ -70,6 +70,12 @@ def get_func_filename(filepath: str) -> str:
         return "MESSAGE_XUD_DTYPE_TB_TIMESTAMP_READ"
     elif re.search(r'CW1', filepath):
         return "CW1_REQUEST_XUD_TIMESTAMP_READ"
+    elif re.search(r'EXWORKS_ACK_OK', filepath):
+        return "EXWORKS_ACK_OK_READ"
+    elif re.search(r'TBM_DOC_CIV', filepath):
+        return "TBM_DOC_CIV_UUID_READ"
+    elif re.search(r'UPDATE_MESSAGE_ACCEPTED', filepath):
+        return "UPDATE_MESSAGE_ACCEPTED_READ"
 
 def get_write_func_filename(option: str) -> str:
     """
