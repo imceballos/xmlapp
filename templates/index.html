@@ -12,8 +12,8 @@
         }
         table {
             border-collapse: collapse;
-            margin: auto;
-            margin-top: 50px;
+            width: 40%;
+            margin: 0 auto;
         }
         td, th {
             padding: 10px;
@@ -73,43 +73,91 @@
             border-radius: 5px;
             margin-bottom: 10px;
         }
+        
+        .pending-table {
+            margin-bottom: 20px;
+        }
+        
+        .accepted-table {
+            float: left;
+            margin-top: 100px;
+            width: 50%;
+        }
+        .rejected-table {
+            float: right;
+            margin-top: 100px;
+            width: 50%;
+        }
+        
+        .accept-button, .reject-button, .delete-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        .accept-button:hover, .reject-button:hover, .delete-button:hover {
+            background-color: #3e8e41;
+        }
+        
     </style>
 </head>
 <body>
-    <h1>File Browser</h1>
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Size</th>
-            <th>Download</th>
-            <th>Action</th>
-            <th>View</th>
+    <div class="container">
+        {% for status, files in {'pending': pending_files, 'accepted': accepted_files, 'rejected': rejected_files}.items() %}
+            <div class="{{ status }}-table">
+                <h2>{{ status }} Files</h2>
+                <table>
+                    <tr>
+                        <th>Name</th>
+                        <th>Size</th>
+                        <th>Download</th>
+                        {% if status != 'rejected' %}
+                            <th>Action</th>
+                        {% endif %}
+                        <th>View</th>
+                    </tr>
+                    {% for file in files %}
+                        <tr>
+                            <td>{{ file.name }}</td>
+                            <td>{{ '{:.2f}'.format(file.size / 1024) }} KB</td>
+                            <td>
+                                <a href="{{ url_for('download_file', filename=file.name, folder=file.folder) }}">
+                                    <div class="download-icon"></div>
+                                </a>
+                            </td>
+                            {% if status == 'accepted' %}
+                                <td>
+                                    <button type="button" class="reject-button" onclick="rejectFile('{{ file.name }}', '{{ file.folder }}', '{{ status }}')">Reject</button>
+                                </td>
+                            {% elif status == 'pending' %}
+                                <td>
+                                    <button type="button" class="accept-button" onclick="acceptFile('{{ file.name }}', '{{ file.folder }}', '{{ status }}')">Accept</button>
+                                    <button type="button" class="reject-button" onclick="rejectFile('{{ file.name }}', '{{ file.folder }}', '{{ status }}')">Reject</button>
+                                </td>
+                            {% endif %}
+                                <td>
+                                    <a href="{{ url_for('view_xml', filename=file.name, folder=file.folder, status=status) }}">View</a>
+                                </td>
+                            </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            {% endfor %}
+    </div>
 
-        </tr>
-        {% for file in files %}
-            <tr>
-                <td>{{ file.name }}</td>
-                <td>{{ '{:.2f}'.format(file.size / 1024) }} KB</td>
-                <td>
-                    <a href="{{ url_for('download_file', filename=file.name) }}">
-                        <div class="download-icon"></div>
-                    </a>
-                </td>
-                <td>
-                    <a href="{{ url_for('view_xml', filename=file.name) }}">View</a>
-                </td>
-                <td>
-                    <button type="button" class="delete-button" onclick="deleteFile('{{ file.name }}')">Delete</button>
-                    </form>
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
-    <a href="{{ url_for('show_form') }}" class="download-button">Read .xml</a>
-    <a href="{{ url_for('post_form') }}" class="download-button">Write .xml</a>
+    <!--<a href="{{ url_for('show_form') }}" class="download-button">Read .xml</a>-->
+    <!--<a href="{{ url_for('post_form') }}" class="download-button">Write .xml</a>-->
     <script>
-        function deleteFile(filename) {
-            fetch('/delete_file/' + filename, {
+        function deleteFile(filename, filefolder) {
+            fetch('/delete_file/' + filename + '/' + filefolder, {
                 method: 'POST'
             }).then(response => {
                 if (response.ok) {
@@ -123,6 +171,50 @@
             }).catch(error => {
                 console.error(error);
                 alert('Failed to delete file');
+            });
+        }
+
+        function rejectFile(filename, filefolder, cstatus) {
+            fetch('/update_file_status', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify([{name: filename, folder: filefolder, status: 'rejected', currentstatus: cstatus}])
+            }).then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Failed to update file status');
+                }
+            }).then(data => {
+                console.log(data.message);
+                location.reload(); // reload the page to update the file list
+            }).catch(error => {
+                console.error(error);
+                alert('Failed to update file status');
+            });
+        }
+
+        function acceptFile(filename, filefolder, cstatus) {
+            fetch('/update_file_status', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify([{name: filename, folder: filefolder, status: 'accepted', currentstatus: cstatus}])
+            }).then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Failed to update file status');
+                }
+            }).then(data => {
+                console.log(data.message);
+                location.reload(); // reload the page to update the file list
+            }).catch(error => {
+                console.error(error);
+                alert('Failed to update file status');
             });
         }
     </script>

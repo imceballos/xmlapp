@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Create Connection</title>
+	<style>
+		body {
+			background-color: #f7f7f7;
+			font-family: Arial, sans-serif;
+		}
+		h1 {
+			color: #333;
+			font-size: 2rem;
+			margin-bottom: 1.5rem;
+            margin-top: 20px;
+
+		}
+		form {
+			background-color: #fff;
+			padding: 2rem;
+			border: 1px solid #ddd;
+			border-radius: 5px;
+			box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+			width: 50%;
+			margin: 0 auto;
+		}
+		label {
+			display: block;
+			margin-bottom: 0.5rem;
+			font-weight: bold;
+			color: #555;
+		}
+		input[type="text"] {
+			border: 1px solid #ddd;
+			border-radius: 3px;
+			padding: 0.5rem;
+			width: 100%;
+			margin-bottom: 1rem;
+			font-size: 1rem;
+		}
+		input[type="submit"] {
+			background-color: #333;
+			color: #fff;
+			border: none;
+			border-radius: 3px;
+			padding: 0.75rem 1.5rem;
+			font-size: 1rem;
+			cursor: pointer;
+		}
+		input[type="submit"]:hover {
+			background-color: #555;
+		}
+		.folder-list {
+			background-color: #fff;
+			padding: 2rem;
+			border: 1px solid #ddd;
+			border-radius: 5px;
+			box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+			width: 50%;
+			margin: 0 auto;
+			margin-top: 2rem;
+		}
+        #form-title {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+		.folder-list ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+		.folder-list ul li {
+			margin-bottom: 0.5rem;
+			font-size: 1.25rem;
+		}
+		.folder-list ul li a {
+			color: #333;
+			text-decoration: none;
+		}
+		.folder-list ul li a:hover {
+			text-decoration: underline;
+		}
+        #left {
+                float: left;
+                width: 20%;
+                margin-right: 5%;
+                padding-right: 20px;
+                border-right: 1px solid #ddd;
+            }
+        #right {
+                float: left;
+                width: 50%;
+            }
+        .clear{
+            clear: both;
+        }
+	</style>
+</head>
+<body>
+    <div id="left">
+        <h3 id="form-title">Create Connection</h3>
+        <form method="post">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name"><br>
+
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location"><br>
+
+            <label for="company">Company:</label>
+            <input type="text" id="company" name="company"><br>
+
+            <input type="submit" value="Create">
+        </form>
+    </div>
+    <div class="folder-list" id="right">
+		<h2>Folder List</h2>
+		<ul>
+			{% for folder in folders %}
+				<li><a href="{{ url_for('folder_detail', folder_name=folder) }}">{{ folder }}</a></li>
+			{% endfor %}
+		</ul>
+	</div>
+</body>
+</html>
