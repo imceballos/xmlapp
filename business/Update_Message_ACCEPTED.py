@@ -62,7 +62,6 @@ async def UPDATE_MESSAGE_ACCEPTED_READ(file: str):
     result['OrganizationCode'] = OrganizationCode
 
     CustomizedFieldCollection = Shipment.find('CustomizedFieldCollection')
-
     CustomizedField = CustomizedFieldCollection.find('CustomizedField')
 
     CustomizedField_DataType = CustomizedField.find('DataType').text

@@ -20,7 +20,6 @@ from utils.utils import UtilFunctions
 from utils.encrypt import decode_from_base64, encode_to_base64
 import business as business
 
-
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
