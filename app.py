@@ -1,41 +1,33 @@
 from fastapi import FastAPI, Request, Form, File, UploadFile, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from starlette.responses import RedirectResponse
-from fastapi.responses import FileResponse
-from passlib.context import CryptContext
+from fastapi.responses import FileResponse, HTMLResponse, Response
 
-from fastapi.responses import HTMLResponse, Response
 from pydantic import BaseModel
-import json
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from typing import List, Annotated
-from jose import JWTError, jwt
-import base64
+from typing import List, Annotated, Dict
 from datetime import datetime, timedelta
 
 import os
-import re
-import xml.etree.ElementTree as ET
-from typing import Dict
 import uuid
 
-from utils.auth import OAuth2PasswordBearerWithCookie
-from utils.auth import AuthenticationMethods
+from utils.auth import OAuth2PasswordBearerWithCookie, AuthenticationMethods
 from utils.settings import Settings
-from utils.models import User, get_user
+from utils.models import User, File, get_user
 from utils.login import LoginForm
+from utils.utils import UtilFunctions
+from utils.encrypt import decode_from_base64, encode_to_base64
 import business as business
 
 
 app = FastAPI()
 
-# Mount static and template files
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
+
 settings = Settings()
 auth_method = AuthenticationMethods(settings)
-
 oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl="token", settings = settings)
 
 
@@ -49,46 +41,8 @@ def get_current_user_from_token(token: str = Depends(oauth2_scheme)) -> User:
     user = auth_method.decode_token(token)
     return user
 
-
-def get_file_info(filepath: str) -> dict:
-    """
-    Given a filepath, return the filename, size, and creation date of the file
-    """
-    filename = os.path.basename(filepath)
-    size = os.path.getsize(filepath)
-    creation_date = datetime.fromtimestamp(os.path.getctime(filepath)).strftime('%Y-%m-%d %H:%M:%S')
-    return {"filename": filename, "size": size, "creation_date": creation_date}
-
-def get_func_filename(filepath: str) -> str:
-    """
-    Get a string as input (filepath) and returns another string as output.
-    If the string contains the pattern "MESSAGE_XUD_DTYPE",  
-    returns "MESSAGE_XUD_DTYPE_TB_TIMESTAMP_READ". If contains the pattern "CW1" 
-    returns the string "CW1_REQUEST_XUD_TIMESTAMP_READ"
-    """
-    if re.search(r'MESSAGE_XUD_DTYPE', filepath):
-        return "MESSAGE_XUD_DTYPE_TB_TIMESTAMP_READ"
-    elif re.search(r'CW1', filepath):
-        return "CW1_REQUEST_XUD_TIMESTAMP_READ"
-    elif re.search(r'EXWORKS_ACK_OK', filepath):
-        return "EXWORKS_ACK_OK_READ"
-    elif re.search(r'TBM_DOC_CIV', filepath):
-        return "TBM_DOC_CIV_UUID_READ"
-    elif re.search(r'UPDATE_MESSAGE_ACCEPTED', filepath):
-        return "UPDATE_MESSAGE_ACCEPTED_READ"
-
-def get_write_func_filename(option: str) -> str:
-    """
-    Given a string as input (option), returns another string as output according to the dictionary
-    """
-    mapper = {
-        "input_a_0": "CW1_REQUEST_XUD_TIMESTAMP_WRITE",
-        "input_b_0": "MESSAGE_XUD_DTYPE_TB_TIMESTAMP_WRITE"
-
-    }
-    return mapper.get(option, "")
     
-@app.get("/")
+@app.get("/statusfiles")
 async def index(request: Request):
     """
     gets the list of files from the directory, creates a list of dictionaries with the name and size fields, and returns an HTML response
@@ -103,13 +57,7 @@ async def download_file(folder: str, filename: str):
     """
     Endpoint that returns the content of a file as a download
     """
-    encoded_bytes = folder.encode('ascii')
-
-    # Use Base64 to decode the bytes
-    decoded_bytes = base64.b64decode(encoded_bytes)
-
-    # Convert the decoded bytes to a string
-    decoded_text = decoded_bytes.decode('ascii')
+    decoded_text = decode_from_base64(folder)
     file_path = os.path.join(decoded_text, filename)
     return FileResponse(file_path, media_type="application/octet-stream", filename=filename)
 
@@ -121,7 +69,7 @@ async def read_file(filename: str):
     """
     filepath = os.path.join("xml_files", filename)
     if os.path.isfile(filepath) and filename.endswith(".xml"):
-        return get_file_info(filepath)
+        return UtilFunctions().get_file_info(filepath)
     else:
         return {"error": "File not found"}
 
@@ -139,32 +87,22 @@ async def show_form(request: Request, user: User = Depends(get_current_user_from
 async def process_form(file: UploadFile, request: Request, user: User = Depends(get_current_user_from_token)):
     """
     Endpoint that processes the uploaded file and saves it to disk
-    """
-    # Generate a unique filename
-    #filename = f"{uuid.uuid4()}.xml"
-    
+    """    
     # Save the uploaded file to disk
     contents = await file.read()
     filename = file.filename
     
-    xml_parser = getattr(business, get_func_filename(filename))
-
+    xml_parser = getattr(business, UtilFunctions().get_func_filename(filename))
     data = await xml_parser(contents)
     
     return templates.TemplateResponse("table.html", {"data": data, "request": request})
 
 @app.post("/delete_file/{filename}/{folder}")
 async def delete_file(request: Request, filename: str, folder: str):
-    encoded_bytes = folder.encode('ascii')
-
-    # Use Base64 to decode the bytes
-    decoded_bytes = base64.b64decode(encoded_bytes)
-
-    # Convert the decoded bytes to a string
-    decoded_text = decoded_bytes.decode('ascii')
+    decoded_text = decode_from_base64(folder)
     file_path = os.path.join(decoded_text, filename)
     try:
-        os.remove(file_path)
+        UtilFunctions().delete_directory(file_path)
         return {"message": f"Successfully deleted {filename}"}
     except FileNotFoundError:
         return {"error": f"File not found: {filename}"}
@@ -247,9 +185,6 @@ def login_for_access_token(
 
 @app.get("/auth/login", response_class=HTMLResponse)
 def login_get(request: Request):
-    expires = request.cookies
-    print("sfdjknfsrjkf")
-    print(expires)
     is_user = auth_method.get_current_user_from_cookie(request)
     if is_user is None:
         context = {
@@ -297,37 +232,24 @@ async def http_exception_handler(request, exc):
     Exception handler for HTTPExceptions. Redirects the user to the login page if they are not authenticated.
     """
     if exc.status_code == status.HTTP_401_UNAUTHORIZED:
-        # user is not authenticated, redirect to the login view
         return RedirectResponse(url="/auth/login")
 
-    # for all other HTTPExceptions, return the exception as is
     return exc
 
 
 @app.get("/view_xml/{filename}/{folder}/{status}", response_class=HTMLResponse)
 async def view_xml(request: Request, filename: str, folder: str, status: str):
-    print("ESTOY ACA")
-    print(filename)
-    print(folder)
-    print(status)
-    encoded_bytes = folder.encode('ascii')
-
-    # Use Base64 to decode the bytes
-    decoded_bytes = base64.b64decode(encoded_bytes)
-
-    # Convert the decoded bytes to a string
-    decoded_text = decoded_bytes.decode('ascii')
+    decoded_text = decode_from_base64(folder)
     file_path = f"{decoded_text}/{status}/{filename}"
-    print(filename, folder, file_path, decoded_text)
     with open(file_path, "r") as file:
         contents = file.read()
 
-    xml_parser = getattr(business, get_func_filename(filename))
+    xml_parser = getattr(business, UtilFunctions().get_func_filename(filename))
     data = await xml_parser(contents)
 
     return templates.TemplateResponse("table.html", {"data": data, "request": request, "filename": filename})
 
-@app.get("/create_connection", response_class=HTMLResponse)
+@app.get("/", response_class=HTMLResponse)
 async def create_connection(request: Request):
     folder_path = "test_files"
     folder_names = [name for name in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, name))]
@@ -348,51 +270,27 @@ async def create_connection_post(request: Request,
     location: str = Form(...),
     company: str = Form(...)
 ):
-    # Create the connection object
-    #connection = Connection(name=name, location=location, company=company)
+
     folder_path = "test_files"
 
-    # Create the folder
     folder_name = f"test_files/{name}_{company}"
     required_subfolders = ["request_to_trucker", "acknowledge", 
                 "trucker_response", "trucker_event_instruction_planning",
                 "trucker_event_instruction_actual", "arrival_on_site","pod_ppu"]
-    os.mkdir(folder_name)
-    for subfolder in required_subfolders:
-        os.mkdir(f"{folder_name}/{subfolder}")
-        os.mkdir(f"{folder_name}/{subfolder}/accepted")
-        os.mkdir(f"{folder_name}/{subfolder}/rejected")
-        os.mkdir(f"{folder_name}/{subfolder}/pending")
+    UtilFunctions().create_subdirectories(folder_name, required_subfolders)
 
-    # TODO: Save the connection and folder information to a database
-
-    # Return a success message
     folders = [name for name in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, name))]
-    # Render the HTML template with the folder names
     context = {"request": request, "folders": folders}
     return templates.TemplateResponse("connections.html", context=context)
 
-class OperationRequest(BaseModel):
-    operation_id: dict
 
 @app.get("/get_template")
 async def perform_operation(request: Request, folder_path: str):
-    #folder_path = request.query_params.get("folder_path", "")
-    #folder_path = json.loads(folder_path) if folder_path else []
-    file_list = os.listdir(folder_path)
-    
-    text_bytes = folder_path.encode('ascii')
 
-    # Use Base64 to encode the bytes
-    encoded_bytes = base64.b64encode(text_bytes)
-
-    # Convert the encoded bytes to a string
-    encoded_text = encoded_bytes.decode('ascii')
-    accepted_files = [{"name": file, "size": os.path.getsize(os.path.join(f"{folder_path}/accepted", file)), "folder": encoded_text} for file in os.listdir(f"{folder_path}/accepted")]
-    rejected_files = [{"name": file, "size": os.path.getsize(os.path.join(f"{folder_path}/rejected", file)), "folder": encoded_text} for file in os.listdir(f"{folder_path}/rejected")]
-    pending_files = [{"name": file, "size": os.path.getsize(os.path.join(f"{folder_path}/pending", file)), "folder": encoded_text} for file in os.listdir(f"{folder_path}/pending")]
-
-    files = [{"name": file, "size": os.path.getsize(os.path.join(folder_path, file)), "folder": encoded_text} for file in file_list]
+    encoded_text = encode_to_base64(folder_path)
+    accepted_files = UtilFunctions().get_files_by_condition(folder_path, encoded_text, "accepted")
+    rejected_files = UtilFunctions().get_files_by_condition(folder_path, encoded_text, "rejected")
+    pending_files = UtilFunctions().get_files_by_condition(folder_path, encoded_text, "pending")
     return templates.TemplateResponse("index.html", {"request": request, "accepted_files": accepted_files, "rejected_files": rejected_files, "pending_files": pending_files})
 
 
@@ -414,30 +312,15 @@ async def perform_operation1(data: dict, request: Request):
         7: "pod_ppu"
     }
     folder_path = f"test_files/{folder_name}/{operation_folders[operation_id]}"
-    xml_files = [f for f in os.listdir(folder_path) if f.endswith(".xml")]
-    
-    # Do some operation here based on the operation_id
-    # Render the corresponding template and return it as an HTML response
-    return {"url": "/get_template", "data": 1, "files":  xml_files, "folder_path": folder_path}
+    xml_files = UtilFunctions().list_directory(folder_path, ".xml")
 
-class File(BaseModel):
-    name: str
-    folder: str
-    status: str
-    currentstatus: str
+    return {"url": "/get_template", "data": 1, "files":  xml_files, "folder_path": folder_path}
 
 @app.post("/update_file_status")
 def update_file_status(files: List[File]):
     files = files[0]
-    encoded_bytes = files.folder.encode('ascii')
-    # Use Base64 to decode the bytes
-    decoded_bytes = base64.b64decode(encoded_bytes)
-    current_status = files.currentstatus
-    # Convert the decoded bytes to a string
-    decoded_text = decoded_bytes.decode('ascii')
-    # construct the full paths for the source and destination files
-    source_file = os.path.join(decoded_text, current_status , files.name)
+    decoded_text = decode_from_base64(files.folder)
+    source_file = os.path.join(decoded_text, files.currentstatus , files.name)
     destination_file =  os.path.join(decoded_text, files.status , files.name)
-    # use os.rename() to move the file from the source to the destination folder
     os.rename(source_file, destination_file)
     return {"message": "Successfully updated"}

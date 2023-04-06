@@ -9,6 +9,12 @@ class User(BaseModel):
 class DataBase(BaseModel):
     user: List[User]
 
+class File(BaseModel):
+    name: str
+    folder: str
+    status: str
+    currentstatus: str
+
 
 DB = DataBase(
     user=[
@@ -22,3 +28,4 @@ def get_user(username: str) -> User:
     if user:
         return user[0]
     return None
+
