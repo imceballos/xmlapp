@@ -1,23 +1,23 @@
-<?xml version='1.0' encoding='utf-8'?>
-<UniversalResponse xmlns="http://www.cargowise.com/Schemas/Universal/2011/11" version="1.1">
-	<Status />
+<?xml version="1.0" encoding="utf-8"?>
+<UniversalResponse version="1.1" xmlns="http://www.cargowise.com/Schemas/Universal/2011/11">
+	<Status>PRS</Status>
 	<Data>
-		<UniversalEvent version="1.1">
+		<UniversalEvent xmlns="http://www.cargowise.com/Schemas/Universal/2011/11" version="1.1">
 			<Event>
 				<DataContext>
 					<DataSourceCollection>
 						<DataSource>
-							<Type />
-							<Key />
+							<Type>TransportBooking</Type>
+							<Key>TB00000981</Key>
 						</DataSource>
 					</DataSourceCollection>
 					<Company>
-						<Code />
+						<Code>SG1</Code>
 						<Country>
-							<Code />
-							<Name />
+							<Code>SG</Code>
+							<Name>Singapore</Name>
 						</Country>
-						<Name />
+						<Name>BOLLORE LOGISTICS SINGAPORE PTE LTD</Name>
 					</Company>
 					<DataProvider>B52TSTSG1</DataProvider>
 					<EnterpriseID>B52</EnterpriseID>
@@ -45,12 +45,12 @@
 							<Name>Pierre-Laurent BAUDOUX</Name>
 						</SavedBy>
 						<Source>
-						<Code />
-						<Description />
+						<Code></Code>
+						<Description></Description>
 						</Source>
-						<VisibleBranchCode />
-						<VisibleCompanyCode />
-						<VisibleDepartmentCode />
+						<VisibleBranchCode></VisibleBranchCode>
+						<VisibleCompanyCode></VisibleCompanyCode>
+						<VisibleDepartmentCode></VisibleDepartmentCode>
 					</AttachedDocument>
 				</AttachedDocumentCollection>
 				<ContextCollection>
