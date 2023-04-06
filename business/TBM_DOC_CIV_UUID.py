@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 
-async def TBM_DOC_CIV_TB00001182_S00013457_uniqueID_READ(file: str):
+async def TBM_DOC_CIV_UUID_READ(file: str):
+
     root = ET.fromstring(file)
     ns = {'ns': 'http://www.cargowise.com/Schemas/Universal/2011/11'}
     result = {}
@@ -10,12 +11,14 @@ async def TBM_DOC_CIV_TB00001182_S00013457_uniqueID_READ(file: str):
     documento = evento.find('ns:AttachedDocumentCollection/ns:AttachedDocument', ns)
     nombre_archivo = documento.find('ns:FileName', ns).text
     fecha_guardado = documento.find('ns:SaveDateUTC', ns).text
-    result['Attached Document'] = {'File Name': nombre_archivo, 'Save Date UTC': fecha_guardado}
+    result["File Name"] = nombre_archivo
+    result["Save Date UTC"] = fecha_guardado
 
     empresa = evento.find('ns:DataContext/ns:Company', ns)
     nombre_empresa = empresa.find('ns:Name', ns).text
     codigo_pais = empresa.find('ns:Country/ns:Code', ns).text
-    result['Data Context'] = {'Company': {'Name': nombre_empresa, 'Country Code': codigo_pais}}
+    result["Company Name"] = nombre_empresa
+    result["Country Code"] = codigo_pais
 
     contexto = evento.find('ns:ContextCollection', ns)
     hawb_num = contexto.find('ns:Context[ns:Type="HAWBNumber"]/ns:Value', ns).text
@@ -23,15 +26,21 @@ async def TBM_DOC_CIV_TB00001182_S00013457_uniqueID_READ(file: str):
     hawb_destino = contexto.find('ns:Context[ns:Type="HAWBDestinationIATAAirportCode"]/ns:Value', ns).text
     hbol_origen = contexto.find('ns:Context[ns:Type="HBOLOriginUNLOCO"]/ns:Value', ns).text
     hbol_destino = contexto.find('ns:Context[ns:Type="HBOLDestinationUNLOCO"]/ns:Value', ns).text
-    result['Context Collection'] = {'HAWB Number': hawb_num, 'HAWB Origin IATA Airport Code': hawb_origen, 'HAWB Destination IATA Airport Code': hawb_destino, 'HBOL Origin UN/LOCODE': hbol_origen, 'HBOL Destination UN/LOCODE': hbol_destino}
+
+    result['HAWB Number'] = hawb_num
+    result['HAWB Origin IATA Airport Code'] = hawb_origen
+    result['HAWB Destination IATA Airport Code'] = hawb_destino
+    result['HBOL Origin UN/LOCODE'] = hbol_origen
+    result['HBOL Destination UN/LOCODE'] = hbol_destino
 
     datasource = evento.find('ns:DataContext/ns:DataSourceCollection/ns:DataSource', ns)
     datasource_type = datasource.find('ns:Type', ns).text
     datasource_key = datasource.find('ns:Key', ns).text
-    result['Data Context']['Data Source'] = {'Type': datasource_type, 'Key': datasource_key}
+    result['Type'] = datasource_type
+    result['Key'] = datasource_key
 
+    result = [{"col1": x, "col2": y} for x,y in result.items()]
     return result
-
 
 async def TBM_DOC_CIV_TB00001182_S00013457_uniqueID_WRITE(data: dict):
 

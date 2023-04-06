@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Seven Buttons Example</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', path='folderstyle.css') }}">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+		$(document).ready(function() {
+			// Attach click event handlers to each button
+			$("#button1").click(function() { performOperation(1, "{{folder_name}}"); });
+			$("#button2").click(function() { performOperation(2, "{{folder_name}}"); });
+			$("#button3").click(function() { performOperation(3, "{{folder_name}}"); });
+			$("#button4").click(function() { performOperation(4, "{{folder_name}}"); });
+			$("#button5").click(function() { performOperation(5, "{{folder_name}}"); });
+			$("#button6").click(function() { performOperation(6, "{{folder_name}}"); });
+			$("#button7").click(function() { performOperation(7, "{{folder_name}}"); });
+		});
+	
+		function performOperation(operationId, folderName) {
+				fetch('/perform_operation1', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ 'operation_id': operationId, 'folder_name': folderName })
+				})
+				.then(response => response.json())
+				.then(data => {
+					// Redirect to the corresponding template with the data and files arguments in the query string
+					window.location.href = data.url + "?folder_path=" + encodeURIComponent(data.folder_path);
+				})
+				.catch(error => {
+					// Display an error message if the operation fails
+					$("#result").text("Error performing operation: " + error);
+				});
+			}
+
+	</script>
+</head>
+<body>
+	<h1>{{folder_name}} operations</h1>
+	<p>Click one of the buttons below to perform a specific operation:</p>
+	<div class="row">
+        <button id="button1" class="button">
+            Request to Trucker 
+            <div class="box">
+                <h3>Details</h3>
+                <p>Create, Update or Cancelled</p>
+            </div>
+        </button>
+        <button id="button2" class="button">
+            Acknowledge
+            <div class="box">
+                <h3> Details</h3>
+                <p>OK and KO responses</p>
+            </div>
+        </button>
+        <button id="button3" class="button">
+            Trucker Response
+            <div class="box">
+                <h3>Details</h3>
+                <p>Acceptation or Rejection</p>
+            </div>
+        </button>
+        <button id="button4" class="button">
+            Trucker Event Instruction Planning
+            <div class="box">
+                <h3>Details</h3>
+                <p>Plans received from the trucker</p>
+            </div>
+        </button>
+        <button id="button5" class="button">
+            Trucker Event Instruction Actual
+            <div class="box">
+                <h3>Details</h3>
+                <p>Updates received in real time from the trucker</p>
+            </div>
+        </button>
+        <button id="button6" class="button">
+            Arrival on Site
+            <div class="box">
+                <h3>Details</h3>
+                <p>Trucker event Instruction Actual Arrival on Site</p>
+            </div>
+        </button>
+        <button id="button7" class="button">
+            POD / PPU
+            <div class="box">
+                <h3>Details</h3>
+                <p>Document TB level POD/PPU</p>
+            </div>
+        </button>
+    </div>
+</body>
+</html>

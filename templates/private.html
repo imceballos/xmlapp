@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Private Page</title>
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+        background-color: #fff;
+      }
+      h1 {
+        font-size: 36px;
+        color: #000;
+        text-align: center;
+        margin-top: 40px;
+        margin-bottom: 40px;
+
+      }
+      hr {
+        border: none;
+        border-top: 2px solid #000;
+        margin: 30px auto;
+        max-width: 400px;
+      }
+      p {
+        font-size: 18px;
+        line-height: 1.5;
+        margin-bottom: 20px;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      .site-map {
+        background-color: #eee;
+        padding: 20px;
+        border-radius: 5px;
+      }
+      .site-map ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .site-map li {
+        margin-bottom: 10px;
+      }
+      .site-map a {
+        color: #000;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Profile Page 🕵️</h1>
+      <p>Hello {{ user.username }}!</p>
+      <p>Welcome to this page. You can only see it if you are logged in!</p>
+      <hr>
+      <div class="site-map">
+        {% include '_site_map.html' %}
+      </div>
+    </div>
+  </body>
+{% include '_site_map.html' %}
+</html>

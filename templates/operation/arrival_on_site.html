@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Browser</title>
+    <style>
+       body {
+            background-color: #f7f7f7;
+            color: #333333;
+            text-align: center;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        table {
+            border-collapse: collapse;
+            margin: auto;
+            margin-top: 50px;
+        }
+        td, th {
+            padding: 10px;
+            border: 1px solid #333333;
+        }
+        th {
+            background-color: #333333;
+            color: #F5F5F5;
+        }
+        a {
+            color: #333333;
+            text-decoration: none;
+        }
+        .download-button {
+            background-color: #F5F5F5;
+            border-radius: 5px;
+            border: 2px solid #333333;
+            color: #333333;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 10px 20px;
+            text-decoration: none;
+            margin-top: 20px;
+            display: inline-block;
+        }
+        .download-icon {
+            background-color: #333333;
+            border-radius: 5px;
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .download-icon::after {
+            content: "▼";
+            display: block;
+            text-align: center;
+            margin-top: 5px;
+            color: #F5F5F5;
+        }
+        form {
+            display: inline-block;
+            text-align: center;
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            text-align: left;
+        }
+        input[type="text"], input[type="password"], input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #333333;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>File Browser</h1>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Size</th>
+            <th>Download</th>
+            <th>Action</th>
+            <th>View</th>
+
+        </tr>
+        {% for file in files %}
+            <tr>
+                <td>{{ file.name }}</td>
+                <td>{{ '{:.2f}'.format(file.size / 1024) }} KB</td>
+                <td>
+                    <a href="{{ url_for('download_file', filename=file.name) }}">
+                        <div class="download-icon"></div>
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ url_for('view_xml', filename=file.name) }}">View</a>
+                </td>
+                <td>
+                    <button type="button" class="delete-button" onclick="deleteFile('{{ file.name }}')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <a href="{{ url_for('show_form') }}" class="download-button">Read .xml</a>
+    <a href="{{ url_for('post_form') }}" class="download-button">Write .xml</a>
+    <script>
+        function deleteFile(filename) {
+            fetch('/delete_file/' + filename, {
+                method: 'POST'
+            }).then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Failed to delete file');
+                }
+            }).then(data => {
+                console.log(data.message);
+                location.reload(); // reload the page to update the file list
+            }).catch(error => {
+                console.error(error);
+                alert('Failed to delete file');
+            });
+        }
+    </script>
+</body>
+{% include '_site_map.html' %}
+</html>
+
+

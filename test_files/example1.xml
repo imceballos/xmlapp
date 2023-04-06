@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<UniversalDocumentRequest>
+	<DocumentRequest>
+		<DataContext>
+			<DataTargetCollection>
+				<DataTarget>
+					<Type>kjkjk</Type>
+					<Key>hj</Key>
+				</DataTarget>
+			</DataTargetCollection>
+			<Company>
+				<Code>hj</Code>
+			</Company>
+			<EnterpriseID />
+			<ServerID />
+		</DataContext>
+		<FilterCollection>
+			<Filter>
+				<Type>hj</Type>
+				<Value>hj</Value>
+			</Filter>
+		</FilterCollection>
+	</DocumentRequest>
+</UniversalDocumentRequest>
