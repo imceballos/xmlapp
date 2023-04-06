@@ -75,4 +75,3 @@ async def UPDATE_MESSAGE_ACCEPTED_READ(file: str):
     result = [{"col1": x, "col2": y} for x,y in result.items()]
 
     return result
-#-------------------------------------------------------------------------------------------------------------
