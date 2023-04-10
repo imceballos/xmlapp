@@ -107,9 +107,56 @@
             background-color: #3e8e41;
         }
         
+
+        .confirmation-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .confirmation-overlay p {
+            font-size: 1.2em;
+            color: white;
+            margin-bottom: 1em;
+        }
+
+        .confirmation-overlay button {
+            font-size: 1.2em;
+            padding: 0.5em 1em;
+            margin: 0.5em;
+            border-radius: 5px;
+            background-color: white;
+            color: black;
+            border: none;
+            cursor: pointer;
+        }
+
+        .confirmation-overlay button:hover {
+            background-color: #eee;
+        }
+
+        .button-wrapper {
+            float: left;
+            margin-top: 100px;
+            margin-right: 50px;
+            width: 5%;
+        }
+
+
     </style>
 </head>
 <body>
+    <div class="button-wrapper">
+        <button onclick="location.href='/formpost'">Generate order</button>
+    </div>
     <div class="container">
         {% for status, files in {'pending': pending_files, 'accepted': accepted_files, 'rejected': rejected_files}.items() %}
             <div class="{{ status }}-table">
@@ -135,12 +182,12 @@
                             </td>
                             {% if status == 'accepted' %}
                                 <td>
-                                    <button type="button" class="reject-button" onclick="rejectFile('{{ file.name }}', '{{ file.folder }}', '{{ status }}')">Reject</button>
+                                    <button type="button" class="reject-button" onclick="showConfirmation('{{ file.name }}', '{{ file.folder }}', '{{ status }}')">Reject</button>
                                 </td>
                             {% elif status == 'pending' %}
                                 <td>
                                     <button type="button" class="accept-button" onclick="acceptFile('{{ file.name }}', '{{ file.folder }}', '{{ status }}')">Accept</button>
-                                    <button type="button" class="reject-button" onclick="rejectFile('{{ file.name }}', '{{ file.folder }}', '{{ status }}')">Reject</button>
+                                    <button type="button" class="reject-button" onclick="showConfirmation('{{ file.name }}', '{{ file.folder }}', '{{ status }}')">Reject</button>
                                 </td>
                             {% endif %}
                                 <td>
@@ -217,6 +264,42 @@
                 alert('Failed to update file status');
             });
         }
+
+        function showConfirmation(name, folder, status) {
+            // Create a new element to hold the confirmation message and buttons
+            var confirmationDiv = document.createElement("div");
+            confirmationDiv.classList.add("confirmation-overlay");
+
+            // Create a message element with the file name
+            var message = document.createElement("p");
+            message.textContent = "Are you sure you want to reject " + name + "?";
+            confirmationDiv.appendChild(message);
+
+            // Create a button to confirm the rejection
+            var confirmButton = document.createElement("button");
+            confirmButton.textContent = "Confirm";
+            confirmButton.addEventListener("click", function() {
+                // Call the rejectFile function if the user confirms the rejection
+                rejectFile(name, folder, status);
+                // Remove the confirmation overlay from the DOM
+                confirmationDiv.remove();
+            });
+            confirmationDiv.appendChild(confirmButton);
+
+            // Create a button to cancel the rejection
+            var cancelButton = document.createElement("button");
+            cancelButton.textContent = "Cancel";
+            cancelButton.addEventListener("click", function() {
+                // Remove the confirmation overlay from the DOM
+                confirmationDiv.remove();
+            });
+            confirmationDiv.appendChild(cancelButton);
+
+            // Add the confirmation overlay to the DOM, overlapping the reject button
+            var rejectButton = event.target;
+            rejectButton.parentNode.insertBefore(confirmationDiv, rejectButton.nextSibling);
+        }
+
     </script>
 </body>
 {% include '_site_map.html' %}

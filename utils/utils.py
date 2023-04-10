@@ -26,18 +26,35 @@ class UtilFunctions:
             return "CW1_REQUEST_XUD_TIMESTAMP_READ"
         elif re.search(r'EXWORKS_ACK_OK', filepath):
             return "EXWORKS_ACK_OK_READ"
+        elif re.search(r'EXWORKS_ACK_KO', filepath):
+            return "EXWORKS_ACK_KO_READ"
         elif re.search(r'TBM_DOC_CIV', filepath):
             return "TBM_DOC_CIV_UUID_READ"
         elif re.search(r'UPDATE_MESSAGE_ACCEPTED', filepath):
             return "UPDATE_MESSAGE_ACCEPTED_READ"
+        elif re.search(r'XUD_RDR_TBN_UUID', filepath):
+            return "XUD_RDR_TBN_UUID_READ"
+        elif re.search(r'UPDATE_MESSAGE_REJECTED', filepath):
+            return "UPDATE_MESSAGE_REJECTED_READ"
+        elif re.search(r'UPDATE_MESSAGE_PAYABLE_UPDATE', filepath):
+            return "UPDATE_MESSAGE_PAYABLE_UPDATE_READ"
+        elif re.search(r'UPDATE_MESSAGE_ALLOCATED', filepath):
+            return "UPDATE_MESSAGE_ALLOCATED_READ"
+        elif re.search(r'UPDATE_MESSAGE_ACCRUALS', filepath):
+            return "UPDATE_MESSAGE_ACCRUALS_READ"
+        elif re.search(r'UPDATE_MESSAGE_ACCRUALS_ACCEPTED', filepath):
+            return "UPDATE_MESSAGE_ACCRUALS_ACCEPTED_READ"
+        elif re.search(r'MESSAGE_EVENT_XUE', filepath):
+            return "MESSAGE_EVENT_XUE_READ"
 
     def get_write_func_filename(self, option: str) -> str:
+        print("OPTION", option)
         """
         Given a string as input (option), returns another string as output according to the dictionary
         """
         mapper = {
-            "input_a_0": "CW1_REQUEST_XUD_TIMESTAMP_WRITE",
-            "input_b_0": "MESSAGE_XUD_DTYPE_TB_TIMESTAMP_WRITE"
+            "input_b_0": "CW1_REQUEST_XUD_TIMESTAMP_WRITE",
+            "input_a_0": "MESSAGE_XUD_DTYPE_TB_TIMESTAMP_WRITE"
 
         }
         return mapper.get(option, "")
