@@ -42,8 +42,6 @@ async def MESSAGE_XUD_DTYPE_TB_TIMESTAMP_READ(file: str):
     result['Event Type'] = event_type
     result['Is Estimate'] = is_estimate
 
-
-    # get the value of the FileName element of the AttachedDocument
     document = root.find('ns:Data/ns:UniversalEvent/ns:Event/ns:AttachedDocumentCollection/ns:AttachedDocument', ns)
     filename = document.find('ns:FileName', ns).text
     imagedata = document.find('ns:ImageData', ns).text
@@ -85,16 +83,13 @@ async def MESSAGE_XUD_DTYPE_TB_TIMESTAMP_WRITE(data: dict):
     tree = ET.parse('xml_files/MESSAGE_XUD_DTYPE_TB_TIMESTAMP.xml')
     root = tree.getroot()
 
-
     ns = {'ns': 'http://www.cargowise.com/Schemas/Universal/2011/11'}
 
     ET.register_namespace("", 'http://www.cargowise.com/Schemas/Universal/2011/11')
 
-    # get the value of the Status element
     status = root.find('ns:Status', ns)
     status.text = data.get("status", "")
 
-    # get the value of the Type and Key elements of the DataSource
     datasource = root.find('ns:Data/ns:UniversalEvent/ns:Event/ns:DataContext/ns:DataSourceCollection/ns:DataSource', ns)
     datasource_type = datasource.find('ns:Type', ns)
     datasource_key = datasource.find('ns:Key', ns)
@@ -114,5 +109,7 @@ async def MESSAGE_XUD_DTYPE_TB_TIMESTAMP_WRITE(data: dict):
     company_country_name.text = data.get("company_country_name", "")
     
     filename_xml = data.get("filename", "")
-    file_path = f'test_files\{filename_xml}'
+    print("TOY ACA")
+    file_path = f'test_files/trucker5_2231231312/acknowledge/pending/{filename_xml}'
+    print(file_path)
     tree.write(file_path, encoding='utf-8', xml_declaration=True)
