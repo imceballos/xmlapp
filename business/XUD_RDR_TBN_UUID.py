@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as ET
 
 
-async def Read_XUD_RDR_TBN_uuid4 (file: str):
+async def XUD_RDR_TBN_UUID_READ(file: str):
     root = ET.fromstring(file)
     result = {}
 

@@ -111,7 +111,7 @@ async def delete_file(request: Request, filename: str, folder: str):
         return {"error": str(e)}
 
 @app.get("/formpost", response_class=HTMLResponse)
-async def post_form(request: Request, user: User = Depends(get_current_user_from_token)):
+async def post_form(request: Request):
     """
     View that displays a form with an input field for uploading a file
     """
