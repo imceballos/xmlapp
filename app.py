@@ -21,6 +21,9 @@ from utils.encrypt import decode_from_base64, encode_to_base64
 import business as business
 
 
+
+TEST_FILES=os.getenv("TEST_FILES")
+
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -48,8 +51,8 @@ async def index(request: Request):
     gets the list of files from the directory, creates a list of dictionaries with the name and size fields, and returns an HTML response
     with the generated file list
     """
-    file_list = os.listdir("test_files")
-    files = [{"name": file, "size": os.path.getsize(os.path.join("test_files", file))} for file in file_list]
+    file_list = os.listdir(TEST_FILES)
+    files = [{"name": file, "size": os.path.getsize(os.path.join(TEST_FILES, file))} for file in file_list]
     return templates.TemplateResponse("index.html", {"request": request, "files": files})
 
 @app.get("/download/{folder}/{filename}")
@@ -251,14 +254,14 @@ async def view_xml(request: Request, filename: str, folder: str, status: str):
 
 @app.get("/", response_class=HTMLResponse)
 async def create_connection(request: Request):
-    folder_path = "test_files"
+    folder_path = TEST_FILES
     folder_names = [name for name in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, name))]
     return templates.TemplateResponse("connections.html", {"request": request, "folders": folder_names})
 
 
 @app.get("/folder/{folder_name}")
 async def folder_detail(request: Request, folder_name: str):
-    folder_path = f"test_files/{folder_name}"
+    folder_path = f"{TEST_FILES}/{folder_name}"
     if not os.path.isdir(folder_path):
         return responses.PlainTextResponse("Folder not found", status_code=404)
     files = os.listdir(folder_path)
@@ -271,9 +274,9 @@ async def create_connection_post(request: Request,
     company: str = Form(...)
 ):
 
-    folder_path = "test_files"
+    folder_path = TEST_FILES
 
-    folder_name = f"test_files/{name}_{company}"
+    folder_name = f"{TEST_FILES}/{name}_{company}"
     required_subfolders = ["request_to_trucker", "acknowledge", 
                 "trucker_response", "trucker_event_instruction_planning",
                 "trucker_event_instruction_actual", "arrival_on_site","pod_ppu"]
@@ -311,7 +314,7 @@ async def perform_operation1(data: dict, request: Request):
         6: "arrival_on_site",
         7: "pod_ppu"
     }
-    folder_path = f"test_files/{folder_name}/{operation_folders[operation_id]}"
+    folder_path = f"{TEST_FILES}/{folder_name}/{operation_folders[operation_id]}"
     xml_files = UtilFunctions().list_directory(folder_path, ".xml")
 
     return {"url": "/get_template", "data": 1, "files":  xml_files, "folder_path": folder_path}
