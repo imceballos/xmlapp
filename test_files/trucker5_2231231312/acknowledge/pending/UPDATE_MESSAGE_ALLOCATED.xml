@@ -4,7 +4,7 @@
       <DataTargetCollection>
         <DataTarget>
           <Type>TransportBooking</Type>
-          <Key>TB12345678</Key>
+          <Key>TB00000257</Key>
         </DataTarget>
       </DataTargetCollection>
       <Company>
@@ -13,7 +13,7 @@
       <EnterpriseID>B52</EnterpriseID>
       <ServerID>TS2</ServerID>
     </DataContext>
-	<NoteCollection Content="Partial">
+		<NoteCollection Content="Partial">
         <Note>
             <Description>EDI Note From Trucker</Description>
             <IsCustomDescription>true</IsCustomDescription>
@@ -33,11 +33,21 @@
 	  </OrganizationAddress>
 	</OrganizationAddressCollection>
 	<CustomizedFieldCollection Content="Partial">
-        <CustomizedField>
+		<CustomizedField>
             <DataType>String</DataType>
-            <Key>ROAD EDI Status</Key>
-            <Value>ACCEPTED</Value>
+            <Key>Truck ID</Key>
+            <Value>This is my test Trucker ID 1234</Value>
+        </CustomizedField>
+		<CustomizedField>
+            <DataType>String</DataType>
+            <Key>Trailers ID</Key>
+            <Value>This is my test Trailers ID 1234</Value>
+        </CustomizedField>
+				<CustomizedField>
+            <DataType>String</DataType>
+            <Key>Driver Name</Key>
+            <Value>This is my test Driver Name 1234</Value>
         </CustomizedField>		
     </CustomizedFieldCollection>
  </Shipment>
-</UniversalShipment>	
+</UniversalShipment>

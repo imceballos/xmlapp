@@ -29,6 +29,8 @@ settings = Settings()
 auth_method = AuthenticationMethods(settings)
 oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl="token", settings = settings)
 
+TEST_FILE = os.getenv("TEST_FILE")
+
 
 def get_current_user_from_token(token: str = Depends(oauth2_scheme)) -> User:
     """
@@ -117,7 +119,7 @@ async def post_form(request: Request, user: User = Depends(get_current_user_from
 
 
 @app.post("/formpost")
-async def process_form(data: dict, request: Request, user: User = Depends(get_current_user_from_token)):
+async def process_form(data: dict, request: Request):
     """
     Given a dictonary, a new dictionary is created with the corresponding keys and values,
     and a function is called to write the data to an XML file.
@@ -159,7 +161,7 @@ async def process_form(data: dict, request: Request, user: User = Depends(get_cu
                     "document_saved_by_code": data.get("input_b_18"),
                     "document_saved_by_name": data.get("input_b_19")
                 }
-    xml_writer = getattr(business, get_write_func_filename(option))
+    xml_writer = getattr(business, UtilFunctions().get_write_func_filename(option))
     datafile = await xml_writer(data)
     return {"message": "XML file successfully created"}
 
