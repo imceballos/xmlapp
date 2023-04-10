@@ -1,4 +1,4 @@
-python -m venv xmlapp
+python -m venv env
 
 .\env\Scripts\activate
 
