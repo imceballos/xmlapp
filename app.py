@@ -161,6 +161,34 @@ async def process_form(data: dict, request: Request):
                     "document_saved_by_code": data.get("input_b_18"),
                     "document_saved_by_name": data.get("input_b_19")
                 }
+    elif option == "input_c_0":
+        data = {
+                    "option": option, 
+                    "filename": data.get("input_c_0"), 
+                    "data_target_type": data.get("input_c_1"), 
+                    "data_target_key": data.get("input_c_2"),
+                    "company_code": data.get("input_c_3"),
+                    "enterprise_id": data.get("input_c_4"),
+                    "server_id": data.get("input_c_5"),
+                    "event_time": data.get("input_c_6"),
+                    "event_type": data.get("input_c_7"),
+                    "event_reference": data.get("input_c_8"),
+                    "is_estimate": data.get("input_c_9")
+                }
+    elif option == "input_d_0":
+        data = {
+                    "option": option, 
+                    "filename": data.get("input_d_0"), 
+                    "data_target_type": data.get("input_d_1"), 
+                    "data_target_key": data.get("input_d_2"),
+                    "company_code": data.get("input_d_3"),
+                    "enterprise_id": data.get("input_d_4"),
+                    "server_id": data.get("input_d_5"),
+                    "event_time": data.get("input_d_6"),
+                    "event_type": data.get("input_d_7"),
+                    "event_reference": data.get("input_d_8"),
+                    "is_estimate": data.get("input_d_9")
+                }         
     xml_writer = getattr(business, UtilFunctions().get_write_func_filename(option))
     datafile = await xml_writer(data)
     return {"message": "XML file successfully created"}
