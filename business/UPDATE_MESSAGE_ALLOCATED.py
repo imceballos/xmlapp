@@ -63,3 +63,23 @@ async def UPDATE_MESSAGE_ALLOCATED_READ(file: str):
     result = [{"col1": x, "col2": y} for x,y in result.items()]
 
     return result
+
+
+async def UPDATE_MESSAGE_ALLOCATED_WRITE(data: dict):
+
+    tree = ET.parse('xml_files/UPDATE_MESSAGE_ALLOCATED.xml')
+    root = tree.getroot()
+
+    ns = {'ns': 'http://www.cargowise.com/Schemas/Universal/2011/11'}
+
+    ET.register_namespace("", 'http://www.cargowise.com/Schemas/Universal/2011/11')
+
+    Shipment =root.find('Shipment')
+
+    DataContext = Shipment.find('DataContext')
+    DataTargetCollection = DataContext.find('DataTargetCollection')
+    DataTarget = DataTargetCollection.find('DataTarget')
+
+    DataTarget.find('Type').text = data.get("datatarget_type", "")
+    DataTarget.find('Key').text = data.get("datatarget_key", "")
+    

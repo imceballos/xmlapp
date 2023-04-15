@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from typing import List, Annotated, Dict
 from datetime import datetime, timedelta
-
+import paramiko
 import os
 import uuid
 
@@ -19,8 +19,8 @@ from utils.login import LoginForm
 from utils.utils import UtilFunctions
 from utils.encrypt import decode_from_base64, encode_to_base64
 import business as business
-
-#maldito estado de Israel
+import asyncio
+import asyncssh
 
 app = FastAPI()
 
@@ -44,7 +44,36 @@ def get_current_user_from_token(token: str = Depends(oauth2_scheme)) -> User:
     user = auth_method.decode_token(token)
     return user
 
-    
+def download_new_files(local_path):
+    remote_path = f"{local_path.split('/')[-1]}"
+    local_path = f"{local_path}/pending/"
+    hostname = '34.70.216.21'
+    username = 'trufa'
+    password = 'trufitapulgoso'
+
+    transport = paramiko.Transport((hostname, 22))
+    transport.connect(username=username, password=password)
+
+    sftp = paramiko.SFTPClient.from_transport(transport)
+
+    print("hello", remote_path, local_path)
+    sftp.chdir(f"trufa/{remote_path}")
+    print("LLEGUE ACA 1")
+    # keep track of the files that we have already downloaded
+    downloaded_files = set()
+
+    for file in sftp.listdir():
+        if file not in downloaded_files:
+            remote_file_path = file
+            local_file_path = os.path.join(local_path, file)
+            sftp.get(remote_file_path, local_file_path)
+
+            # add the file to the downloaded files set
+            downloaded_files.add(file)
+
+    sftp.close()
+    transport.close()
+
 @app.get("/statusfiles")
 async def index(request: Request):
     """
@@ -403,6 +432,7 @@ async def create_connection_post(request: Request,
 
 @app.get("/get_template")
 async def perform_operation(request: Request, folder_path: str):
+    download_new_files(folder_path)
 
     encoded_text = encode_to_base64(folder_path)
     accepted_files = UtilFunctions().get_files_by_condition(folder_path, encoded_text, "accepted")
