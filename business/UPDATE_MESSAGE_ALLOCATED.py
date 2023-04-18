@@ -1,7 +1,5 @@
 import xml.etree.ElementTree as ET
 
-#PROBLEMA RAMA REPETIDA
-
 async def UPDATE_MESSAGE_ALLOCATED_READ(file: str):
 
     root = ET.fromstring(file)
@@ -79,7 +77,60 @@ async def UPDATE_MESSAGE_ALLOCATED_WRITE(data: dict):
     DataContext = Shipment.find('DataContext')
     DataTargetCollection = DataContext.find('DataTargetCollection')
     DataTarget = DataTargetCollection.find('DataTarget')
+<<<<<<< HEAD
 
     DataTarget.find('Type').text = data.get("datatarget_type", "")
     DataTarget.find('Key').text = data.get("datatarget_key", "")
     
+=======
+    DataTarget_Type = DataTarget.find('Type')
+    DataTarget_Key = DataTarget.find('Key')
+    DataTarget_Type.text = data.get('datatarget_type', "")
+    DataTarget_Key.text = data.get('datatarget_key', "")
+
+    Company = DataContext.find('Company')
+    Company_Code = Company.find('Code')
+    Company_Code.text = data.get('company_code', "")
+
+    EnterpriseID = DataContext.find('EnterpriseID')
+    EnterpriseID.text = data.get('enterpriseid', "")
+
+    ServerID = DataContext.find('ServerID')
+    ServerID.text = data.get('serverid', "")
+
+    NoteCollection = Shipment.find('NoteCollection')
+    Note = NoteCollection.find('Note')
+    Description = Note.find('Description')
+    Description.text = data.get('description', "")
+    IsCustomDescription = Note.find('iscustomdescription')
+    IsCustomDescription.text = data.get('iscustomdescription', "")
+    NoteText = Note.find('NoteText')
+    NoteText.text = data.get('notetext', "")
+    NoteContext = Note.find('NoteContext')
+    NoteContext_Code = NoteContext.find('Code')
+    NoteContext_Code.text = data.get('notecontext_Code', "")
+
+    Visibility = Note.find('Visibility')
+    Visibility_Code = Visibility.find('Code')
+    Visibility_Code.text = data.get('visibility_code', "")
+
+    OrganizationAddressCollection = Shipment.find('OrganizationAddressCollection')
+    OrganizationAddress = OrganizationAddressCollection.find('OrganizationAddress')
+    AddressType = OrganizationAddress.find('AddressType')
+    AddressType.text = data.get('addresstype', "")
+    OrganizationCode = OrganizationAddress.find('OrganizationCode')
+    OrganizationCode.text = data.get('organizationcode', "")
+
+    CustomizedFieldCollection = Shipment.find('CustomizedFieldCollection')
+    CustomizedField = CustomizedFieldCollection.find('CustomizedField')
+    CustomizedField_DataType = CustomizedField.find('DataType')
+    CustomizedField_Key = CustomizedField.find('Key')
+    CustomizedField_Value = CustomizedField.find('Value')
+    CustomizedField_DataType.text = data.get('customizedfield_datatype', "")
+    CustomizedField_Key.text = data.get('customizedfield_key', "")
+    CustomizedField_Value.text = data.get('customizedfield_value', "")
+
+    filename_xml = data.get("filename", "")
+    file_path = f'test_files\{filename_xml}'
+    tree.write(file_path, encoding='utf-8', xml_declaration=True)
+>>>>>>> 77cffda4890a1ea7e208ee53bd33e1c044f8032f
