@@ -18,11 +18,15 @@ from utils.models import User, File, get_user
 from utils.login import LoginForm
 from utils.utils import UtilFunctions
 from utils.encrypt import decode_from_base64, encode_to_base64
+from utils.sftp import SFTPDownloader
+
 import business as business
 import asyncio
 import asyncssh
 
 app = FastAPI()
+
+downloader = SFTPDownloader("34.70.216.21", 22, "trufa", "trufitapulgoso")
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
@@ -44,35 +48,6 @@ def get_current_user_from_token(token: str = Depends(oauth2_scheme)) -> User:
     user = auth_method.decode_token(token)
     return user
 
-def download_new_files(local_path):
-    remote_path = f"{local_path.split('/')[-1]}"
-    local_path = f"{local_path}/pending/"
-    hostname = '34.70.216.21'
-    username = 'trufa'
-    password = 'trufitapulgoso'
-
-    transport = paramiko.Transport((hostname, 22))
-    transport.connect(username=username, password=password)
-
-    sftp = paramiko.SFTPClient.from_transport(transport)
-
-    print("hello", remote_path, local_path)
-    sftp.chdir(f"trufa/{remote_path}")
-    print("LLEGUE ACA 1")
-    # keep track of the files that we have already downloaded
-    downloaded_files = set()
-
-    for file in sftp.listdir():
-        if file not in downloaded_files:
-            remote_file_path = file
-            local_file_path = os.path.join(local_path, file)
-            sftp.get(remote_file_path, local_file_path)
-
-            # add the file to the downloaded files set
-            downloaded_files.add(file)
-
-    sftp.close()
-    transport.close()
 
 @app.get("/statusfiles")
 async def index(request: Request):
@@ -147,6 +122,7 @@ async def post_form(request: Request):
     View that displays a form with an input field for uploading a file
     """
     return templates.TemplateResponse("formpost.html", {"request": request})
+
 @app.post("/formpost")
 async def process_form(data: dict, request: Request):
     """
@@ -432,7 +408,9 @@ async def create_connection_post(request: Request,
 
 @app.get("/get_template")
 async def perform_operation(request: Request, folder_path: str):
-    download_new_files(folder_path)
+    await asyncio.to_thread(downloader.download_files, folder_path)
+    #await asyncio.gather(downloader.download_files(folder_path))
+    #await asyncio.gather(download_new_files(folder_path))
 
     encoded_text = encode_to_base64(folder_path)
     accepted_files = UtilFunctions().get_files_by_condition(folder_path, encoded_text, "accepted")
