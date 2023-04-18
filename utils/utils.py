@@ -1,5 +1,6 @@
 import re
 import os
+from datetime import datetime
 from typing import List
 
 class UtilFunctions:
@@ -48,7 +49,6 @@ class UtilFunctions:
             return "MESSAGE_EVENT_XUE_READ"
 
     def get_write_func_filename(self, option: str) -> str:
-        print("OPTION", option)
         """
         Given a string as input (option), returns another string as output according to the dictionary
         """
