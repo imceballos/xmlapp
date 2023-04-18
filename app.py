@@ -442,10 +442,12 @@ async def perform_operation1(data: dict, request: Request):
     return {"url": "/get_template", "data": 1, "files":  xml_files, "folder_path": folder_path}
 
 @app.post("/update_file_status")
-def update_file_status(files: List[File]):
+async def update_file_status(files: List[File]):
     files = files[0]
     decoded_text = decode_from_base64(files.folder)
-    source_file = os.path.join(decoded_text, files.currentstatus , files.name)
-    destination_file =  os.path.join(decoded_text, files.status , files.name)
+    source_file = f"{decoded_text}/{files.currentstatus}/{files.name}"
+    destination_file =  f"{decoded_text}/{files.status}/{files.name}"
+    print(source_file, destination_file, f"{decoded_text}/{files.status}")
     os.rename(source_file, destination_file)
+    await asyncio.to_thread(downloader.upload_files, f"{decoded_text}/{files.status}/", "trufa/acknowledge/")
     return {"message": "Successfully updated"}

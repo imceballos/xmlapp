@@ -33,13 +33,33 @@ class SFTPDownloader:
                 self.current_dir = f"trufa/{remote_path}"
 
             downloaded_files = set()
-
             for file in sftp.listdir():
                 if file not in downloaded_files:
                     remote_file_path = file
                     local_file_path = os.path.join(local_path, file)
                     sftp.get(remote_file_path, local_file_path)
                     downloaded_files.add(file)
+    
+    def upload_files(self, local_dir, remote_dir):
+        sftp = self.connect()
+        print("PASO ACA AL MENOS")
+        try:
+            print("entro al tri")
+            sftp.chdir('../..')
+            sftp.chdir(remote_dir)
+        except IOError:
+            print("except")
+            sftp.mkdir(remote_dir)
+            sftp.chdir(remote_dir)
+
+        for filename in os.listdir(local_dir):
+            local_path = os.path.join(local_dir, filename)
+            if os.path.isfile(local_path):
+                remote_path = os.path.join(remote_dir, filename)
+                print("ESTOY ACA O NO")
+                print(local_path)
+                print(remote_path)
+                sftp.put(local_path, filename)
         
     def close(self):
         """Close the SSH connection"""

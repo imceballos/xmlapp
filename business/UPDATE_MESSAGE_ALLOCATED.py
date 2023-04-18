@@ -77,12 +77,6 @@ async def UPDATE_MESSAGE_ALLOCATED_WRITE(data: dict):
     DataContext = Shipment.find('DataContext')
     DataTargetCollection = DataContext.find('DataTargetCollection')
     DataTarget = DataTargetCollection.find('DataTarget')
-<<<<<<< HEAD
-
-    DataTarget.find('Type').text = data.get("datatarget_type", "")
-    DataTarget.find('Key').text = data.get("datatarget_key", "")
-    
-=======
     DataTarget_Type = DataTarget.find('Type')
     DataTarget_Key = DataTarget.find('Key')
     DataTarget_Type.text = data.get('datatarget_type', "")
@@ -133,4 +127,3 @@ async def UPDATE_MESSAGE_ALLOCATED_WRITE(data: dict):
     filename_xml = data.get("filename", "")
     file_path = f'test_files\{filename_xml}'
     tree.write(file_path, encoding='utf-8', xml_declaration=True)
->>>>>>> 77cffda4890a1ea7e208ee53bd33e1c044f8032f
