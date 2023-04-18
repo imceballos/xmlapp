@@ -43,3 +43,48 @@ async def MESSAGE_EVENT_XUE_READ(file: str):
 
     result = [{"col1": x, "col2": y} for x,y in result.items()]
     return result
+
+async def MESSAGE_EVENT_XUE_WRITE(data: dict):
+
+    tree = ET.parse('xml_files/')
+    root = tree.getroot()
+
+    Event =root.find('Event')
+
+    DataContext = Event.find('DataContext')
+
+    DataTargetCollection = DataContext.find('DataTargetCollection')
+
+    DataTarget = DataTargetCollection.find('DataTarget')
+
+    DataTarget_Type = DataTarget.find('Type')
+    DataTarget_Key = DataTarget.find('Key')
+    DataTarget_Type.text = data.get('datatarget_type', "")
+    DataTarget_Key.text = data.get('datatarget_key', "")
+
+    Company = DataContext.find('Company')
+
+    Company_Code = Company.find('Code')
+    Company_Code.text = data.get('company_code', "")
+
+    EnterpriseID = DataContext.find('EnterpriseID')
+    EnterpriseID.text = data.get('enterpriseid', "")
+
+    ServerID = DataContext.find('ServerID')
+    ServerID.text = data.get('serverid', "")
+
+    EventTime = Event.find('EventTime')
+    EventTime.text = data.get('eventtime', "")
+
+    EventType = Event.find('EventType')
+    EventType.text = data.get('eventtype', "")
+
+    EventReference = Event.find('EventReference')
+    EventReference.text = data.get('eventreference', "")
+
+    IsEstimate = Event.find('IsEstimate')
+    IsEstimate.text = data.get('isestimate', "")
+
+    filename_xml = data.get("filename", "")
+    file_path = f'test_files\{filename_xml}'
+    tree.write(file_path, encoding='utf-8', xml_declaration=True)
