@@ -108,3 +108,114 @@ async def UPDATE_MESSAGE_ACCRUALS_READ(file: str):
     result = [{"col1": x, "col2": y} for x,y in result.items()]
     
     return result
+
+async def UPDATE_MESSAGE_ACCRUALS_WRITE(data: dict):
+
+    tree = ET.parse('xml_files/update_message_accruals.xml')
+    root = tree.getroot()
+
+    Shipment =root.find('Shipment')
+    DataContext = Shipment.find('DataContext')
+    DataTargetCollection = DataContext.find('DataTargetCollection')
+    DataTarget = DataTargetCollection.find('DataTarget')
+
+    DataTarget_Type = DataTarget.find('Type')
+    DataTarget_Key = DataTarget.find('Key')
+    DataTarget_Type.text = data.get('datatarget_type', "")
+    DataTarget_Key.text = data.get('datatarget_key', "")
+
+    Company = DataContext.find('Company')
+    Company_Code = Company.find('Code')
+    Company_Code.text = data.get('company_code', "")
+
+    EnterpriseID = DataContext.find('EnterpriseID')
+    EnterpriseID.text = data.get('enterpriseid', "")
+
+    ServerID = DataContext.find('ServerID')
+    ServerID.text = data.get('serverid', "")
+
+    TransportBookingDirection = Shipment.find('TransportBookingDirection')
+    TransportBookingDirection_Code = TransportBookingDirection.find('Code')
+    TransportBookingDirection_Description = TransportBookingDirection.find('Description')
+    TransportBookingDirection_Code.text = data.get('transportbookingdirection_code', "")
+    TransportBookingDirection_Description.text = data.get('transportbookingdirection_description', "")
+
+    OrganizationAddressCollection = Shipment.find('OrganizationAddressCollection')
+    OrganizationAddress = OrganizationAddressCollection.find('OrganizationAddress')
+
+    AddressType = OrganizationAddress.find('AddressType')
+    OrganizationCode = OrganizationAddress.find('OrganizationCode')
+    AddressType.text = data.get('addresstype', "")
+    OrganizationCode.text = data.get('organizationcode', "")
+
+    JobCosting = Shipment.find('JobCosting')
+    Branch = JobCosting.find('Branch')
+    Branch_Code = Branch.find('Code')
+    Branch_Code.text = data.get('branch_code', "")
+
+    Currency = JobCosting.find('Currency')
+    Currency_Code = Currency.find('Code')
+    Currency_Code.text = data.get('currency_code', "")
+
+    Department = JobCosting.find('Department')
+    Department_Code = Department.find('Code')
+    Department_Code.text = data.get('department_code', "")
+
+    ChargeLineCollection = JobCosting.find('ChargeLineCollection')
+    ChargeLine = ChargeLineCollection.find('ChargeLine')
+    ChargeLine_Branch = ChargeLine.find('Branch')
+    ChargeLine_Branch_Code = ChargeLine_Branch.find('Code')
+    ChargeLine_Branch_Code.text = data.get('chargeline_branch_code', "")
+
+    ChargeLine_ChargeCode = ChargeLine.find('ChargeCode')
+    ChargeLine_ChargeCode_Code = ChargeLine_ChargeCode.find('Code')
+    ChargeLine_ChargeCode_Code.text = data.get('chargeline_chargecode_code', "")
+
+    ChargeLine_CostLocalAmount = ChargeLine.find('CostLocalAmount')
+    ChargeLine_CostLocalAmount.text = data.get('chargeline_costlocalamount', "")
+
+    ChargeLine_CostOSAmount = ChargeLine.find('CostOSAmount')
+    ChargeLine_CostOSAmount.text = data.get('chargeline_costosamount', "")
+
+    ChargeLine_CostOSCurrency = ChargeLine.find('CostOSCurrency')
+
+    ChargeLine_CostOSCurrency_Code = ChargeLine_CostOSCurrency.find('Code')
+    ChargeLine_CostOSCurrency_Code.text = data.get('chargeline_costoscurrency_code', "")
+
+    ChargeLine_CostOSGSTVATAmount = ChargeLine.find('CostOSGSTVATAmount')
+    ChargeLine_CostOSGSTVATAmount.text = data.get('chargeline_costosgstvatamount', "")
+
+    ChargeLine_Creditor = ChargeLine.find('Creditor')
+    ChargeLine_Creditor_Type = ChargeLine_Creditor.find('Type')
+    ChargeLine_Creditor_Key = ChargeLine_Creditor.find('Key')
+    ChargeLine_Creditor_Type.text = data.get('chargeline_creditor_type', "")
+    ChargeLine_Creditor_Key.text = data.get('chargeline_creditor_key', "")
+
+    ChargeLine_Department = ChargeLine .find('Department')
+    ChargeLine_Department_Code = ChargeLine_Department.find('Code')
+    ChargeLine_Department_Code.text = data.get('chargeline_department_code', "")
+
+    ChargeLine_DisplaySequence = ChargeLine.find('DisplaySequence')
+    ChargeLine_DisplaySequence.text = data.get('chargeline_displaysequence', "")
+
+    ChargeLine_ImportMetaData = ChargeLine.find('ImportMetaData')
+
+    ChargeLine_ImportMetaData_Instruction = ChargeLine_ImportMetaData.find('Instruction')
+    ChargeLine_ImportMetaData_Instruction.text = data.get('chargeline_importmetadata_instruction', "")
+
+    ChargeLine_SupplierReference = ChargeLine.find('SupplierReference')
+    ChargeLine_SupplierReference.text = data.get('chargeline_supplierreference', "")
+
+    CustomizedFieldCollection = Shipment.find('CustomizedFieldCollection')
+    CustomizedField = CustomizedFieldCollection.find('customizedfield')
+
+    CustomizedField_DataType = CustomizedField.find('DataType')
+    CustomizedField_Key = CustomizedField.find('Key')
+    CustomizedField_Value = CustomizedField.find('Value')
+    CustomizedField_DataType.text = data.get('customizedfield_datatype', "")
+    CustomizedField_Key.text = data.get('customizedfield_key', "")
+    CustomizedField_Value.text = data.get('customizedField_value', "")
+
+    filename_xml = data.get("filename", "")
+    file_path = f'test_files\{filename_xml}'
+    tree.write(file_path, encoding='utf-8', xml_declaration=True)

@@ -1,6 +1,5 @@
 import xml.etree.ElementTree as ET
 
-
 async def XUD_RDR_TBN_UUID_READ(file: str):
     root = ET.fromstring(file)
     result = {}
@@ -96,52 +95,100 @@ async def XUD_RDR_TBN_UUID_READ(file: str):
 
     return
 
-"""
+async def XUD_RDR_TBN_UUID_WRITE(data: dict):
 
-get de elements of AttachedDocument
-AttachedDocument = AttachedDocumentCollection.find('ns:AttachedDocument', ns)
+    tree = ET.parse('xml_files/XUD_RDR_TB00001190_f5ed2ffe-351f-479d-b635-0ab9a26a845c_20221208142347150.xml')
+    root = tree.getroot()
 
-get the value of the element FileName
-FileName = AttachedDocument.find('ns:FileName', ns).text
-result['File Name 2']= FileName
+    ns = {'ns': 'http://www.cargowise.com/Schemas/Universal/2011/11'}
 
-get the value of the element ImageData
-ImageData = AttachedDocument.find('ns:ImageData', ns).text
-result['Image Data 2']=ImageData
+    Status=root.find('ns:Status', ns)
+    Status.text = data.get('status', "")
 
-get de elements of Type
-Type = AttachedDocument.find('ns:Type', ns)
+    Event = root.find('ns:Data/ns:UniversalEvent/ns:Event', ns)
 
-get the value of the elements Type and Description
-Type_Code = Type.find('ns:Code', ns).text
-Type_Description = Type.find('ns:Description', ns).text
-result['Type_Code 2']=Type_Code
-result['Type_Description 2']=Type_Description
+    DataContext = Event.find('ns:DataContext', ns)
 
-get the value of the element DocumentID
-DocumentID = AttachedDocument.find('ns:DocumentID', ns).text
-result['DocumentID 2']= DocumentID
+    DataSourceCollection = DataContext.find('ns:DataSourceCollection', ns)
 
-get the value of the element IsPublished
-IsPublished = AttachedDocument.find('ns:IsPublished', ns).text
-result['Is Published 2']= IsPublished
+    DataSource = DataContext.find('ns:DataSourceCollection/ns:DataSource', ns)
 
-get the value of the element SaveDateUTC
-SaveDateUTC= AttachedDocument.find('ns:SaveDateUTC', ns).text
-result['Save Date UTC 2']= SaveDateUTC
+    DataSource_Type = DataSource.find('ns:Type', ns)
+    DataSource_Key = DataSource.find('ns:Key', ns)
+    DataSource_Type.text = data.get('datasource_type', "")
+    DataSource_Key.text = data.get('datasource_key', "")
 
-get the elementS of SavedBy
-SavedBy = AttachedDocument.find('ns:SavedBy', ns)
+    Company = DataContext.find('ns:Company', ns)
 
-get the value of the element Code and Name
-SavedBy_Code = SavedBy.find('ns:Code', ns).text
-SavedBy_Name = SavedBy.find('ns:Name', ns).text
-result['SavedBy_Code 2']= SavedBy_Code
-result['SavedBy_Name 2']= SavedBy_Name
-"""
+    Company_Code = Company.find('ns:Code', ns)
+    Company_Code.text = data.get('company_code', "")
 
-#-------------------------------------------------------------------------------------------------------------
+    Country = Company.find('ns:Country', ns)
 
+    Company_Country_Code = Company.find('ns:Country/ns:Code', ns)
+    Company_Country_Name = Company.find('ns:Country/ns:Name', ns)
+    Company_Country_Code.text = data.get('company_country_code', "")
+    Company_Country_Name.text = data.get('company_country_name', "")
 
+    Company_Name = Company.find('ns:Name', ns)
+    Company_Name.text = data.get('company_name', "")
 
-#-------------------------------------------------------------------------------------------------------------
+    DataProvider = DataContext .find('ns:DataProvider', ns)
+    DataProvider.text = data.get('dataprovider', "")
+
+    EnterPriseID = DataContext.find('ns:EnterpriseID', ns)
+    EnterPriseID.text = data.get('enterpriseid', "")
+
+    ServerID = DataContext.find('ns:ServerID', ns)
+    ServerID.text = data.get('serverid', "")
+
+    EventTime = Event.find('ns:EventTime', ns)
+    EventTime.text = data.get('eventtime', "")
+
+    EventType = Event.find('ns:EventType', ns)
+    EventType.text = data.get('eventtype', "")
+
+    IsEstimate = Event.find('ns:IsEstimate', ns)
+    IsEstimate.text = data.get('isestimate', "")
+
+    AttachedDocumentCollection = Event.find('ns:AttachedDocumentCollection', ns)
+
+    AttachedDocument = AttachedDocumentCollection.find('ns:AttachedDocument', ns)
+
+    FileName = AttachedDocument.find('ns:FileName', ns)
+    FileName.text = data.get('filename', "")
+
+    ImageData = AttachedDocument.find('ns:ImageData', ns)
+    ImageData.text = data.get('imagedata', "")
+
+    Type = AttachedDocument.find('ns:Type', ns)
+
+    Type_Code = Type.find('ns:Code', ns)
+    Type_Description = Type.find('ns:Description', ns)
+    Type_Code.text = data.get('type_code', "")
+    Type_Description.text =data.get('type_description', "")
+
+    DocumentID = AttachedDocument.find('ns:DocumentID', ns)
+    DocumentID.text = data.get('documentid', "")
+
+    IsPublished = AttachedDocument.find('ns:IsPublished', ns)
+    IsPublished.text = data.get('ispublished', "")
+
+    SaveDateUTC= AttachedDocument.find('ns:SaveDateUTC', ns)
+    SaveDateUTC.text = data.get('savedateutc', "")
+
+    SavedBy = AttachedDocument.find('ns:SavedBy', ns)
+
+    SavedBy_Code = SavedBy.find('ns:Code', ns)
+    SavedBy_Name = SavedBy.find('ns:Name', ns)
+    SavedBy_Code.text = data.get('savedby_code', "")
+    SavedBy_Name.text = data.get('savedby_name', "")
+
+    MessageNumberCollection = root.find('ns:MessageNumberCollection', ns)
+
+    MessageNumber = MessageNumberCollection.find('ns:MessageNumber', ns)
+    MessageNumber.text = data.get('messagenumber', "")
+
+    filename_xml = data.get("filename", "")
+    file_path = f'test_files\{filename_xml}'
+    tree.write(file_path, encoding='utf-8', xml_declaration=True)
