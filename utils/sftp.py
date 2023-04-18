@@ -42,13 +42,10 @@ class SFTPDownloader:
     
     def upload_files(self, local_dir, remote_dir):
         sftp = self.connect()
-        print("PASO ACA AL MENOS")
         try:
-            print("entro al tri")
             sftp.chdir('../..')
             sftp.chdir(remote_dir)
         except IOError:
-            print("except")
             sftp.mkdir(remote_dir)
             sftp.chdir(remote_dir)
 
@@ -56,7 +53,6 @@ class SFTPDownloader:
             local_path = os.path.join(local_dir, filename)
             if os.path.isfile(local_path):
                 remote_path = os.path.join(remote_dir, filename)
-                print("ESTOY ACA O NO")
                 print(local_path)
                 print(remote_path)
                 sftp.put(local_path, filename)
