@@ -26,8 +26,6 @@ import asyncssh
 
 app = FastAPI()
 
-downloader = SFTPDownloader("34.70.216.21", 22, "trufa", "trufitapulgoso")
-
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
