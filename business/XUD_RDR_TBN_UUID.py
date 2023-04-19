@@ -97,7 +97,7 @@ async def XUD_RDR_TBN_UUID_READ(file: str):
 
 async def XUD_RDR_TBN_UUID_WRITE(data: dict):
 
-    tree = ET.parse('xml_files/XUD_RDR_TB00001190_f5ed2ffe-351f-479d-b635-0ab9a26a845c_20221208142347150.xml')
+    tree = ET.parse('xml_files/XUD_RDR_TBN_UUID.xml')
     root = tree.getroot()
 
     ns = {'ns': 'http://www.cargowise.com/Schemas/Universal/2011/11'}
@@ -190,5 +190,5 @@ async def XUD_RDR_TBN_UUID_WRITE(data: dict):
     MessageNumber.text = data.get('messagenumber', "")
 
     filename_xml = data.get("filename", "")
-    file_path = f'test_files\{filename_xml}'
+    file_path = f'test_files/trucker5_2231231312/acknowledge/pending/{filename_xml}'
     tree.write(file_path, encoding='utf-8', xml_declaration=True)

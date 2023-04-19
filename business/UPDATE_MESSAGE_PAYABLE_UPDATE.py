@@ -94,7 +94,7 @@ async def UPDATE_MESSAGE_PAYABLE_UPDATE_READ(file: str):
 
 async def UPDATE_MESSAGE_PAYABLE_UPDATE_WRITE(data: dict):
 
-    tree = ET.parse('xml_files/update_message_payable_update.xml')
+    tree = ET.parse('xml_files/UPDATE_MESSAGE_PAYABLE_UPDATE.xml')
     root = tree.getroot()
 
     Shipment =root.find('Shipment')
@@ -181,5 +181,5 @@ async def UPDATE_MESSAGE_PAYABLE_UPDATE_WRITE(data: dict):
     ChargeLine_SupplierReference.text = data.get('chargeline_supplierreference', "") 
     
     filename_xml = data.get("filename", "")
-    file_path = f'test_files\{filename_xml}'
+    file_path = f'test_files/trucker5_2231231312/acknowledge/pending/{filename_xml}'
     tree.write(file_path, encoding='utf-8', xml_declaration=True)

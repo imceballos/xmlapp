@@ -129,6 +129,7 @@ async def process_form(data: dict, request: Request):
     Given a dictonary, a new dictionary is created with the corresponding keys and values,
     and a function is called to write the data to an XML file.
     """
+    print(data)
     option = list(data.keys())[0]
     if option == "input_a_0":
         data = {    
@@ -449,5 +450,5 @@ async def update_file_status(files: List[File]):
     destination_file =  f"{decoded_text}/{files.status}/{files.name}"
     print(source_file, destination_file, f"{decoded_text}/{files.status}")
     os.rename(source_file, destination_file)
-    await asyncio.to_thread(downloader.upload_files, f"{decoded_text}/{files.status}/", "trufa/acknowledge/")
+    await asyncio.to_thread(downloader.upload_files, destination_file, f"trufa/{files.status}/")
     return {"message": "Successfully updated"}

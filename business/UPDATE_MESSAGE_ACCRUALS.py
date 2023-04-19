@@ -111,7 +111,7 @@ async def UPDATE_MESSAGE_ACCRUALS_READ(file: str):
 
 async def UPDATE_MESSAGE_ACCRUALS_WRITE(data: dict):
 
-    tree = ET.parse('xml_files/update_message_accruals.xml')
+    tree = ET.parse('xml_files/UPDATE_MESSAGE_ACCRUALS.xml')
     root = tree.getroot()
 
     Shipment =root.find('Shipment')
@@ -217,5 +217,5 @@ async def UPDATE_MESSAGE_ACCRUALS_WRITE(data: dict):
     CustomizedField_Value.text = data.get('customizedField_value', "")
 
     filename_xml = data.get("filename", "")
-    file_path = f'test_files\{filename_xml}'
+    file_path = f'test_files/trucker5_2231231312/acknowledge/pending/{filename_xml}'
     tree.write(file_path, encoding='utf-8', xml_declaration=True)

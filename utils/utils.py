@@ -53,9 +53,13 @@ class UtilFunctions:
         Given a string as input (option), returns another string as output according to the dictionary
         """
         mapper = {
-            "input_b_0": "CW1_REQUEST_XUD_TIMESTAMP_WRITE",
-            "input_a_0": "MESSAGE_XUD_DTYPE_TB_TIMESTAMP_WRITE"
-
+            "input_a_0": "CW1_REQUEST_XUD_TIMESTAMP_WRITE",
+            "input_b_0": "MESSAGE_XUD_DTYPE_TB_TIMESTAMP_WRITE",
+            "input_h_0": "UPDATE_MESSAGE_ALLOCATED_WRITE",
+            "input_i_0": "UPDATE_MESSAGE_PAYABLE_UPDATE_WRITE",
+            "input_j_0": "XUD_RDR_TBN_UUID_WRITE",
+            "input_k_0": "UPDATE_MESSAGE_REJECTED_WRITE",
+            "input_l_0": "MESSAGE_EVENT_XUE_WRITE"
         }
         return mapper.get(option, "")
 
