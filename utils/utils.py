@@ -21,13 +21,7 @@ class UtilFunctions:
         returns "MESSAGE_XUD_DTYPE_TB_TIMESTAMP_READ". If contains the pattern "CW1" 
         returns the string "CW1_REQUEST_XUD_TIMESTAMP_READ"
         """
-        if any(filepath.endswith(ext) for ext in ('.jpg', '.png')):
-            return "JPG_READ"
-        elif filepath.endswith('.pdf'):
-            return "PDF_READ"
-        elif filepath.endswith('.txt'):
-            return "TXT_READ"
-        elif re.search(r'MESSAGE_XUD_DTYPE', filepath):
+        if re.search(r'MESSAGE_XUD_DTYPE', filepath):
             return "MESSAGE_XUD_DTYPE_TB_TIMESTAMP_READ"
         elif re.search(r'CW1', filepath):
             return "CW1_REQUEST_XUD_TIMESTAMP_READ"
@@ -59,13 +53,9 @@ class UtilFunctions:
         Given a string as input (option), returns another string as output according to the dictionary
         """
         mapper = {
-            "input_a_0": "CW1_REQUEST_XUD_TIMESTAMP_WRITE",
-            "input_b_0": "MESSAGE_XUD_DTYPE_TB_TIMESTAMP_WRITE",
-            "input_h_0": "UPDATE_MESSAGE_ALLOCATED_WRITE",
-            "input_i_0": "UPDATE_MESSAGE_PAYABLE_UPDATE_WRITE",
-            "input_j_0": "XUD_RDR_TBN_UUID_WRITE",
-            "input_k_0": "UPDATE_MESSAGE_REJECTED_WRITE",
-            "input_l_0": "MESSAGE_EVENT_XUE_WRITE"
+            "input_b_0": "CW1_REQUEST_XUD_TIMESTAMP_WRITE",
+            "input_a_0": "MESSAGE_XUD_DTYPE_TB_TIMESTAMP_WRITE"
+
         }
         return mapper.get(option, "")
 
@@ -94,3 +84,4 @@ class UtilFunctions:
             if str_end:
                 return [f for f in os.listdir(folder_name) if f.endswith(str_end)]
             return [f for f in os.listdir(folder_name)]
+            
