@@ -96,7 +96,7 @@ async def UPDATE_MESSAGE_ALLOCATED_WRITE(data: dict):
     Note = NoteCollection.find('Note')
     Description = Note.find('Description')
     Description.text = data.get('description', "")
-    IsCustomDescription = Note.find('iscustomdescription')
+    IsCustomDescription = Note.find('IsCustomDescription')
     IsCustomDescription.text = data.get('iscustomdescription', "")
     NoteText = Note.find('NoteText')
     NoteText.text = data.get('notetext', "")

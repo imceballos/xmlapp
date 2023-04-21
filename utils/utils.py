@@ -21,7 +21,13 @@ class UtilFunctions:
         returns "MESSAGE_XUD_DTYPE_TB_TIMESTAMP_READ". If contains the pattern "CW1" 
         returns the string "CW1_REQUEST_XUD_TIMESTAMP_READ"
         """
-        if re.search(r'MESSAGE_XUD_DTYPE', filepath):
+        if any(filepath.endswith(ext) for ext in ('.jpg', '.png')):
+            return "JPG_READ"
+        elif filepath.endswith('.pdf'):
+            return "PDF_READ"
+        elif filepath.endswith('.txt'):
+            return "TXT_READ"
+        elif re.search(r'MESSAGE_XUD_DTYPE', filepath):
             return "MESSAGE_XUD_DTYPE_TB_TIMESTAMP_READ"
         elif re.search(r'CW1', filepath):
             return "CW1_REQUEST_XUD_TIMESTAMP_READ"
@@ -88,4 +94,3 @@ class UtilFunctions:
             if str_end:
                 return [f for f in os.listdir(folder_name) if f.endswith(str_end)]
             return [f for f in os.listdir(folder_name)]
-            
