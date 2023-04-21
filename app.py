@@ -19,6 +19,7 @@ from utils.login import LoginForm
 from utils.utils import UtilFunctions
 from utils.encrypt import decode_from_base64, encode_to_base64
 from utils.sftp import SFTPDownloader
+from utils.ftp import FTPDownloader
 
 import business as business
 import asyncio
@@ -35,6 +36,7 @@ oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl="token", settings = sett
 
 TEST_FILE = os.getenv("TEST_FILE")
 
+ddd = FTPDownloader("ftp.virgogroup.com.sg", "testaccount@virgogroup.com.sg", "wetest#1")
 
 def get_current_user_from_token(token: str = Depends(oauth2_scheme)) -> User:
     """
@@ -392,13 +394,15 @@ async def folder_detail(request: Request, folder_name: str):
 @app.post("/create_connection")
 async def create_connection_post(request: Request,
     name: str = Form(...),
-    location: str = Form(...),
-    company: str = Form(...)
+    ip: str = Form(...),
+    username: str = Form(...),
+    password: str = Form(...)
+
 ):
 
     folder_path = "test_files"
 
-    folder_name = f"test_files/{name}_{company}"
+    folder_name = f"test_files/{name}"
     required_subfolders = ["request_to_trucker", "acknowledge", 
                 "trucker_response", "trucker_event_instruction_planning",
                 "trucker_event_instruction_actual", "arrival_on_site","pod_ppu"]
@@ -414,6 +418,8 @@ async def perform_operation(request: Request, folder_path: str):
     #await asyncio.to_thread(downloader.download_files, folder_path)
     #await asyncio.gather(downloader.download_files(folder_path))
     #await asyncio.gather(download_new_files(folder_path))
+
+    ddd.download_files(os.path.join(folder_path, "pending"))
 
     encoded_text = encode_to_base64(folder_path)
     folder_level = folder_path.split("/")[-1]
