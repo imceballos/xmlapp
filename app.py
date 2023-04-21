@@ -457,6 +457,20 @@ async def update_file_status(files: List[File]):
     decoded_text = decode_from_base64(files.folder)
     source_file = f"{decoded_text}/{files.currentstatus}/{files.name}"
     destination_file =  f"{decoded_text}/{files.status}/{files.name}"
-    os.rename(source_file, destination_file)
+    if files.name in os.listdir(f"{decoded_text}/{files.status}"):
+        if files.name.split('.')[0]+'-2'+'.xml' in os.listdir(f"{decoded_text}/{files.status}"):
+            n=2
+            for f in os.listdir(f"{decoded_text}/{files.status}"):
+                if files.name.split('.')[0]+'-' in f:
+                    last_n = int(f.split('-')[1].split('.')[0])
+                    if last_n > n:
+                        n = last_n
+            os.rename(source_file, destination_file.split('.')[0]+'-'+str(n+1)+'.xml')
+            n=3
+        else:
+            os.rename(source_file, destination_file.split('.')[0]+'-'+str(2)+'.xml')
+
+    else:
+        os.rename(source_file, destination_file)
     #await asyncio.to_thread(downloader.upload_files, destination_file, f"trufa/{files.status}/")
     return {"message": "Successfully updated"}
