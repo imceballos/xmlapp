@@ -87,7 +87,7 @@ async def Update_Message_ACCEPTED_WRITE(data: dict):
     """
     Take a dictionary and create an XML file with its information using the format of the XML file Update_Message_ACCEPTED.xml.
     """
-    tree = ET.parse("xml_files/Update_Message_ACCEPTED.xml")
+    tree = ET.parse("xml_files/UPDATE_MESSAGE_ACCEPTED.xml")
     root = tree.getroot()
 
     Shipment = root.find("Shipment")
@@ -163,5 +163,5 @@ async def Update_Message_ACCEPTED_WRITE(data: dict):
     CustomizedField_Value.text = data.get("CustomizedField_Value", "")
 
     filename_xml = data.get("filename", "")
-    file_path = f"test_files\{filename_xml}"
-    tree.write(file_path, encoding="utf-8", xml_declaration=True)
+    file_path = f'test_files/trucker5_2231231312/acknowledge/pending/{filename_xml}'
+    tree.write(file_path, encoding='utf-8', xml_declaration=True)

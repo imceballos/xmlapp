@@ -26,8 +26,6 @@ import asyncssh
 
 app = FastAPI()
 
-downloader = SFTPDownloader("34.70.216.21", 22, "trufa", "trufitapulgoso")
-
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
@@ -59,13 +57,14 @@ async def index(request: Request):
     files = [{"name": file, "size": os.path.getsize(os.path.join("test_files", file))} for file in file_list]
     return templates.TemplateResponse("index.html", {"request": request, "files": files})
 
-@app.get("/download/{folder}/{filename}")
-async def download_file(folder: str, filename: str):
+
+@app.get("/download/{filename}/{folder}/{status}")
+async def download_file(folder: str, filename: str, status: str):
     """
     Endpoint that returns the content of a file as a download
     """
     decoded_text = decode_from_base64(folder)
-    file_path = os.path.join(decoded_text, filename)
+    file_path = os.path.join(f"{decoded_text}/",status, filename)
     return FileResponse(file_path, media_type="application/octet-stream", filename=filename)
 
 
@@ -129,6 +128,8 @@ async def process_form(data: dict, request: Request):
     Given a dictonary, a new dictionary is created with the corresponding keys and values,
     and a function is called to write the data to an XML file.
     """
+    print("Estoy aca")
+    print(data)
     option = list(data.keys())[0]
     if option == "input_a_0":
         data = {    
@@ -316,7 +317,6 @@ def login_get(request: Request):
     return RedirectResponse(url="/")
 
 
-
 @app.post("/auth/login", response_class=HTMLResponse)
 async def login_post(request: Request):
     form = LoginForm(request)
@@ -363,11 +363,13 @@ async def http_exception_handler(request, exc):
 async def view_xml(request: Request, filename: str, folder: str, status: str):
     decoded_text = decode_from_base64(folder)
     file_path = f"{decoded_text}/{status}/{filename}"
-    with open(file_path, "r") as file:
+    with open(file_path, "rb") as file:
         contents = file.read()
 
     xml_parser = getattr(business, UtilFunctions().get_func_filename(filename))
     data = await xml_parser(contents)
+    if any(file_path.endswith(ext) for ext in ('.jpg', '.png', '.txt', 'pdf')):
+        return data
 
     return templates.TemplateResponse("table.html", {"data": data, "request": request, "filename": filename})
 
@@ -385,6 +387,7 @@ async def folder_detail(request: Request, folder_name: str):
         return responses.PlainTextResponse("Folder not found", status_code=404)
     files = os.listdir(folder_path)
     return templates.TemplateResponse("folder.html", {"request": request, "folder_name": folder_name, "files": files})
+
 
 @app.post("/create_connection")
 async def create_connection_post(request: Request,
@@ -408,15 +411,17 @@ async def create_connection_post(request: Request,
 
 @app.get("/get_template")
 async def perform_operation(request: Request, folder_path: str):
-    await asyncio.to_thread(downloader.download_files, folder_path)
+    #await asyncio.to_thread(downloader.download_files, folder_path)
     #await asyncio.gather(downloader.download_files(folder_path))
     #await asyncio.gather(download_new_files(folder_path))
 
     encoded_text = encode_to_base64(folder_path)
+    folder_level = folder_path.split("/")[-1]
     accepted_files = UtilFunctions().get_files_by_condition(folder_path, encoded_text, "accepted")
     rejected_files = UtilFunctions().get_files_by_condition(folder_path, encoded_text, "rejected")
     pending_files = UtilFunctions().get_files_by_condition(folder_path, encoded_text, "pending")
-    return templates.TemplateResponse("index.html", {"request": request, "accepted_files": accepted_files, "rejected_files": rejected_files, "pending_files": pending_files})
+    return templates.TemplateResponse("index.html", {"request": request, "accepted_files": accepted_files, 
+            "rejected_files": rejected_files, "pending_files": pending_files, "folder_level": folder_level})
 
 
 @app.get("/showfolder")
@@ -438,7 +443,6 @@ async def perform_operation1(data: dict, request: Request):
     }
     folder_path = f"test_files/{folder_name}/{operation_folders[operation_id]}"
     xml_files = UtilFunctions().list_directory(folder_path, ".xml")
-
     return {"url": "/get_template", "data": 1, "files":  xml_files, "folder_path": folder_path}
 
 @app.post("/update_file_status")
@@ -449,5 +453,5 @@ async def update_file_status(files: List[File]):
     destination_file =  f"{decoded_text}/{files.status}/{files.name}"
     print(source_file, destination_file, f"{decoded_text}/{files.status}")
     os.rename(source_file, destination_file)
-    await asyncio.to_thread(downloader.upload_files, f"{decoded_text}/{files.status}/", "trufa/acknowledge/")
+    await asyncio.to_thread(downloader.upload_files, destination_file, f"trufa/{files.status}/")
     return {"message": "Successfully updated"}

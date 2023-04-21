@@ -103,17 +103,17 @@ async def UPDATE_MESSAGE_ALLOCATED_WRITE(data: dict):
     ServerID = DataContext.find("ServerID")
     ServerID.text = data.get("serverid", "")
 
-    NoteCollection = Shipment.find("NoteCollection")
-    Note = NoteCollection.find("Note")
-    Description = Note.find("Description")
-    Description.text = data.get("description", "")
-    IsCustomDescription = Note.find("iscustomdescription")
-    IsCustomDescription.text = data.get("iscustomdescription", "")
-    NoteText = Note.find("NoteText")
-    NoteText.text = data.get("notetext", "")
-    NoteContext = Note.find("NoteContext")
-    NoteContext_Code = NoteContext.find("Code")
-    NoteContext_Code.text = data.get("notecontext_Code", "")
+    NoteCollection = Shipment.find('NoteCollection')
+    Note = NoteCollection.find('Note')
+    Description = Note.find('Description')
+    Description.text = data.get('description', "")
+    IsCustomDescription = Note.find('IsCustomDescription')
+    IsCustomDescription.text = data.get('iscustomdescription', "")
+    NoteText = Note.find('NoteText')
+    NoteText.text = data.get('notetext', "")
+    NoteContext = Note.find('NoteContext')
+    NoteContext_Code = NoteContext.find('Code')
+    NoteContext_Code.text = data.get('notecontext_Code', "")
 
     Visibility = Note.find("Visibility")
     Visibility_Code = Visibility.find("Code")
@@ -140,5 +140,5 @@ async def UPDATE_MESSAGE_ALLOCATED_WRITE(data: dict):
     CustomizedField_Value.text = data.get("customizedfield_value", "")
 
     filename_xml = data.get("filename", "")
-    file_path = f"test_files\{filename_xml}"
-    tree.write(file_path, encoding="utf-8", xml_declaration=True)
+    file_path = f'test_files/trucker5_2231231312/acknowledge/pending/{filename_xml}'
+    tree.write(file_path, encoding='utf-8', xml_declaration=True)

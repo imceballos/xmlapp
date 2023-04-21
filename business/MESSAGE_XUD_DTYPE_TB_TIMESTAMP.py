@@ -126,9 +126,5 @@ async def MESSAGE_XUD_DTYPE_TB_TIMESTAMP_WRITE(data: dict):
     company_country_name.text = data.get("company_country_name", "")
 
     filename_xml = data.get("filename", "")
-    print("TOY ACA")
-    file_path = (
-        f"test_files/trucker5_2231231312/acknowledge/pending/{filename_xml}"
-    )
-    print(file_path)
-    tree.write(file_path, encoding="utf-8", xml_declaration=True)
+    file_path = f'test_files/trucker5_2231231312/acknowledge/pending/{filename_xml}'
+    tree.write(file_path, encoding='utf-8', xml_declaration=True)

@@ -1,4 +1,5 @@
 import os
+import re
 import paramiko
 
 class SFTPDownloader:
@@ -25,7 +26,7 @@ class SFTPDownloader:
     def download_files(self, local_path):
         sftp = self.connect()
         remote_path = f"{local_path.split('/')[-1]}"
-        local_path = f"{local_path}/pending/"
+        local_path = f"{local_path}/pending/"     
         if "trufa" in sftp.listdir() and remote_path in sftp.listdir("trufa"):
             if self.current_dir != f"trufa/{remote_path}":
                 sftp.chdir('../..')
@@ -33,8 +34,9 @@ class SFTPDownloader:
                 self.current_dir = f"trufa/{remote_path}"
 
             downloaded_files = set()
+            suffixes = ["txt", "json", "xml"]
             for file in sftp.listdir():
-                if file not in downloaded_files:
+                if file not in downloaded_files and re.search(fr"\.({'|'.join(suffixes)})$", file):
                     remote_file_path = file
                     local_file_path = os.path.join(local_path, file)
                     sftp.get(remote_file_path, local_file_path)
@@ -42,24 +44,15 @@ class SFTPDownloader:
     
     def upload_files(self, local_dir, remote_dir):
         sftp = self.connect()
-        print("PASO ACA AL MENOS")
         try:
-            print("entro al tri")
             sftp.chdir('../..')
             sftp.chdir(remote_dir)
         except IOError:
-            print("except")
             sftp.mkdir(remote_dir)
             sftp.chdir(remote_dir)
 
-        for filename in os.listdir(local_dir):
-            local_path = os.path.join(local_dir, filename)
-            if os.path.isfile(local_path):
-                remote_path = os.path.join(remote_dir, filename)
-                print("ESTOY ACA O NO")
-                print(local_path)
-                print(remote_path)
-                sftp.put(local_path, filename)
+        target_file = local_dir.split("/")[-1]
+        sftp.put(local_dir, target_file)
         
     def close(self):
         """Close the SSH connection"""
