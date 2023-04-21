@@ -1,129 +1,144 @@
 import xml.etree.ElementTree as ET
 
-async def UPDATE_MESSAGE_ALLOCATED_READ(file: str):
 
+async def UPDATE_MESSAGE_ALLOCATED_READ(file: str):
+    """
+    Take the XML file PDATE_MESSAGE_ALLOCATED.xml in string format, read it and return a dictionary with its field names as keys and its contents as values.
+    """
     root = ET.fromstring(file)
     result = {}
 
-    Shipment =root.find('Shipment')
+    Shipment = root.find("Shipment")
 
-    DataContext = Shipment.find('DataContext')
-    DataTargetCollection = DataContext.find('DataTargetCollection')
-    DataTarget = DataTargetCollection.find('DataTarget')
-    DataTarget_Type = DataTarget.find('Type').text
-    DataTarget_Key = DataTarget.find('Key').text
-    result['DataTarget_Type'] = DataTarget_Type
-    result['DataTarget_Key'] = DataTarget_Key
+    DataContext = Shipment.find("DataContext")
+    DataTargetCollection = DataContext.find("DataTargetCollection")
+    DataTarget = DataTargetCollection.find("DataTarget")
+    DataTarget_Type = DataTarget.find("Type").text
+    DataTarget_Key = DataTarget.find("Key").text
+    result["DataTarget_Type"] = DataTarget_Type
+    result["DataTarget_Key"] = DataTarget_Key
 
-    Company = DataContext.find('Company')
-    Company_Code = Company.find('Code').text
-    result['Company_Code'] = Company_Code
+    Company = DataContext.find("Company")
+    Company_Code = Company.find("Code").text
+    result["Company_Code"] = Company_Code
 
-    EnterpriseID = DataContext.find('EnterpriseID').text
-    result['EnterpriseID'] = EnterpriseID
+    EnterpriseID = DataContext.find("EnterpriseID").text
+    result["EnterpriseID"] = EnterpriseID
 
-    ServerID = DataContext.find('ServerID').text
-    result['ServerID'] = ServerID
+    ServerID = DataContext.find("ServerID").text
+    result["ServerID"] = ServerID
 
-    NoteCollection = Shipment.find('NoteCollection')
-    Note = NoteCollection.find('Note')
-    Description = Note.find('Description').text
-    result['Description'] = Description
-    IsCustomDescription = Note.find('IsCustomDescription').text
-    result['IsCustomDescription'] = IsCustomDescription
-    NoteText = Note.find('NoteText').text
-    result['NoteText'] = NoteText
-    NoteContext = Note.find('NoteContext')
-    NoteContext_Code = NoteContext.find('Code').text
-    result['NoteContext_Code'] = NoteContext_Code
+    NoteCollection = Shipment.find("NoteCollection")
+    Note = NoteCollection.find("Note")
+    Description = Note.find("Description").text
+    result["Description"] = Description
+    IsCustomDescription = Note.find("IsCustomDescription").text
+    result["IsCustomDescription"] = IsCustomDescription
+    NoteText = Note.find("NoteText").text
+    result["NoteText"] = NoteText
+    NoteContext = Note.find("NoteContext")
+    NoteContext_Code = NoteContext.find("Code").text
+    result["NoteContext_Code"] = NoteContext_Code
 
-    Visibility = Note.find('Visibility')
-    Visibility_Code = Visibility.find('Code').text
-    result['Visibility_Code'] = Visibility_Code
+    Visibility = Note.find("Visibility")
+    Visibility_Code = Visibility.find("Code").text
+    result["Visibility_Code"] = Visibility_Code
 
-    OrganizationAddressCollection = Shipment.find('OrganizationAddressCollection')
-    OrganizationAddress = OrganizationAddressCollection.find('OrganizationAddress')
-    AddressType = OrganizationAddress.find('AddressType').text
-    result['AddressType'] = AddressType
+    OrganizationAddressCollection = Shipment.find(
+        "OrganizationAddressCollection"
+    )
+    OrganizationAddress = OrganizationAddressCollection.find(
+        "OrganizationAddress"
+    )
+    AddressType = OrganizationAddress.find("AddressType").text
+    result["AddressType"] = AddressType
 
-    OrganizationCode = OrganizationAddress.find('OrganizationCode').text
-    result['OrganizationCode'] = OrganizationCode
+    OrganizationCode = OrganizationAddress.find("OrganizationCode").text
+    result["OrganizationCode"] = OrganizationCode
 
-    CustomizedFieldCollection = Shipment.find('CustomizedFieldCollection')
-    CustomizedField = CustomizedFieldCollection.find('CustomizedField')
-    CustomizedField_DataType = CustomizedField.find('DataType').text
-    CustomizedField_Key = CustomizedField.find('Key').text
-    CustomizedField_Value = CustomizedField.find('Value').text
-    result['CustomizedField_DataType'] = CustomizedField_DataType
-    result['CustomizedField_Key'] = CustomizedField_Key
-    result['CustomizedField_Value'] = CustomizedField_Value
+    CustomizedFieldCollection = Shipment.find("CustomizedFieldCollection")
+    CustomizedField = CustomizedFieldCollection.find("CustomizedField")
+    CustomizedField_DataType = CustomizedField.find("DataType").text
+    CustomizedField_Key = CustomizedField.find("Key").text
+    CustomizedField_Value = CustomizedField.find("Value").text
+    result["CustomizedField_DataType"] = CustomizedField_DataType
+    result["CustomizedField_Key"] = CustomizedField_Key
+    result["CustomizedField_Value"] = CustomizedField_Value
 
-    result = [{"col1": x, "col2": y} for x,y in result.items()]
+    result = [{"col1": x, "col2": y} for x, y in result.items()]
 
     return result
 
 
 async def UPDATE_MESSAGE_ALLOCATED_WRITE(data: dict):
-
-    tree = ET.parse('xml_files/UPDATE_MESSAGE_ALLOCATED.xml')
+    """
+    Take a dictionary and create an XML file with its information using the format of the XML file UPDATE_MESSAGE_ALLOCATED.xml.
+    """
+    tree = ET.parse("xml_files/UPDATE_MESSAGE_ALLOCATED.xml")
     root = tree.getroot()
 
-    ns = {'ns': 'http://www.cargowise.com/Schemas/Universal/2011/11'}
+    ns = {"ns": "http://www.cargowise.com/Schemas/Universal/2011/11"}
 
-    ET.register_namespace("", 'http://www.cargowise.com/Schemas/Universal/2011/11')
+    ET.register_namespace(
+        "", "http://www.cargowise.com/Schemas/Universal/2011/11"
+    )
 
-    Shipment =root.find('Shipment')
+    Shipment = root.find("Shipment")
 
-    DataContext = Shipment.find('DataContext')
-    DataTargetCollection = DataContext.find('DataTargetCollection')
-    DataTarget = DataTargetCollection.find('DataTarget')
-    DataTarget_Type = DataTarget.find('Type')
-    DataTarget_Key = DataTarget.find('Key')
-    DataTarget_Type.text = data.get('datatarget_type', "")
-    DataTarget_Key.text = data.get('datatarget_key', "")
+    DataContext = Shipment.find("DataContext")
+    DataTargetCollection = DataContext.find("DataTargetCollection")
+    DataTarget = DataTargetCollection.find("DataTarget")
+    DataTarget_Type = DataTarget.find("Type")
+    DataTarget_Key = DataTarget.find("Key")
+    DataTarget_Type.text = data.get("datatarget_type", "")
+    DataTarget_Key.text = data.get("datatarget_key", "")
 
-    Company = DataContext.find('Company')
-    Company_Code = Company.find('Code')
-    Company_Code.text = data.get('company_code', "")
+    Company = DataContext.find("Company")
+    Company_Code = Company.find("Code")
+    Company_Code.text = data.get("company_code", "")
 
-    EnterpriseID = DataContext.find('EnterpriseID')
-    EnterpriseID.text = data.get('enterpriseid', "")
+    EnterpriseID = DataContext.find("EnterpriseID")
+    EnterpriseID.text = data.get("enterpriseid", "")
 
-    ServerID = DataContext.find('ServerID')
-    ServerID.text = data.get('serverid', "")
+    ServerID = DataContext.find("ServerID")
+    ServerID.text = data.get("serverid", "")
 
-    NoteCollection = Shipment.find('NoteCollection')
-    Note = NoteCollection.find('Note')
-    Description = Note.find('Description')
-    Description.text = data.get('description', "")
-    IsCustomDescription = Note.find('iscustomdescription')
-    IsCustomDescription.text = data.get('iscustomdescription', "")
-    NoteText = Note.find('NoteText')
-    NoteText.text = data.get('notetext', "")
-    NoteContext = Note.find('NoteContext')
-    NoteContext_Code = NoteContext.find('Code')
-    NoteContext_Code.text = data.get('notecontext_Code', "")
+    NoteCollection = Shipment.find("NoteCollection")
+    Note = NoteCollection.find("Note")
+    Description = Note.find("Description")
+    Description.text = data.get("description", "")
+    IsCustomDescription = Note.find("iscustomdescription")
+    IsCustomDescription.text = data.get("iscustomdescription", "")
+    NoteText = Note.find("NoteText")
+    NoteText.text = data.get("notetext", "")
+    NoteContext = Note.find("NoteContext")
+    NoteContext_Code = NoteContext.find("Code")
+    NoteContext_Code.text = data.get("notecontext_Code", "")
 
-    Visibility = Note.find('Visibility')
-    Visibility_Code = Visibility.find('Code')
-    Visibility_Code.text = data.get('visibility_code', "")
+    Visibility = Note.find("Visibility")
+    Visibility_Code = Visibility.find("Code")
+    Visibility_Code.text = data.get("visibility_code", "")
 
-    OrganizationAddressCollection = Shipment.find('OrganizationAddressCollection')
-    OrganizationAddress = OrganizationAddressCollection.find('OrganizationAddress')
-    AddressType = OrganizationAddress.find('AddressType')
-    AddressType.text = data.get('addresstype', "")
-    OrganizationCode = OrganizationAddress.find('OrganizationCode')
-    OrganizationCode.text = data.get('organizationcode', "")
+    OrganizationAddressCollection = Shipment.find(
+        "OrganizationAddressCollection"
+    )
+    OrganizationAddress = OrganizationAddressCollection.find(
+        "OrganizationAddress"
+    )
+    AddressType = OrganizationAddress.find("AddressType")
+    AddressType.text = data.get("addresstype", "")
+    OrganizationCode = OrganizationAddress.find("OrganizationCode")
+    OrganizationCode.text = data.get("organizationcode", "")
 
-    CustomizedFieldCollection = Shipment.find('CustomizedFieldCollection')
-    CustomizedField = CustomizedFieldCollection.find('CustomizedField')
-    CustomizedField_DataType = CustomizedField.find('DataType')
-    CustomizedField_Key = CustomizedField.find('Key')
-    CustomizedField_Value = CustomizedField.find('Value')
-    CustomizedField_DataType.text = data.get('customizedfield_datatype', "")
-    CustomizedField_Key.text = data.get('customizedfield_key', "")
-    CustomizedField_Value.text = data.get('customizedfield_value', "")
+    CustomizedFieldCollection = Shipment.find("CustomizedFieldCollection")
+    CustomizedField = CustomizedFieldCollection.find("CustomizedField")
+    CustomizedField_DataType = CustomizedField.find("DataType")
+    CustomizedField_Key = CustomizedField.find("Key")
+    CustomizedField_Value = CustomizedField.find("Value")
+    CustomizedField_DataType.text = data.get("customizedfield_datatype", "")
+    CustomizedField_Key.text = data.get("customizedfield_key", "")
+    CustomizedField_Value.text = data.get("customizedfield_value", "")
 
     filename_xml = data.get("filename", "")
-    file_path = f'test_files\{filename_xml}'
-    tree.write(file_path, encoding='utf-8', xml_declaration=True)
+    file_path = f"test_files\{filename_xml}"
+    tree.write(file_path, encoding="utf-8", xml_declaration=True)
