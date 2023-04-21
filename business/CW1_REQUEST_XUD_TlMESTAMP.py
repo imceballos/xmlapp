@@ -2,6 +2,9 @@ import xml.etree.ElementTree as ET
 
 
 async def CW1_REQUEST_XUD_TIMESTAMP_READ(file: str):
+    """
+    Take the XML file CW1_REQUEST_XUD_TIMESTAMP.xml in string format, read it and return a dictionary with its field names as keys and its contents as values.
+    """
     root = ET.fromstring(file)
     result = {}
 
@@ -37,6 +40,9 @@ async def CW1_REQUEST_XUD_TIMESTAMP_READ(file: str):
 
 
 async def CW1_REQUEST_XUD_TIMESTAMP_WRITE(data: dict):
+    """
+    Take a dictionary and create an XML file with its information using the format of the XML file CW1_REQUEST_XUD_TIMESTAMP.xml.
+    """
     tree = ET.parse("xml_files/CW1_REQUEST_XUD_TIMESTAMP.xml")
     root = tree.getroot()
 
