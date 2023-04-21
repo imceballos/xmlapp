@@ -1,0 +1,21 @@
+<UniversalEvent>
+      <Event>
+    <DataContext>
+      <DataTargetCollection>
+        <DataTarget>
+          <Type>TransportBooking</Type>
+          <Key>TB12345678</Key>
+        </DataTarget>
+      </DataTargetCollection>
+      <Company>
+            <Code>US1</Code>
+      </Company>
+      <EnterpriseID>B52</EnterpriseID>
+      <ServerID>TS2</ServerID>
+    </DataContext>
+        <EventTime>2022-07-04T03:33:00</EventTime>
+        <EventType>Z35</EventType>
+	<EventReference>|SRC=TRK|LOC=USNYC|COM=TRUCKER|</EventReference>
+	<IsEstimate>false</IsEstimate>
+      </Event>
+</UniversalEvent>
