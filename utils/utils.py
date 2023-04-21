@@ -68,12 +68,12 @@ class UtilFunctions:
             os.mkdir(folder_name)
 
     def create_subdirectories(self, main_folder: str, dir_names: List):
-        create_directory(main_folder)
+        self.create_directory(main_folder)
         for subfolder in dir_names:
-            create_directory(f"{main_folder}/{subfolder}")
-            create_directory(f"{main_folder}/{subfolder}/accepted")
-            create_directory(f"{main_folder}/{subfolder}/rejected")
-            create_directory(f"{main_folder}/{subfolder}/pending")
+            self.create_directory(f"{main_folder}/{subfolder}")
+            self.create_directory(f"{main_folder}/{subfolder}/accepted")
+            self.create_directory(f"{main_folder}/{subfolder}/rejected")
+            self.create_directory(f"{main_folder}/{subfolder}/pending")
 
     def delete_directory(self, folder_name: str):
         if os.path.isdir(folder_name):
