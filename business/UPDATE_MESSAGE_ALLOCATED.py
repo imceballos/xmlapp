@@ -108,12 +108,12 @@ async def UPDATE_MESSAGE_ALLOCATED_WRITE(data: dict):
     Description = Note.find('Description')
     Description.text = data.get('description', "")
     IsCustomDescription = Note.find('IsCustomDescription')
-    IsCustomDescription.text = data.get('iscustomdescription', "")
+    IsCustomDescription.text = data.get('iscustom_description', "")
     NoteText = Note.find('NoteText')
     NoteText.text = data.get('notetext', "")
     NoteContext = Note.find('NoteContext')
     NoteContext_Code = NoteContext.find('Code')
-    NoteContext_Code.text = data.get('notecontext_Code', "")
+    NoteContext_Code.text = data.get('notecontext_code', "")
 
     Visibility = Note.find("Visibility")
     Visibility_Code = Visibility.find("Code")
@@ -126,9 +126,9 @@ async def UPDATE_MESSAGE_ALLOCATED_WRITE(data: dict):
         "OrganizationAddress"
     )
     AddressType = OrganizationAddress.find("AddressType")
-    AddressType.text = data.get("addresstype", "")
+    AddressType.text = data.get("address_type", "")
     OrganizationCode = OrganizationAddress.find("OrganizationCode")
-    OrganizationCode.text = data.get("organizationcode", "")
+    OrganizationCode.text = data.get("organization_code", "")
 
     CustomizedFieldCollection = Shipment.find("CustomizedFieldCollection")
     CustomizedField = CustomizedFieldCollection.find("CustomizedField")
@@ -136,8 +136,8 @@ async def UPDATE_MESSAGE_ALLOCATED_WRITE(data: dict):
     CustomizedField_Key = CustomizedField.find("Key")
     CustomizedField_Value = CustomizedField.find("Value")
     CustomizedField_DataType.text = data.get("customizedfield_datatype", "")
-    CustomizedField_Key.text = data.get("customizedfield_key", "")
-    CustomizedField_Value.text = data.get("customizedfield_value", "")
+    CustomizedField_Key.text = data.get("customized_field_key", "")
+    CustomizedField_Value.text = data.get("customized_field_value", "")
 
     filename_xml = data.get("filename", "")
     file_path = f'test_files/trucker5_2231231312/acknowledge/pending/{filename_xml}'

@@ -1,64 +1,65 @@
+<?xml version='1.0' encoding='utf-8'?>
 <UniversalShipment>
   <Shipment>
     <DataContext>
       <DataTargetCollection>
         <DataTarget>
-          <Type></Type>
-          <Key></Key>
+          <Type>Pelao</Type>
+          <Key>qlo</Key>
         </DataTarget>
       </DataTargetCollection>
       <Company>
-            <Code></Code>
+            <Code>cabeza</Code>
       </Company>
-      <EnterpriseID></EnterpriseID>
-      <ServerID></ServerID>
+      <EnterpriseID>de</EnterpriseID>
+      <ServerID>pene</ServerID>
     </DataContext>
     <TransportBookingDirection>
-      <Code></Code>
-      <Description></Description>
+      <Code>mentalidad</Code>
+      <Description>de</Description>
     </TransportBookingDirection>
 	<OrganizationAddressCollection>
 	  <OrganizationAddress>
-		<AddressType></AddressType>
-		<OrganizationCode></OrganizationCode>
+		<AddressType>tiburón</AddressType>
+		<OrganizationCode>cripto</OrganizationCode>
 	  </OrganizationAddress>
 	</OrganizationAddressCollection>
     <JobCosting>
       <Branch>
-        <Code></Code>
+        <Code>asshole</Code>
       </Branch>
       <Currency>
-        <Code></Code>
+        <Code>falopero</Code>
       </Currency>
       <Department>
-        <Code></Code>
+        <Code>qlo</Code>
       </Department>
 		<ChargeLineCollection>
 			<ChargeLine>
 				<Branch>
-					<Code></Code>
+					<Code>se </Code>
 				</Branch>
 				<ChargeCode>
-					<Code></Code>
+					<Code>va</Code>
 				</ChargeCode>
-				<CostLocalAmount></CostLocalAmount>
-				<CostOSAmount></CostOSAmount>
+				<CostLocalAmount>a</CostLocalAmount>
+				<CostOSAmount>las</CostOSAmount>
 				<CostOSCurrency>
-					<Code></Code>
+					<Code>maracas</Code>
 				</CostOSCurrency>
-				<CostOSGSTVATAmount></CostOSGSTVATAmount>
+				<CostOSGSTVATAmount>en </CostOSGSTVATAmount>
 				<Creditor>
-					<Type></Type>
-					<Key></Key>
+					<Type>el</Type>
+					<Key>barrio</Key>
 				</Creditor>	
 				<Department>
-					<Code></Code>
+					<Code>rojo</Code>
 				</Department>
-				<DisplaySequence></DisplaySequence>
+				<DisplaySequence>de</DisplaySequence>
 				<ImportMetaData>
-					<Instruction></Instruction>
+					<Instruction>Bankok</Instruction>
 				</ImportMetaData>
-				<SupplierReference></SupplierReference>  
+				<SupplierReference>y les gustan las cariñosas con rifle</SupplierReference>  
 			</ChargeLine>
 		</ChargeLineCollection>
     </JobCosting>	
