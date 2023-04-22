@@ -37,6 +37,14 @@
 			margin-bottom: 1rem;
 			font-size: 1rem;
 		}
+		input[type="password"] {
+			border: 1px solid #ddd;
+			border-radius: 3px;
+			padding: 0.5rem;
+			width: 100%;
+			margin-bottom: 1rem;
+			font-size: 1rem;
+		}
 		input[type="submit"] {
 			background-color: #333;
 			color: #fff;
@@ -99,15 +107,18 @@
 <body>
     <div id="left">
         <h3 id="form-title">Create Connection</h3>
-        <form method="post">
+		<form action="/create_connection" method="post">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name"><br>
 
-            <label for="location">Location:</label>
-            <input type="text" id="location" name="location"><br>
+            <label for="ip">IP:</label>
+            <input type="text" id="ip" name="ip"><br>
 
-            <label for="company">Company:</label>
-            <input type="text" id="company" name="company"><br>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username"><br>
+
+			<label for="password">Password:</label>
+			<input type="password" name="password" id="password" required><br>
 
             <input type="submit" value="Create">
         </form>

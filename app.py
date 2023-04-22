@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from typing import List, Annotated, Dict
 from datetime import datetime, timedelta
-
+import paramiko
 import os
 import uuid
 
@@ -18,7 +18,12 @@ from utils.models import User, File, get_user
 from utils.login import LoginForm
 from utils.utils import UtilFunctions
 from utils.encrypt import decode_from_base64, encode_to_base64
+from utils.sftp import SFTPDownloader
+from utils.ftp import FTPDownloader
+
 import business as business
+import asyncio
+import asyncssh
 
 app = FastAPI()
 
@@ -31,6 +36,7 @@ oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl="token", settings = sett
 
 TEST_FILE = os.getenv("TEST_FILE")
 
+ddd = FTPDownloader("ftp.virgogroup.com.sg", "testaccount@virgogroup.com.sg", "wetest#1")
 
 def get_current_user_from_token(token: str = Depends(oauth2_scheme)) -> User:
     """
@@ -42,7 +48,7 @@ def get_current_user_from_token(token: str = Depends(oauth2_scheme)) -> User:
     user = auth_method.decode_token(token)
     return user
 
-    
+
 @app.get("/statusfiles")
 async def index(request: Request):
     """
@@ -53,13 +59,14 @@ async def index(request: Request):
     files = [{"name": file, "size": os.path.getsize(os.path.join("test_files", file))} for file in file_list]
     return templates.TemplateResponse("index.html", {"request": request, "files": files})
 
-@app.get("/download/{folder}/{filename}")
-async def download_file(folder: str, filename: str):
+
+@app.get("/download/{filename}/{folder}/{status}")
+async def download_file(folder: str, filename: str, status: str):
     """
     Endpoint that returns the content of a file as a download
     """
     decoded_text = decode_from_base64(folder)
-    file_path = os.path.join(decoded_text, filename)
+    file_path = os.path.join(f"{decoded_text}/",status, filename)
     return FileResponse(file_path, media_type="application/octet-stream", filename=filename)
 
 
@@ -117,13 +124,14 @@ async def post_form(request: Request):
     """
     return templates.TemplateResponse("formpost.html", {"request": request})
 
-
 @app.post("/formpost")
 async def process_form(data: dict, request: Request):
     """
     Given a dictonary, a new dictionary is created with the corresponding keys and values,
     and a function is called to write the data to an XML file.
     """
+    print("Estoy aca")
+    print(data)
     option = list(data.keys())[0]
     if option == "input_a_0":
         data = {    
@@ -159,7 +167,91 @@ async def process_form(data: dict, request: Request):
                     "is_published": data.get("input_b_16"),
                     "save_date_utc": data.get("input_b_17"),
                     "document_saved_by_code": data.get("input_b_18"),
-                    "document_saved_by_name": data.get("input_b_19")
+                    "document_saved_by_name": data.get("input_b_19")                  
+                    }
+    elif option == "input_h_0":
+        data = {
+                    "option": option, 
+                    "filename": data.get("input_h_0"), 
+                    "datatarget_type": data.get("input_h_1"), 
+                    "datatarget_key": data.get("input_h_2"),
+                    "company_code": data.get("input_h_3"),
+                    "enterpriseid": data.get("input_h_4"),
+                    "serverid": data.get("input_h_5"),
+                    "description": data.get("input_h_6"),
+                    "iscustom_description": data.get("input_h_7"),
+                    "notetext": data.get("input_h_8"),
+                    "notecontext_code": data.get("input_h_9"),
+                    "visibility_code": data.get("input_h_10"),
+                    "address_type": data.get("input_h_11"),
+                    "organization_code": data.get("input_h_12"),
+                    "customizedfield_datatype": data.get("input_h_13"),
+                    "customized_field_key": data.get("input_h_14"),
+                    "customized_field_value": data.get("input_h_15")
+                }
+        
+    elif option == "input_i_0":
+        data = {
+                    "option": option, 
+                    "filename": data.get("input_i_0"), 
+                    "datatarget_type": data.get("input_i_1"), 
+                    "datatarget_key": data.get("input_i_2"),
+                    "company_code": data.get("input_i_3"),
+                    "enterpriseid": data.get("input_i_4"),
+                    "serverid": data.get("input_i_5"),
+                    "transportbookingdirection_code": data.get("input_i_6"),
+                    "transportbookingdirection_description": data.get("input_i_7"),
+                    "addresstype": data.get("input_i_8"),
+                    "organizationcode": data.get("input_i_9"),
+                    "branch_code": data.get("input_i_10"),
+                    "currency_code": data.get("input_i_11"),
+                    "department_code": data.get("input_i_12"),
+                    "chargeline_branch_code": data.get("input_i_13"),
+                    "chargeline_chargecode_code": data.get("input_i_14"),
+                    "chargeline_costlocalamount": data.get("input_i_15"),
+                    "chargeline_costosamount": data.get("input_i_16"),
+                    "chargeline_costoscurrency_code": data.get("input_i_17"),
+                    "chargeline_costosgstvatamount": data.get("input_i_18"),
+                    "chargeline_creditor_type": data.get("input_i_19"),
+                    "chargeline_creditor_key": data.get("input_i_20"),
+                    "chargeline_department_code": data.get("input_i_21"),
+                    "chargeline_displaysequence": data.get("input_i_22"),
+                    "chargeline_importmetadata_instruction": data.get("input_i_23"),
+                    "chargeline_supplierreference": data.get("input_i_24")
+                }
+        
+    elif option == "input_j_0":
+        data = {
+                    "option": option, 
+                    "filename": data.get("input_j_0"), 
+                    "status": data.get("input_j_1"), 
+                    "datasource_type": data.get("input_j_2"),
+                    "datasource_key": data.get("input_j_3"),
+                    "companycode": data.get("input_j_4"),
+                    "companycountry_code": data.get("input_j_5"),
+                    "companycountry_name": data.get("input_j_6"),
+                    "company_name": data.get("input_j_7"),
+                    "dataprovider": data.get("input_j_8"),
+                    "enterpriseid": data.get("input_j_9"),
+                    "serverid": data.get("input_j_10"),
+                    "eventtime": data.get("input_j_11"),
+                    "eventtype": data.get("input_j_12"),
+                    "isestimate": data.get("input_j_13"),
+                    "attacheddocument_filename": data.get("input_j_14"),
+                    "imagedata": data.get("input_j_15"),
+                    "type_code": data.get("input_j_16"),
+                    "type_description": data.get("input_j_17"),
+                    "documentid": data.get("input_j_18"),
+                    "ispublished": data.get("input_j_19"),
+                    "savedateutc": data.get("input_j_20"),
+                    "savedby_code": data.get("input_j_21"),
+                    "savedby_name": data.get("input_j_22"),
+                    "source_code": data.get("input_j_23"),
+                    "source_description": data.get("input_j_24"),
+                    "visible_branch_code": data.get("input_j_25"),               
+                    "visible_company_code": data.get("input_j_26"),                   
+                    "visible_department_code": data.get("input_j_27"),
+                    "messagenumber": data.get("input_j_28")
                 }
     elif option == "input_c_0":
         data = {
@@ -272,6 +364,43 @@ async def process_form(data: dict, request: Request):
                     "customized_field_key": data.get("input_g_26"),
                     "customized_field_value": data.get("input_g_27")
                 }         
+
+    elif option == "input_k_0":
+        data = {
+                    "option": option, 
+                    "filename": data.get("input_k_0"), 
+                    "datatarget_type": data.get("input_k_1"), 
+                    "datatarget_key": data.get("input_k_2"),
+                    "company_code": data.get("input_k_3"),
+                    "enterpriseid": data.get("input_k_4"),
+                    "serverid": data.get("input_k_5"),
+                    "description": data.get("input_k_6"),
+                    "iscustomdescription": data.get("input_k_7"),
+                    "notetext": data.get("input_k_8"),
+                    "notecontext_code": data.get("input_k_9"),
+                    "visibility_code": data.get("input_k_10"),
+                    "addresstype": data.get("input_k_11"),
+                    "organizationcode": data.get("input_k_12"),
+                    "customizedfield_datatype": data.get("input_k_13"),
+                    "customizedfield_key": data.get("input_k_14"),
+                    "customizedfield_value": data.get("input_k_15")
+                }
+        
+    elif option == "input_l_0":
+        data = {
+                    "option": option, 
+                    "filename": data.get("input_l_0"), 
+                    "datatarget_type": data.get("input_l_1"), 
+                    "datatarget_key": data.get("input_l_2"),
+                    "company_code": data.get("input_l_3"),
+                    "enterpriseid": data.get("input_l_4"),
+                    "serverid": data.get("input_l_5"),
+                    "eventtime": data.get("input_l_6"),
+                    "eventtype": data.get("input_l_7"),
+                    "eventreference": data.get("input_l_8"),
+                    "isestimate": data.get("input_l_9")
+                }
+    
     xml_writer = getattr(business, UtilFunctions().get_write_func_filename(option))
     datafile = await xml_writer(data)
     return {"message": "XML file successfully created"}
@@ -304,7 +433,6 @@ def login_get(request: Request):
         }
         return templates.TemplateResponse("login.html", context)
     return RedirectResponse(url="/")
-
 
 
 @app.post("/auth/login", response_class=HTMLResponse)
@@ -353,11 +481,13 @@ async def http_exception_handler(request, exc):
 async def view_xml(request: Request, filename: str, folder: str, status: str):
     decoded_text = decode_from_base64(folder)
     file_path = f"{decoded_text}/{status}/{filename}"
-    with open(file_path, "r") as file:
+    with open(file_path, "rb") as file:
         contents = file.read()
 
     xml_parser = getattr(business, UtilFunctions().get_func_filename(filename))
     data = await xml_parser(contents)
+    if any(file_path.endswith(ext) for ext in ('.jpg', '.png', '.txt', 'pdf')):
+        return data
 
     return templates.TemplateResponse("table.html", {"data": data, "request": request, "filename": filename})
 
@@ -376,16 +506,19 @@ async def folder_detail(request: Request, folder_name: str):
     files = os.listdir(folder_path)
     return templates.TemplateResponse("folder.html", {"request": request, "folder_name": folder_name, "files": files})
 
+
 @app.post("/create_connection")
 async def create_connection_post(request: Request,
     name: str = Form(...),
-    location: str = Form(...),
-    company: str = Form(...)
+    ip: str = Form(...),
+    username: str = Form(...),
+    password: str = Form(...)
+
 ):
 
     folder_path = "test_files"
 
-    folder_name = f"test_files/{name}_{company}"
+    folder_name = f"test_files/{name}"
     required_subfolders = ["request_to_trucker", "acknowledge", 
                 "trucker_response", "trucker_event_instruction_planning",
                 "trucker_event_instruction_actual", "arrival_on_site","pod_ppu"]
@@ -398,12 +531,19 @@ async def create_connection_post(request: Request,
 
 @app.get("/get_template")
 async def perform_operation(request: Request, folder_path: str):
+    #await asyncio.to_thread(downloader.download_files, folder_path)
+    #await asyncio.gather(downloader.download_files(folder_path))
+    #await asyncio.gather(download_new_files(folder_path))
+
+    ddd.download_files(os.path.join(folder_path, "pending"))
 
     encoded_text = encode_to_base64(folder_path)
+    folder_level = folder_path.split("/")[-1]
     accepted_files = UtilFunctions().get_files_by_condition(folder_path, encoded_text, "accepted")
     rejected_files = UtilFunctions().get_files_by_condition(folder_path, encoded_text, "rejected")
     pending_files = UtilFunctions().get_files_by_condition(folder_path, encoded_text, "pending")
-    return templates.TemplateResponse("index.html", {"request": request, "accepted_files": accepted_files, "rejected_files": rejected_files, "pending_files": pending_files})
+    return templates.TemplateResponse("index.html", {"request": request, "accepted_files": accepted_files, 
+            "rejected_files": rejected_files, "pending_files": pending_files, "folder_level": folder_level})
 
 
 @app.get("/showfolder")
@@ -425,14 +565,28 @@ async def perform_operation1(data: dict, request: Request):
     }
     folder_path = f"test_files/{folder_name}/{operation_folders[operation_id]}"
     xml_files = UtilFunctions().list_directory(folder_path, ".xml")
-
     return {"url": "/get_template", "data": 1, "files":  xml_files, "folder_path": folder_path}
 
 @app.post("/update_file_status")
-def update_file_status(files: List[File]):
+async def update_file_status(files: List[File]):
     files = files[0]
     decoded_text = decode_from_base64(files.folder)
-    source_file = os.path.join(decoded_text, files.currentstatus , files.name)
-    destination_file =  os.path.join(decoded_text, files.status , files.name)
-    os.rename(source_file, destination_file)
+    source_file = f"{decoded_text}/{files.currentstatus}/{files.name}"
+    destination_file =  f"{decoded_text}/{files.status}/{files.name}"
+    if files.name in os.listdir(f"{decoded_text}/{files.status}"):
+        if files.name.split('.')[0]+'-2'+'.xml' in os.listdir(f"{decoded_text}/{files.status}"):
+            n=2
+            for f in os.listdir(f"{decoded_text}/{files.status}"):
+                if files.name.split('.')[0]+'-' in f:
+                    last_n = int(f.split('-')[1].split('.')[0])
+                    if last_n > n:
+                        n = last_n
+            os.rename(source_file, destination_file.split('.')[0]+'-'+str(n+1)+'.xml')
+            n=3
+        else:
+            os.rename(source_file, destination_file.split('.')[0]+'-'+str(2)+'.xml')
+
+    else:
+        os.rename(source_file, destination_file)
+    #await asyncio.to_thread(downloader.upload_files, destination_file, f"trufa/{files.status}/")
     return {"message": "Successfully updated"}

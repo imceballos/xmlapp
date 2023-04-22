@@ -154,9 +154,9 @@
     </style>
 </head>
 <body>
-    <div class="button-wrapper">
-        <button onclick="location.href='/formpost'">Generate order</button>
-    </div>
+    <a href="{{ url_for('post_form') }}">
+        <button>Go to post form</button>
+    </a>    
     <div class="container">
         {% for status, files in {'pending': pending_files, 'accepted': accepted_files, 'rejected': rejected_files}.items() %}
             <div class="{{ status }}-table">
@@ -176,7 +176,7 @@
                             <td>{{ file.name }}</td>
                             <td>{{ '{:.2f}'.format(file.size / 1024) }} KB</td>
                             <td>
-                                <a href="{{ url_for('download_file', filename=file.name, folder=file.folder) }}">
+                                <a href="{{ url_for('download_file', filename=file.name, folder=file.folder, status=status) }}">
                                     <div class="download-icon"></div>
                                 </a>
                             </td>

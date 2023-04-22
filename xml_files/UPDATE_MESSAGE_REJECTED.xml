@@ -1,0 +1,43 @@
+<UniversalShipment xmlns="http://www.cargowise.com/Schemas/Universal/2011/11" version="1.1">
+  <Shipment>
+    <DataContext>
+      <DataTargetCollection>
+        <DataTarget>
+          <Type></Type>
+          <Key></Key>
+        </DataTarget>
+      </DataTargetCollection>
+      <Company>
+            <Code></Code>
+      </Company>
+      <EnterpriseID></EnterpriseID>
+      <ServerID></ServerID>
+    </DataContext>
+	<NoteCollection Content="Partial">
+        <Note>
+            <Description></Description>
+            <IsCustomDescription></IsCustomDescription>
+            <NoteText></NoteText>
+            <NoteContext>
+                <Code></Code>
+            </NoteContext>
+            <Visibility>
+                <Code></Code>
+            </Visibility>
+        </Note>
+    </NoteCollection>
+	<OrganizationAddressCollection>
+	  <OrganizationAddress>
+		<AddressType></AddressType>
+		<OrganizationCode></OrganizationCode>
+	  </OrganizationAddress>
+	</OrganizationAddressCollection>
+	<CustomizedFieldCollection Content="Partial">
+        <CustomizedField>
+            <DataType></DataType>
+            <Key></Key>
+            <Value></Value>
+        </CustomizedField>
+    </CustomizedFieldCollection>
+ </Shipment>
+</UniversalShipment>
