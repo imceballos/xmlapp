@@ -167,8 +167,8 @@ async def process_form(data: dict, request: Request):
                     "is_published": data.get("input_b_16"),
                     "save_date_utc": data.get("input_b_17"),
                     "document_saved_by_code": data.get("input_b_18"),
-                    "document_saved_by_name": data.get("input_b_19")
-                }
+                    "document_saved_by_name": data.get("input_b_19")                  
+                    }
     elif option == "input_h_0":
         data = {
                     "option": option, 
@@ -181,7 +181,7 @@ async def process_form(data: dict, request: Request):
                     "description": data.get("input_h_6"),
                     "iscustom_description": data.get("input_h_7"),
                     "notetext": data.get("input_h_8"),
-                    "notecontext_node": data.get("input_h_9"),
+                    "notecontext_code": data.get("input_h_9"),
                     "visibility_code": data.get("input_h_10"),
                     "address_type": data.get("input_h_11"),
                     "organization_code": data.get("input_h_12"),
@@ -193,14 +193,14 @@ async def process_form(data: dict, request: Request):
     elif option == "input_i_0":
         data = {
                     "option": option, 
-                    "filename": data.get("input__0"), 
+                    "filename": data.get("input_i_0"), 
                     "datatarget_type": data.get("input_i_1"), 
                     "datatarget_key": data.get("input_i_2"),
                     "company_code": data.get("input_i_3"),
                     "enterpriseid": data.get("input_i_4"),
                     "serverid": data.get("input_i_5"),
                     "transportbookingdirection_code": data.get("input_i_6"),
-                    "transportBookingDirection_description": data.get("input_i_7"),
+                    "transportbookingdirection_description": data.get("input_i_7"),
                     "addresstype": data.get("input_i_8"),
                     "organizationcode": data.get("input_i_9"),
                     "branch_code": data.get("input_i_10"),
@@ -210,7 +210,7 @@ async def process_form(data: dict, request: Request):
                     "chargeline_chargecode_code": data.get("input_i_14"),
                     "chargeline_costlocalamount": data.get("input_i_15"),
                     "chargeline_costosamount": data.get("input_i_16"),
-                    "chargeline_chargeline_costoscurrency_code": data.get("input_i_17"),
+                    "chargeline_costoscurrency_code": data.get("input_i_17"),
                     "chargeline_costosgstvatamount": data.get("input_i_18"),
                     "chargeline_creditor_type": data.get("input_i_19"),
                     "chargeline_creditor_key": data.get("input_i_20"),
@@ -225,11 +225,11 @@ async def process_form(data: dict, request: Request):
                     "option": option, 
                     "filename": data.get("input_j_0"), 
                     "status": data.get("input_j_1"), 
-                    "dataSource_type": data.get("input_j_2"),
-                    "dataSource_key": data.get("input_j_3"),
+                    "datasource_type": data.get("input_j_2"),
+                    "datasource_key": data.get("input_j_3"),
                     "companycode": data.get("input_j_4"),
-                    "company_countrycode": data.get("input_j_5"),
-                    "company_country_name": data.get("input_j_6"),
+                    "companycountry_code": data.get("input_j_5"),
+                    "companycountry_name": data.get("input_j_6"),
                     "company_name": data.get("input_j_7"),
                     "dataprovider": data.get("input_j_8"),
                     "enterpriseid": data.get("input_j_9"),
@@ -237,7 +237,7 @@ async def process_form(data: dict, request: Request):
                     "eventtime": data.get("input_j_11"),
                     "eventtype": data.get("input_j_12"),
                     "isestimate": data.get("input_j_13"),
-                    "filename": data.get("input_j_14"),
+                    "attacheddocument_filename": data.get("input_j_14"),
                     "imagedata": data.get("input_j_15"),
                     "type_code": data.get("input_j_16"),
                     "type_description": data.get("input_j_17"),
@@ -246,7 +246,12 @@ async def process_form(data: dict, request: Request):
                     "savedateutc": data.get("input_j_20"),
                     "savedby_code": data.get("input_j_21"),
                     "savedby_name": data.get("input_j_22"),
-                    "messagenumber": data.get("input_j_23")
+                    "source_code": data.get("input_j_23"),
+                    "source_description": data.get("input_j_24"),
+                    "visible_branch_code": data.get("input_j_25"),               
+                    "visible_company_code": data.get("input_j_26"),                   
+                    "visible_department_code": data.get("input_j_27"),
+                    "messagenumber": data.get("input_j_28")
                 }
 
     elif option == "input_k_0":

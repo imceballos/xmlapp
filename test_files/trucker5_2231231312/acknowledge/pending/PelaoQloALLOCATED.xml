@@ -1,42 +1,43 @@
+<?xml version='1.0' encoding='utf-8'?>
 <UniversalShipment>
   <Shipment>
     <DataContext>
       <DataTargetCollection>
         <DataTarget>
-          <Type></Type>
-          <Key></Key>
+          <Type>Pelao</Type>
+          <Key>y</Key>
         </DataTarget>
       </DataTargetCollection>
       <Company>
-            <Code></Code>
+            <Code>Gupta</Code>
       </Company>
-      <EnterpriseID></EnterpriseID>
-      <ServerID></ServerID>
+      <EnterpriseID>se</EnterpriseID>
+      <ServerID>van</ServerID>
     </DataContext>
 		<NoteCollection Content="Partial">
         <Note>
-            <Description></Description>
-            <IsCustomDescription></IsCustomDescription>
-            <NoteText></NoteText>
+            <Description>a</Description>
+            <IsCustomDescription>las</IsCustomDescription>
+            <NoteText>maracas</NoteText>
             <NoteContext>
-                <Code></Code>
+                <Code>con</Code>
             </NoteContext>
             <Visibility>
-                <Code></Code>
+                <Code>Talwar</Code>
             </Visibility>
         </Note>
     </NoteCollection>
 	<OrganizationAddressCollection>
 	  <OrganizationAddress>
-		<AddressType></AddressType>
-		<OrganizationCode></OrganizationCode>
+		<AddressType>al</AddressType>
+		<OrganizationCode>barrio</OrganizationCode>
 	  </OrganizationAddress>
 	</OrganizationAddressCollection>
 	<CustomizedFieldCollection Content="Partial">
 		<CustomizedField>
-            <DataType></DataType>
-            <Key></Key>
-            <Value></Value>
+            <DataType>rojo</DataType>
+            <Key>de</Key>
+            <Value>Bankok</Value>
         </CustomizedField>	
     </CustomizedFieldCollection>
  </Shipment>

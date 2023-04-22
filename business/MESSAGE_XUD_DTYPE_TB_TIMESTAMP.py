@@ -125,6 +125,52 @@ async def MESSAGE_XUD_DTYPE_TB_TIMESTAMP_WRITE(data: dict):
     company_country_code.text = data.get("company_country_code", "")
     company_country_name.text = data.get("company_country_name", "")
 
+    event = root.find("ns:Data/ns:UniversalEvent/ns:Event", ns)
+    
+    event_time = event.find("ns:EventTime", ns)
+    event_type = event.find("ns:EventType", ns)
+    is_estimate = event.find("ns:IsEstimate", ns)
+
+    event_time.text = data.get("event_time", "")
+    event_type.text = data.get("event_type", "")
+    is_estimate.text = data.get("is_estimate", "")
+
+    document = root.find(
+        "ns:Data/ns:UniversalEvent/ns:Event/ns:AttachedDocumentCollection/ns:AttachedDocument",
+        ns,
+    )
+    filename = document.find("ns:FileName", ns)
+    imagedata = document.find("ns:ImageData", ns)
+
+    filename.text = data.get("filename_attached", "")
+    imagedata.text = data.get("image_data", "")
+
+    # get the value of the Code and Description elements of the Type of the AttachedDocument
+    document_type = document.find("ns:Type", ns)
+
+    document_type_code = document_type.find("ns:Code", ns)
+    document_type_desc = document_type.find("ns:Description", ns)
+
+    document_type_code.text = data.get("document_type_code", "")
+    document_type_desc.text = data.get("document_type_description", "")
+
+    document_id = document.find("ns:DocumentID", ns)
+    is_published = document.find("ns:IsPublished", ns)
+    save_date_utc = document.find("ns:SaveDateUTC", ns)
+
+    document_id.text = data.get("document_id", "")
+    is_published.text = data.get("is_published", "")
+    save_date_utc.text = data.get("save_date_utc", "")
+
+    # get the SavedBy attributes
+    document_saved_by = document.find("ns:SavedBy", ns)
+
+    document_saved_by_code = document_saved_by.find("ns:Code", ns)
+    document_saved_by_name = document_saved_by.find("ns:Name", ns)
+
+    document_saved_by_code.text = data.get("document_saved_by_code", "")
+    document_saved_by_name.text = data.get("document_saved_by_name", "")
+
     filename_xml = data.get("filename", "")
     file_path = f'test_files/trucker5_2231231312/acknowledge/pending/{filename_xml}'
     tree.write(file_path, encoding='utf-8', xml_declaration=True)
