@@ -2,6 +2,7 @@ import re
 import os
 from datetime import datetime
 from typing import List
+from .encrypt import encode_to_base64
 
 class UtilFunctions:
 
@@ -75,8 +76,10 @@ class UtilFunctions:
         return mapper.get(option, "")
 
     def get_files_by_condition(self, folder_path: str, encoded_text: str, condition: str):
-        listed_files = [{"name": file, "size": os.path.getsize(os.path.join(f"{folder_path}/{condition}", file)), "folder": encoded_text} for file in os.listdir(f"{folder_path}/{condition}")]
-        return listed_files
+        if folder_path.split("/")[-1] == "all_files":
+            folder_path = folder_path[:-9]
+            return self.get_all_files(folder_path, condition)
+        return [{"name": file, "size": os.path.getsize(os.path.join(f"{folder_path}/{condition}", file)), "folder": encoded_text} for file in os.listdir(f"{folder_path}/{condition}")]
     
     def create_directory(self, folder_name: str):
         if not os.path.isdir(folder_name):
@@ -100,3 +103,25 @@ class UtilFunctions:
                 return [f for f in os.listdir(folder_name) if f.endswith(str_end)]
             return [f for f in os.listdir(folder_name)]
             
+    def get_all_files(self, folder_path, cond):
+        folders = [os.path.join(folder_path,folder) for folder in os.listdir(folder_path)]
+        element_cond = [self.get_files_directory(subpath, cond) for subpath in folders]
+        file_sizes = {}
+
+        for file_list in element_cond:
+            for file_data in file_list:
+                file_name = file_data['name']
+                file_size = {'size': file_data['size'], 'folder': file_data['folder']}
+                if file_name not in file_sizes or file_sizes[file_name]['size'] < file_size['size']:
+                    file_sizes[file_name] = file_size
+
+        max_size_files = [{'name': file_name, 'size': file_size['size'], 'folder': file_size['folder']} for file_name, file_size in file_sizes.items()]
+        return max_size_files
+
+    def get_files_directory(self, folder_path, cond):
+        elements = set(os.listdir(os.path.join(folder_path, cond)))
+        print("ESTOY ACA HOY HELLO WORLD")
+        print(os.path.join(f"{folder_path}"))
+        print([{"name": file, "size": os.path.getsize(os.path.join(f"{folder_path}/{cond}", file)), "folder": encode_to_base64(f"{folder_path}/")} for file in os.listdir(f"{folder_path}/{cond}")])
+        return [{"name": file, "size": os.path.getsize(os.path.join(f"{folder_path}/{cond}", file)), "folder": encode_to_base64(f"{folder_path}/")} for file in os.listdir(f"{folder_path}/{cond}")]
+        #return set(os.listdir(os.path.join(folder_path, cond)))

@@ -533,15 +533,20 @@ async def perform_operation(request: Request, folder_path: str):
     #await asyncio.gather(downloader.download_files(folder_path))
     #await asyncio.gather(download_new_files(folder_path))
 
-    #ddd.download_files(os.path.join(folder_path, "pending"))
+    #ddd.download_files(folder_path)
 
     encoded_text = encode_to_base64(folder_path)
     folder_level = folder_path.split("/")[-1]
     accepted_files = UtilFunctions().get_files_by_condition(folder_path, encoded_text, "accepted")
     rejected_files = UtilFunctions().get_files_by_condition(folder_path, encoded_text, "rejected")
     pending_files = UtilFunctions().get_files_by_condition(folder_path, encoded_text, "pending")
+    print("VER ARCHIVOS")
+    print(accepted_files)
+    print(rejected_files)
+    print(pending_files)
     return templates.TemplateResponse("index.html", {"request": request, "accepted_files": accepted_files, 
-            "rejected_files": rejected_files, "pending_files": pending_files, "folder_level": folder_level})
+            "rejected_files": rejected_files, "pending_files": pending_files, "folder_level": folder_level,
+            "folder_path": f"{folder_path}/"})
 
 
 @app.get("/showfolder")
@@ -553,6 +558,7 @@ async def perform_operation1(data: dict, request: Request):
     operation_id = data.get("operation_id", "")
     folder_name = data.get("folder_name", "")
     operation_folders = {
+        0: "all_files",
         1: "request_to_trucker",
         2: "acknowledge",
         3: "trucker_response",
@@ -560,7 +566,7 @@ async def perform_operation1(data: dict, request: Request):
         5: "trucker_event_instruction_actual",
         6: "arrival_on_site",
         7: "pod_ppu"
-    }
+    }        
     folder_path = f"test_files/{folder_name}/{operation_folders[operation_id]}"
     xml_files = UtilFunctions().list_directory(folder_path, ".xml")
     return {"url": "/get_template", "data": 1, "files":  xml_files, "folder_path": folder_path}
@@ -587,4 +593,17 @@ async def update_file_status(files: List[File]):
     else:
         os.rename(source_file, destination_file)
     #await asyncio.to_thread(downloader.upload_files, destination_file, f"trufa/{files.status}/")
+    return {"message": "Successfully updated"}
+
+
+@app.post("/download_files_ftp")
+async def download_files_ftp(data: dict):
+    ddd.download_files(data["folder_path"])
+    return {"message": "Successfully updated"}
+
+@app.post("/send_files_ftp")
+async def download_files_ftp(data: dict):
+    folder_path = decode_from_base64(data["folder_path"])
+    file_path = os.path.join(folder_path, f"{data['status']}/", data["filename"])
+    ddd.upload_file(file_path)
     return {"message": "Successfully updated"}
