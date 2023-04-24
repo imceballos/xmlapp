@@ -7,6 +7,7 @@
 	<script>
 		$(document).ready(function() {
 			// Attach click event handlers to each button
+			$("#button0").click(function() { performOperation(0, "{{folder_name}}"); });
 			$("#button1").click(function() { performOperation(1, "{{folder_name}}"); });
 			$("#button2").click(function() { performOperation(2, "{{folder_name}}"); });
 			$("#button3").click(function() { performOperation(3, "{{folder_name}}"); });
@@ -37,6 +38,16 @@
 </head>
 <body>
 	<h1>{{folder_name}} operations</h1>
+	<p>See all the transactional files:</p>
+    <div class="row">
+        <button id="button0" class="button">
+            All files
+            <div class="box">
+                <h3>Details</h3>
+                <p>All xml transactional files</p>
+            </div>
+        </button>
+    </div><br>
 	<p>Click one of the buttons below to perform a specific operation:</p>
 	<div class="row">
         <button id="button1" class="button">
