@@ -49,6 +49,11 @@
 		<select id="options" name="options">
 			<option value="a">CW1_REQUEST_XUD_TIMESTAMP</option>
 			<option value="b">MESSAGE_XUD_DTYPE_TB_TIMESTAMP</option>
+			<option value="c">EXWORKS_ACK_KO</option>
+			<option value="d">EXWORKS_ACK_OK</option>
+			<option value="e">UPDATE_MESSAGE_ACCEPTED</option>
+			<option value="f">UPDATE_MESSAGE_ACCRUALS_ACCEPTED</option>
+			<option value="g">UPDATE_MESSAGE_ACCRUALS</option>
 			<option value="h">UPDATE_MESSAGE_ALLOCATED</option>
 			<option value="i">UPDATE_MESSAGE_PAYABLE_UPDATE</option>
 			<option value="j">XUD_RDR_UUID</option>
@@ -88,37 +93,240 @@
 				<input type="text" id="input-b-3" name="input-b-3"><br>
 				<label for="input-b-4">Company Code:</label>
 				<input type="text" id="input-b-4" name="input-b-4"><br>
-				<label for="input-b-5">Company Name:</label>
+				<label for="input-b-5">Company Country Code:</label>
 				<input type="text" id="input-b-5" name="input-b-5"><br>
-				<label for="input-b-6">Company Country Code:</label>
+				<label for="input-b-6">Company Country Name:</label>
 				<input type="text" id="input-b-6" name="input-b-6"><br>
-				<label for="input-b-7">Company Country Name:</label>
+				<label for="input-b-7">Company Name:</label>
 				<input type="text" id="input-b-7" name="input-b-7"><br>
-				<label for="input-b-8">Event Time:</label>
+				<label for="input-b-8">Data Provider</label>
 				<input type="text" id="input-b-8" name="input-b-8"><br>
-				<label for="input-b-9">Event Type:</label>
+				<label for="input-b-9">Enterprise ID:</label>
 				<input type="text" id="input-b-9" name="input-b-9"><br>
-				<label for="input-b-10">Is Estimate:</label>
+				<label for="input-b-10">Server ID:</label>
 				<input type="text" id="input-b-10" name="input-b-10"><br>
-				<label for="input-b-11">Filename:</label>
+				<label for="input-b-11">Event Type:</label>
 				<input type="text" id="input-b-11" name="input-b-11"><br>
-				<label for="input-b-12">ImageData:</label>
+				<label for="input-b-12">Event Type:</label>
 				<input type="text" id="input-b-12" name="input-b-12"><br>
-				<label for="input-b-13">Document Type Code:</label>
+				<label for="input-b-13">Is Estimate:</label>
 				<input type="text" id="input-b-13" name="input-b-13"><br>
-				<label for="input-b-14">Document Type Description:</label>
+				<label for="input-b-14">Attached Filename:</label>
 				<input type="text" id="input-b-14" name="input-b-14"><br>
-				<label for="input-b-15">Document ID:</label>
+				<label for="input-b-15">ImageData:</label>
 				<input type="text" id="input-b-15" name="input-b-15"><br>
-				<label for="input-b-16">Is Published:</label>
+				<label for="input-b-16">Document Type Code:</label>
 				<input type="text" id="input-b-16" name="input-b-16"><br>
-				<label for="input-b-17">Save Date UTC:</label>
+				<label for="input-b-17">Document Type Description:</label>
 				<input type="text" id="input-b-17" name="input-b-17"><br>
-				<label for="input-b-18">Document Saved By Code:</label>
+				<label for="input-b-18">Document ID:</label>
 				<input type="text" id="input-b-18" name="input-b-18"><br>
-				<label for="input-b-19">Document Saved By Name:</label>
+				<label for="input-b-19">Is Published:</label>
 				<input type="text" id="input-b-19" name="input-b-19"><br>
+				<label for="input-b-20">Save Date UTC:</label>
+				<input type="text" id="input-b-20" name="input-b-20"><br>
+				<label for="input-b-21">Document Saved By Code:</label>
+				<input type="text" id="input-b-21" name="input-b-21"><br>
+				<label for="input-b-22">Document Saved By Name:</label>
+				<input type="text" id="input-b-22" name="input-b-22"><br>
 			</div>
+			<!-- Form for Option EXWORKS_ACK_KO -->
+			<div id="form-c" class="form-group">
+				<label for="input-c-0">Filename:</label>
+				<input type="text" id="input-c-0" name="input-c-0"><br>
+				<label for="input-c-1">Data Target Type:</label>
+				<input type="text" id="input-c-1" name="input-c-1"><br>
+				<label for="input-c-2">Data Target Key:</label>
+				<input type="text" id="input-c-2" name="input-c-2"><br>
+				<label for="input-c-3">Company Code:</label>
+				<input type="text" id="input-c-3" name="input-c-3"><br>
+				<label for="input-c-4">Enterprise ID:</label>
+				<input type="text" id="input-c-4" name="input-c-4"><br>
+				<label for="input-c-5">Server ID:</label>
+				<input type="text" id="input-c-5" name="input-c-5"><br>
+				<label for="input-c-6">Event Time:</label>
+				<input type="text" id="input-c-6" name="input-c-6"><br>
+				<label for="input-c-7">Event Type:</label>
+				<input type="text" id="input-c-7" name="input-c-7"><br>
+				<label for="input-c-8">Event Reference:</label>
+				<input type="text" id="input-c-8" name="input-c-8"><br>
+				<label for="input-c-9">Is Estimate:</label>
+				<input type="text" id="input-c-9" name="input-c-9"><br>
+			</div>
+					<!-- Form for Option EXWORKS_ACK_OK -->
+			<div id="form-d" class="form-group">
+				<label for="input-d-0">Filename:</label>
+				<input type="text" id="input-d-0" name="input-d-0"><br>
+				<label for="input-d-1">Data Target Type:</label>
+				<input type="text" id="input-d-1" name="input-d-1"><br>
+				<label for="input-d-2">Data Target Key:</label>
+				<input type="text" id="input-d-2" name="input-d-2"><br>
+				<label for="input-d-3">Company Code:</label>
+				<input type="text" id="input-d-3" name="input-d-3"><br>
+				<label for="input-d-4">Enterprise ID:</label>
+				<input type="text" id="input-d-4" name="input-d-4"><br>
+				<label for="input-d-5">Server ID:</label>
+				<input type="text" id="input-d-5" name="input-d-5"><br>
+				<label for="input-d-6">Event Time:</label>
+				<input type="text" id="input-d-6" name="input-d-6"><br>
+				<label for="input-d-7">Event Type:</label>
+				<input type="text" id="input-d-7" name="input-d-7"><br>
+				<label for="input-d-8">Event Reference:</label>
+				<input type="text" id="input-d-8" name="input-d-8"><br>
+				<label for="input-d-9">Is Estimate:</label>
+				<input type="text" id="input-d-9" name="input-d-9"><br>
+			</div>
+					<!-- UPDATE_MESSAGE_ACCEPTED -->
+			<div id="form-e" class="form-group">
+				<label for="input-e-0">Filename:</label>
+				<input type="text" id="input-e-0" name="input-e-0"><br>
+				<label for="input-e-1">Data Target Type:</label>
+				<input type="text" id="input-e-1" name="input-e-1"><br>
+				<label for="input-e-2">Data Target Key:</label>
+				<input type="text" id="input-e-2" name="input-e-2"><br>
+				<label for="input-e-3">Company Code:</label>
+				<input type="text" id="input-e-3" name="input-e-3"><br>
+				<label for="input-e-4">Enterprise ID:</label>
+				<input type="text" id="input-e-4" name="input-e-4"><br>
+				<label for="input-e-5">Server ID:</label>
+				<input type="text" id="input-e-5" name="input-e-5"><br>
+				<label for="input-e-6">Description:</label>
+				<input type="text" id="input-e-6" name="input-e-6"><br>
+				<label for="input-e-7">Note Text:</label>
+				<input type="text" id="input-e-7" name="input-e-7"><br>
+				<label for="input-e-8">Note Context Code:</label>
+				<input type="text" id="input-e-8" name="input-e-8"><br>
+				<label for="input-e-9">Visibility Code:</label>
+				<input type="text" id="input-e-9" name="input-e-9"><br>
+				<label for="input-e-10">Address Type:</label>
+				<input type="text" id="input-e-10" name="input-e-10"><br>
+				<label for="input-e-11">Organization Code:</label>
+				<input type="text" id="input-e-11" name="input-e-11"><br>
+				<label for="input-e-12">Customized Field DataType:</label>
+				<input type="text" id="input-e-12" name="input-e-12"><br>
+				<label for="input-e-13">Customized Field Key:</label>
+				<input type="text" id="input-e-13" name="input-e-13"><br>
+				<label for="input-e-14">Customized Field Value:</label>
+				<input type="text" id="input-e-14" name="input-e-14"><br>
+			</div>
+						<!-- UPDATE_MESSAGE_ACCRUALS_ACCEPTED -->
+			<div id="form-f" class="form-group">
+				<label for="input-f-0">Filename:</label>
+				<input type="text" id="input-f-0" name="input-f-0"><br>
+				<label for="input-f-1">Data Target Type:</label>
+				<input type="text" id="input-f-1" name="input-f-1"><br>
+				<label for="input-f-2">Data Target Key:</label>
+				<input type="text" id="input-f-2" name="input-f-2"><br>
+				<label for="input-f-3">Company Code:</label>
+				<input type="text" id="input-f-3" name="input-f-3"><br>
+				<label for="input-f-4">Enterprise ID:</label>
+				<input type="text" id="input-f-4" name="input-f-4"><br>
+				<label for="input-f-5">Server ID:</label>
+				<input type="text" id="input-f-5" name="input-f-5"><br>
+				<label for="input-f-6">Transport Booking Direction Code:</label>
+				<input type="text" id="input-f-6" name="input-f-6"><br>
+				<label for="input-f-7">Transport Booking Direction Description:</label>
+				<input type="text" id="input-f-7" name="input-f-7"><br>
+				<label for="input-f-8">Address Type:</label>
+				<input type="text" id="input-f-8" name="input-f-8"><br>
+				<label for="input-f-9">Organization Code:</label>
+				<input type="text" id="input-f-9" name="input-f-9"><br>
+				<label for="input-f-10">Branch Code:</label>
+				<input type="text" id="input-f-10" name="input-f-10"><br>
+				<label for="input-f-11">Currency Code:</label>
+				<input type="text" id="input-f-11" name="input-f-11"><br>
+				<label for="input-f-12">Department Code:</label>
+				<input type="text" id="input-f-12" name="input-f-12"><br>
+				<label for="input-f-13">Charge Line Branch Code:</label>
+				<input type="text" id="input-f-13" name="input-f-13"><br>
+				<label for="input-f-14">Charge Line Charge Code:</label>
+				<input type="text" id="input-f-14" name="input-f-14"><br>
+				<label for="input-f-15">Charge Line Cost Local Amount:</label>
+				<input type="text" id="input-f-15" name="input-f-15"><br>
+				<label for="input-f-16">Charge Line Cost OS Amount:</label>
+				<input type="text" id="input-f-16" name="input-f-16"><br>
+				<label for="input-f-17">Charge Line Cost OS Currency Code:</label>
+				<input type="text" id="input-f-17" name="input-f-17"><br>
+				<label for="input-f-18">Charge Line Cost OS GSTVAT Amount:</label>
+				<input type="text" id="input-f-18" name="input-f-18"><br>
+				<label for="input-f-19">Charge Line Creditor Type:</label>
+				<input type="text" id="input-f-19" name="input-f-19"><br>
+				<label for="input-f-20">Charge Line Creditor Key:</label>
+				<input type="text" id="input-f-20" name="input-f-20"><br>
+				<label for="input-f-21">Charge Line Department Code:</label>
+				<input type="text" id="input-f-21" name="input-f-21"><br>
+				<label for="input-f-22">Charge Line Display Sequence:</label>
+				<input type="text" id="input-f-22" name="input-f-22"><br>
+				<label for="input-f-23">Charge Line Import MetaData Instruction:</label>
+				<input type="text" id="input-f-23" name="input-f-23"><br>
+				<label for="input-f-24">Charge Line Supplier Reference:</label>
+				<input type="text" id="input-f-24" name="input-f-24"><br>
+				<label for="input-f-25">Customized Field Data Type:</label>
+				<input type="text" id="input-f-25" name="input-f-25"><br>
+				<label for="input-f-26">Customized Field Key:</label>
+				<input type="text" id="input-f-26" name="input-f-26"><br>
+				<label for="input-f-27">Customized Field Value:</label>
+				<input type="text" id="input-f-27" name="input-f-27"><br>
+			</div>
+						<!-- UPDATE_MESSAGE_ACCRUALS -->
+			<div id="form-g" class="form-group">
+				<label for="input-g-0">Filename:</label>
+				<input type="text" id="input-g-0" name="input-g-0"><br>
+				<label for="input-g-1">Data Target Type:</label>
+				<input type="text" id="input-g-1" name="input-g-1"><br>
+				<label for="input-g-2">Data Target Key:</label>
+				<input type="text" id="input-g-2" name="input-g-2"><br>
+				<label for="input-g-3">Company Code:</label>
+				<input type="text" id="input-g-3" name="input-g-3"><br>
+				<label for="input-g-4">Enterprise ID:</label>
+				<input type="text" id="input-g-4" name="input-g-4"><br>
+				<label for="input-g-5">Server ID:</label>
+				<input type="text" id="input-g-5" name="input-g-5"><br>
+				<label for="input-g-6">Transport Booking Direction Code:</label>
+				<input type="text" id="input-g-6" name="input-g-6"><br>
+				<label for="input-g-7">Transport Booking Direction Description:</label>
+				<input type="text" id="input-g-7" name="input-g-7"><br>
+				<label for="input-g-8">Address Type:</label>
+				<input type="text" id="input-g-8" name="input-g-8"><br>
+				<label for="input-g-9">Organization Code:</label>
+				<input type="text" id="input-g-9" name="input-g-9"><br>
+				<label for="input-g-10">Branch Code:</label>
+				<input type="text" id="input-g-10" name="input-g-10"><br>
+				<label for="input-g-11">Currency Code:</label>
+				<input type="text" id="input-g-11" name="input-g-11"><br>
+				<label for="input-g-12">Department Code:</label>
+				<input type="text" id="input-g-12" name="input-g-12"><br>
+				<label for="input-g-13">Charge Line Branch Code:</label>
+				<input type="text" id="input-g-13" name="input-g-13"><br>
+				<label for="input-g-14">Charge Line Charge Code:</label>
+				<input type="text" id="input-g-14" name="input-g-14"><br>
+				<label for="input-g-15">Charge Line Cost Local Amount:</label>
+				<input type="text" id="input-g-15" name="input-g-15"><br>
+				<label for="input-g-16">Charge Line Cost OS Amount:</label>
+				<input type="text" id="input-g-16" name="input-g-16"><br>
+				<label for="input-g-17">Charge Line Cost OS Currency Code:</label>
+				<input type="text" id="input-g-17" name="input-g-17"><br>
+				<label for="input-g-18">Charge Line Cost OS GSTVAT Amount:</label>
+				<input type="text" id="input-g-18" name="input-g-18"><br>
+				<label for="input-g-19">Charge Line Creditor Type:</label>
+				<input type="text" id="input-g-19" name="input-g-19"><br>
+				<label for="input-g-20">Charge Line Creditor Key:</label>
+				<input type="text" id="input-g-20" name="input-g-20"><br>
+				<label for="input-g-21">Charge Line Department Code:</label>
+				<input type="text" id="input-g-21" name="input-g-21"><br>
+				<label for="input-g-22">Charge Line Display Sequence:</label>
+				<input type="text" id="input-g-22" name="input-g-22"><br>
+				<label for="input-g-23">Charge Line Import MetaData Instruction:</label>
+				<input type="text" id="input-g-23" name="input-g-23"><br>
+				<label for="input-g-24">Charge Line Supplier Reference:</label>
+				<input type="text" id="input-g-24" name="input-g-24"><br>
+				<label for="input-g-25">Customized Field Data Type:</label>
+				<input type="text" id="input-g-25" name="input-g-25"><br>
+				<label for="input-g-26">Customized Field Key:</label>
+				<input type="text" id="input-g-26" name="input-g-26"><br>
+				<label for="input-g-27">Customized Field Value:</label>
+				<input type="text" id="input-g-27" name="input-g-27"><br>
+			</div>								
 			<!-- Form for Option UPDATE_MESSAGE_ALLOCATED -->
 			<div id="form-h" class="form-group">
 				<label for="input-h-0">Filename:</label>
@@ -256,9 +464,19 @@
 				<label for="input-j-21">SavedBy Code:</label>
 				<input type="text" id="input-j-21" name="input-j-21"><br>		
 				<label for="input-j-22">SavedBy Name:</label>
-				<input type="text" id="input-j-22" name="input-j-22"><br>		
-				<label for="input-j-23">MessageNumber:</label>
-				<input type="text" id="input-j-23" name="input-j-23"><br>		
+				<input type="text" id="input-j-22" name="input-j-22"><br>
+				<label for="input-j-23">Source Code:</label>
+				<input type="text" id="input-j-23" name="input-j-23"><br>
+				<label for="input-j-24">Source Description:</label>
+				<input type="text" id="input-j-24" name="input-j-24"><br>
+				<label for="input-j-25">Visible Branch Code:</label>
+				<input type="text" id="input-j-25" name="input-j-25"><br>
+				<label for="input-j-26">Visible Company Code:</label>
+				<input type="text" id="input-j-26" name="input-j-26"><br>
+				<label for="input-j-27">Visible Department Code:</label>
+				<input type="text" id="input-j-27" name="input-j-27"><br>				
+				<label for="input-j-28">MessageNumber:</label>
+				<input type="text" id="input-j-28" name="input-j-28"><br>		
 			</div>
 
 			<!-- Form for Option UPDATE_MESSAGE_REJECTED -->
@@ -357,6 +575,41 @@
 			for (let i = 0; i < inputCount; i++) {
 				const inputName = `input-b-${i}`;
 				body[`input_b_${i}`] = formData.get(inputName);
+			}
+		}else if (options === 'c') {
+			const formGroup = document.querySelector('#form-c');
+  			const inputCount = formGroup.querySelectorAll('input').length;
+			for (let i = 0; i < inputCount; i++) {
+				const inputName = `input-c-${i}`;
+				body[`input_c_${i}`] = formData.get(inputName);
+		}
+		}else if (options === 'd') {
+			const formGroup = document.querySelector('#form-d');
+  			const inputCount = formGroup.querySelectorAll('input').length;
+			for (let i = 0; i < inputCount; i++) {
+				const inputName = `input-d-${i}`;
+				body[`input_d_${i}`] = formData.get(inputName);
+			}
+		}else if (options === 'e') {
+			const formGroup = document.querySelector('#form-e');
+  			const inputCount = formGroup.querySelectorAll('input').length;
+			for (let i = 0; i < inputCount; i++) {
+				const inputName = `input-e-${i}`;
+				body[`input_e_${i}`] = formData.get(inputName);
+			}
+		}else if (options === 'f') {
+			const formGroup = document.querySelector('#form-f');
+  			const inputCount = formGroup.querySelectorAll('input').length;
+			for (let i = 0; i < inputCount; i++) {
+				const inputName = `input-f-${i}`;
+				body[`input_f_${i}`] = formData.get(inputName);
+			}
+		}else if (options === 'g') {
+			const formGroup = document.querySelector('#form-g');
+  			const inputCount = formGroup.querySelectorAll('input').length;
+			for (let i = 0; i < inputCount; i++) {
+				const inputName = `input-g-${i}`;
+				body[`input_g_${i}`] = formData.get(inputName);
 			}
 		} else if (options === 'h') {
 			const formGroup = document.querySelector('#form-h');

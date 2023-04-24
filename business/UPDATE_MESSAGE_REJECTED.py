@@ -110,7 +110,7 @@ async def UPDATE_MESSAGE_REJECTED_WRITE(data: dict):
     DataTarget_Type = DataTarget.find("ns:Type", ns)
     DataTarget_Key = DataTarget.find("ns:Key", ns)
     DataTarget_Type.text = data.get("datatarget_type", "")
-    DataTarget_Key.text = data.get("datadarget_key", "")
+    DataTarget_Key.text = data.get("datatarget_key", "")
 
     Company = DataContext.find("ns:Company", ns)
 

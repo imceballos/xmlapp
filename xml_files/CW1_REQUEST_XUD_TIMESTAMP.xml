@@ -3,20 +3,20 @@
 		<DataContext>
 			<DataTargetCollection>
 				<DataTarget>
-					<Type>TransportBooking</Type>
-					<Key>TB00000981</Key>
+					<Type></Type>
+					<Key></Key>
 				</DataTarget>
 			</DataTargetCollection>
 			<Company>
-				<Code>SG1</Code>
+				<Code></Code>
 			</Company>
-			<EnterpriseID>B52</EnterpriseID>
-			<ServerID>TST</ServerID>
+			<EnterpriseID></EnterpriseID>
+			<ServerID></ServerID>
 		</DataContext>
 		<FilterCollection>
 			<Filter>
-				<Type>DocumentType</Type>
-				<Value>CIV</Value>
+				<Type></Type>
+				<Value></Value>
 			</Filter>
 		</FilterCollection>
 	</DocumentRequest>

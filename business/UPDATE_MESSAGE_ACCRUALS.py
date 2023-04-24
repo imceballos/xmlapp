@@ -151,10 +151,10 @@ async def UPDATE_MESSAGE_ACCRUALS_WRITE(data: dict):
     Company_Code.text = data.get("company_code", "")
 
     EnterpriseID = DataContext.find("EnterpriseID")
-    EnterpriseID.text = data.get("enterpriseid", "")
+    EnterpriseID.text = data.get("enterprise_id", "")
 
     ServerID = DataContext.find("ServerID")
-    ServerID.text = data.get("serverid", "")
+    ServerID.text = data.get("server_id", "")
 
     TransportBookingDirection = Shipment.find("TransportBookingDirection")
     TransportBookingDirection_Code = TransportBookingDirection.find("Code")
@@ -162,10 +162,10 @@ async def UPDATE_MESSAGE_ACCRUALS_WRITE(data: dict):
         "Description"
     )
     TransportBookingDirection_Code.text = data.get(
-        "transportbookingdirection_code", ""
+        "transport_bookingdirection_code", ""
     )
     TransportBookingDirection_Description.text = data.get(
-        "transportbookingdirection_description", ""
+        "transport_bookingdirection_description", ""
     )
 
     OrganizationAddressCollection = Shipment.find(
@@ -177,8 +177,8 @@ async def UPDATE_MESSAGE_ACCRUALS_WRITE(data: dict):
 
     AddressType = OrganizationAddress.find("AddressType")
     OrganizationCode = OrganizationAddress.find("OrganizationCode")
-    AddressType.text = data.get("addresstype", "")
-    OrganizationCode.text = data.get("organizationcode", "")
+    AddressType.text = data.get("address_type", "")
+    OrganizationCode.text = data.get("organization_code", "")
 
     JobCosting = Shipment.find("JobCosting")
     Branch = JobCosting.find("Branch")
@@ -201,13 +201,13 @@ async def UPDATE_MESSAGE_ACCRUALS_WRITE(data: dict):
 
     ChargeLine_ChargeCode = ChargeLine.find("ChargeCode")
     ChargeLine_ChargeCode_Code = ChargeLine_ChargeCode.find("Code")
-    ChargeLine_ChargeCode_Code.text = data.get("chargeline_chargecode_code", "")
+    ChargeLine_ChargeCode_Code.text = data.get("chargeline_charge_code", "")
 
     ChargeLine_CostLocalAmount = ChargeLine.find("CostLocalAmount")
-    ChargeLine_CostLocalAmount.text = data.get("chargeline_costlocalamount", "")
+    ChargeLine_CostLocalAmount.text = data.get("chargeline_costlocal_amount", "")
 
     ChargeLine_CostOSAmount = ChargeLine.find("CostOSAmount")
-    ChargeLine_CostOSAmount.text = data.get("chargeline_costosamount", "")
+    ChargeLine_CostOSAmount.text = data.get("chargeline_costos_amount", "")
 
     ChargeLine_CostOSCurrency = ChargeLine.find("CostOSCurrency")
 
@@ -218,7 +218,7 @@ async def UPDATE_MESSAGE_ACCRUALS_WRITE(data: dict):
 
     ChargeLine_CostOSGSTVATAmount = ChargeLine.find("CostOSGSTVATAmount")
     ChargeLine_CostOSGSTVATAmount.text = data.get(
-        "chargeline_costosgstvatamount", ""
+        "chargeline_costosgstvat_amount", ""
     )
 
     ChargeLine_Creditor = ChargeLine.find("Creditor")
@@ -232,7 +232,7 @@ async def UPDATE_MESSAGE_ACCRUALS_WRITE(data: dict):
     ChargeLine_Department_Code.text = data.get("chargeline_department_code", "")
 
     ChargeLine_DisplaySequence = ChargeLine.find("DisplaySequence")
-    ChargeLine_DisplaySequence.text = data.get("chargeline_displaysequence", "")
+    ChargeLine_DisplaySequence.text = data.get("chargeline_display_sequence", "")
 
     ChargeLine_ImportMetaData = ChargeLine.find("ImportMetaData")
 
@@ -245,18 +245,18 @@ async def UPDATE_MESSAGE_ACCRUALS_WRITE(data: dict):
 
     ChargeLine_SupplierReference = ChargeLine.find("SupplierReference")
     ChargeLine_SupplierReference.text = data.get(
-        "chargeline_supplierreference", ""
+        "chargeline_supplier_reference", ""
     )
 
     CustomizedFieldCollection = Shipment.find("CustomizedFieldCollection")
-    CustomizedField = CustomizedFieldCollection.find("customizedfield")
+    CustomizedField = CustomizedFieldCollection.find("CustomizedField")
 
     CustomizedField_DataType = CustomizedField.find("DataType")
     CustomizedField_Key = CustomizedField.find("Key")
     CustomizedField_Value = CustomizedField.find("Value")
     CustomizedField_DataType.text = data.get("customizedfield_datatype", "")
     CustomizedField_Key.text = data.get("customizedfield_key", "")
-    CustomizedField_Value.text = data.get("customizedField_value", "")
+    CustomizedField_Value.text = data.get("customizedfield_value", "")
 
     filename_xml = data.get("filename", "")
     file_path = f'test_files/trucker5_2231231312/acknowledge/pending/{filename_xml}'

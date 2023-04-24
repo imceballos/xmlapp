@@ -93,13 +93,29 @@ async def XUD_RDR_TBN_UUID_READ(file: str):
     SavedBy_Name = SavedBy.find("ns:Name", ns).text
     result["SavedBy_Code"] = SavedBy_Code
     result["SavedBy_Name"] = SavedBy_Name
+ 
+    Source = AttachedDocument.find("ns:Source", ns)
+    Source_Code = Source.find("ns:Code", ns).text
+    Source_Description = Source.find("ns:Description", ns).text
+    result['Source_Code'] = Source_Code
+    result['Source_Description'] = Source_Description
+
+    VisibleBranchCode = AttachedDocument.find("ns:VisibleBranchCode", ns).text
+    result['VisibleBranchCode'] = VisibleBranchCode
+
+    VisibleCompanyCode = AttachedDocument.find("ns:VisibleCompanyCode", ns).text
+    result['VisibleCompanyCode'] = VisibleCompanyCode
+
+    VisibleDepartmentCode = AttachedDocument.find("ns:VisibleDepartmentCode", ns).text
+    result['VisibleDepartmentCode'] = VisibleDepartmentCode
 
     MessageNumberCollection = root.find("ns:MessageNumberCollection", ns)
 
     MessageNumber = MessageNumberCollection.find("ns:MessageNumber", ns).text
     result["MessageNumber"] = MessageNumber
 
-    return
+    result = [{"col1": x, "col2": y} for x, y in result.items()]
+    return result
 
 
 async def XUD_RDR_TBN_UUID_WRITE(data: dict):
@@ -112,6 +128,10 @@ async def XUD_RDR_TBN_UUID_WRITE(data: dict):
     root = tree.getroot()
 
     ns = {"ns": "http://www.cargowise.com/Schemas/Universal/2011/11"}
+
+    ET.register_namespace(
+        "", "http://www.cargowise.com/Schemas/Universal/2011/11"
+    )
 
     Status = root.find("ns:Status", ns)
     Status.text = data.get("status", "")
@@ -132,14 +152,14 @@ async def XUD_RDR_TBN_UUID_WRITE(data: dict):
     Company = DataContext.find("ns:Company", ns)
 
     Company_Code = Company.find("ns:Code", ns)
-    Company_Code.text = data.get("company_code", "")
+    Company_Code.text = data.get("companycode", "")
 
     Country = Company.find("ns:Country", ns)
 
     Company_Country_Code = Company.find("ns:Country/ns:Code", ns)
     Company_Country_Name = Company.find("ns:Country/ns:Name", ns)
-    Company_Country_Code.text = data.get("company_country_code", "")
-    Company_Country_Name.text = data.get("company_country_name", "")
+    Company_Country_Code.text = data.get("companycountry_code", "")
+    Company_Country_Name.text = data.get("companycountry_name", "")
 
     Company_Name = Company.find("ns:Name", ns)
     Company_Name.text = data.get("company_name", "")
@@ -169,7 +189,7 @@ async def XUD_RDR_TBN_UUID_WRITE(data: dict):
     )
 
     FileName = AttachedDocument.find("ns:FileName", ns)
-    FileName.text = data.get("filename", "")
+    FileName.text = data.get("attacheddocument_filename", "")
 
     ImageData = AttachedDocument.find("ns:ImageData", ns)
     ImageData.text = data.get("imagedata", "")
@@ -201,6 +221,21 @@ async def XUD_RDR_TBN_UUID_WRITE(data: dict):
 
     MessageNumber = MessageNumberCollection.find("ns:MessageNumber", ns)
     MessageNumber.text = data.get("messagenumber", "")
+
+    Source = AttachedDocument.find("ns:Source", ns)
+    Source_Code = Source.find("ns:Code", ns)
+    Source_Description = Source.find("ns:Description", ns)
+    Source_Code.text = data.get('source_code', "")
+    Source_Description.text = data.get('source_description', "")
+
+    VisibleBranchCode = AttachedDocument.find("ns:VisibleBranchCode", ns)
+    VisibleBranchCode.text = data.get('visible_branch_code', "")
+
+    VisibleCompanyCode = AttachedDocument.find("ns:VisibleCompanyCode", ns)
+    VisibleCompanyCode.text = data.get('visible_company_code', "")
+
+    VisibleDepartmentCode = AttachedDocument.find("ns:VisibleDepartmentCode", ns)
+    VisibleDepartmentCode.text = data.get('visible_department_code', "")
 
     filename_xml = data.get("filename", "")
     file_path = f'test_files/trucker5_2231231312/acknowledge/pending/{filename_xml}'

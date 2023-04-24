@@ -1,29 +1,23 @@
 from fastapi import FastAPI, Request, Form, File, UploadFile, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm
 from starlette.responses import RedirectResponse
 from fastapi.responses import FileResponse, HTMLResponse, Response
 
-from pydantic import BaseModel
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from typing import List, Annotated, Dict
-from datetime import datetime, timedelta
-import paramiko
+from typing import List, Dict
 import os
-import uuid
 
 from utils.auth import OAuth2PasswordBearerWithCookie, AuthenticationMethods
 from utils.settings import Settings
-from utils.models import User, File, get_user
+from utils.models import User, File
 from utils.login import LoginForm
 from utils.utils import UtilFunctions
 from utils.encrypt import decode_from_base64, encode_to_base64
-from utils.sftp import SFTPDownloader
 from utils.ftp import FTPDownloader
 
 import business as business
-import asyncio
-import asyncssh
+import asyncio #presente en lineas conectadas
 
 app = FastAPI()
 
@@ -140,10 +134,10 @@ async def process_form(data: dict, request: Request):
                     "data_target_type": data.get("input_a_1"), 
                     "data_target_key": data.get("input_a_2"),
                     "company_code": data.get("input_a_3"),
-                    "filter_type": data.get("input_a_4"),
-                    "filter_value": data.get("input_a_5"),
-                    "enterprise_id": data.get("input_a_6"),
-                    "server_id": data.get("input_a_7")
+                    "enterprise_id": data.get("input_a_4"),
+                    "server_id": data.get("input_a_5"),
+                    "filter_type": data.get("input_a_6"),
+                    "filter_value": data.get("input_a_7")
                 }
     elif option == "input_b_0":
         data = {
@@ -151,24 +145,27 @@ async def process_form(data: dict, request: Request):
                     "filename": data.get("input_b_0"), 
                     "status": data.get("input_b_1"), 
                     "data_source_type": data.get("input_b_2"),
-                    "data_source_key": data.get("input_b_3"),
+                    "data_source_key": data.get("input_b_3"),          
                     "company_code": data.get("input_b_4"),
-                    "company_name": data.get("input_b_5"),
-                    "company_country_code": data.get("input_b_6"),
-                    "company_country_name": data.get("input_b_7"),
-                    "event_time": data.get("input_b_8"),
-                    "event_type": data.get("input_b_9"),
-                    "is_estimate": data.get("input_b_10"),
-                    "filename_attached": data.get("input_b_11"),
-                    "image_data": data.get("input_b_12"),
-                    "document_type_code": data.get("input_b_13"),
-                    "document_type_description": data.get("input_b_14"),
-                    "document_id": data.get("input_b_15"),
-                    "is_published": data.get("input_b_16"),
-                    "save_date_utc": data.get("input_b_17"),
-                    "document_saved_by_code": data.get("input_b_18"),
-                    "document_saved_by_name": data.get("input_b_19")
-                }
+                    "company_country_code": data.get("input_b_5"),
+                    "company_country_name": data.get("input_b_6"),
+                    "company_name": data.get("input_b_7"),
+                    "data_provider": data.get("input_b_8"),
+                    "enterprise_id": data.get("input_b_9"),
+                    "server_id": data.get("input_b_10"),
+                    "event_time": data.get("input_b_11"),
+                    "event_type": data.get("input_b_12"),
+                    "is_estimate": data.get("input_b_13"),
+                    "attached_filename": data.get("input_b_14"),
+                    "image_data": data.get("input_b_15"),
+                    "document_type_code": data.get("input_b_16"),
+                    "document_type_description": data.get("input_b_17"),
+                    "document_id": data.get("input_b_18"),
+                    "is_published": data.get("input_b_19"),
+                    "save_date_utc": data.get("input_b_20"),
+                    "document_saved_by_code": data.get("input_b_21"),
+                    "document_saved_by_name": data.get("input_b_22")                  
+                    }
     elif option == "input_h_0":
         data = {
                     "option": option, 
@@ -181,7 +178,7 @@ async def process_form(data: dict, request: Request):
                     "description": data.get("input_h_6"),
                     "iscustom_description": data.get("input_h_7"),
                     "notetext": data.get("input_h_8"),
-                    "notecontext_node": data.get("input_h_9"),
+                    "notecontext_code": data.get("input_h_9"),
                     "visibility_code": data.get("input_h_10"),
                     "address_type": data.get("input_h_11"),
                     "organization_code": data.get("input_h_12"),
@@ -193,14 +190,14 @@ async def process_form(data: dict, request: Request):
     elif option == "input_i_0":
         data = {
                     "option": option, 
-                    "filename": data.get("input__0"), 
+                    "filename": data.get("input_i_0"), 
                     "datatarget_type": data.get("input_i_1"), 
                     "datatarget_key": data.get("input_i_2"),
                     "company_code": data.get("input_i_3"),
                     "enterpriseid": data.get("input_i_4"),
                     "serverid": data.get("input_i_5"),
                     "transportbookingdirection_code": data.get("input_i_6"),
-                    "transportBookingDirection_description": data.get("input_i_7"),
+                    "transportbookingdirection_description": data.get("input_i_7"),
                     "addresstype": data.get("input_i_8"),
                     "organizationcode": data.get("input_i_9"),
                     "branch_code": data.get("input_i_10"),
@@ -210,7 +207,7 @@ async def process_form(data: dict, request: Request):
                     "chargeline_chargecode_code": data.get("input_i_14"),
                     "chargeline_costlocalamount": data.get("input_i_15"),
                     "chargeline_costosamount": data.get("input_i_16"),
-                    "chargeline_chargeline_costoscurrency_code": data.get("input_i_17"),
+                    "chargeline_costoscurrency_code": data.get("input_i_17"),
                     "chargeline_costosgstvatamount": data.get("input_i_18"),
                     "chargeline_creditor_type": data.get("input_i_19"),
                     "chargeline_creditor_key": data.get("input_i_20"),
@@ -225,11 +222,11 @@ async def process_form(data: dict, request: Request):
                     "option": option, 
                     "filename": data.get("input_j_0"), 
                     "status": data.get("input_j_1"), 
-                    "dataSource_type": data.get("input_j_2"),
-                    "dataSource_key": data.get("input_j_3"),
+                    "datasource_type": data.get("input_j_2"),
+                    "datasource_key": data.get("input_j_3"),
                     "companycode": data.get("input_j_4"),
-                    "company_countrycode": data.get("input_j_5"),
-                    "company_country_name": data.get("input_j_6"),
+                    "companycountry_code": data.get("input_j_5"),
+                    "companycountry_name": data.get("input_j_6"),
                     "company_name": data.get("input_j_7"),
                     "dataprovider": data.get("input_j_8"),
                     "enterpriseid": data.get("input_j_9"),
@@ -237,7 +234,7 @@ async def process_form(data: dict, request: Request):
                     "eventtime": data.get("input_j_11"),
                     "eventtype": data.get("input_j_12"),
                     "isestimate": data.get("input_j_13"),
-                    "filename": data.get("input_j_14"),
+                    "attacheddocument_filename": data.get("input_j_14"),
                     "imagedata": data.get("input_j_15"),
                     "type_code": data.get("input_j_16"),
                     "type_description": data.get("input_j_17"),
@@ -246,8 +243,125 @@ async def process_form(data: dict, request: Request):
                     "savedateutc": data.get("input_j_20"),
                     "savedby_code": data.get("input_j_21"),
                     "savedby_name": data.get("input_j_22"),
-                    "messagenumber": data.get("input_j_23")
+                    "source_code": data.get("input_j_23"),
+                    "source_description": data.get("input_j_24"),
+                    "visible_branch_code": data.get("input_j_25"),               
+                    "visible_company_code": data.get("input_j_26"),                   
+                    "visible_department_code": data.get("input_j_27"),
+                    "messagenumber": data.get("input_j_28")
                 }
+    elif option == "input_c_0":
+        data = {
+                    "option": option, 
+                    "filename": data.get("input_c_0"), 
+                    "data_target_type": data.get("input_c_1"), 
+                    "data_target_key": data.get("input_c_2"),
+                    "company_code": data.get("input_c_3"),
+                    "enterprise_id": data.get("input_c_4"),
+                    "server_id": data.get("input_c_5"),
+                    "event_time": data.get("input_c_6"),
+                    "event_type": data.get("input_c_7"),
+                    "event_reference": data.get("input_c_8"),
+                    "is_estimate": data.get("input_c_9")
+                }
+    elif option == "input_d_0":
+        data = {
+                    "option": option, 
+                    "filename": data.get("input_d_0"), 
+                    "datatarget_type": data.get("input_d_1"),
+                    "datatarget_key": data.get("input_d_2"),
+                    "company_code": data.get("input_d_3"),
+                    "enterprise_id": data.get("input_d_4"),
+                    "server_id": data.get("input_d_5"),
+                    "event_time": data.get("input_d_6"), 
+                    "event_type": data.get("input_d_7"),
+                    "event_reference": data.get("input_d_8"),
+                    "is_estimate": data.get("input_d_9")
+                }
+    elif option == "input_e_0":
+        data = {
+                    "option": option, 
+                    "filename": data.get("input_e_0"), 
+                    "datatarget_type": data.get("input_e_1"), 
+                    "datatarget_key": data.get("input_e_2"),
+                    "company_code": data.get("input_e_3"),
+                    "enterprise_id": data.get("input_e_4"),
+                    "server_id": data.get("input_e_5"),
+                    "description": data.get("input_e_6"),
+                    "iscustom_description": data.get("input_e_7"),
+                    "notetext": data.get("input_e_8"),
+                    "notecontext_code": data.get("input_e_9"),
+                    "visibility_code": data.get("input_e_10"),
+                    "address_type": data.get("input_e_11"),
+                    "organization_code": data.get("input_e_12"),
+                    "customizedfield_datatype": data.get("input_e_13"),
+                    "customizedfield_key": data.get("input_e_14"),
+                    "customizedfield_value": data.get("input_e_15")
+                } 
+    elif option == "input_f_0":
+        data = {
+                    "option": option, 
+                    "filename": data.get("input_f_0"), 
+                    "datatarget_type": data.get("input_f_1"), 
+                    "datatarget_key": data.get("input_f_2"),
+                    "company_code": data.get("input_f_3"),
+                    "enterprise_id": data.get("input_f_4"),
+                    "server_id": data.get("input_f_5"),
+                    "transportbooking_direction_code": data.get("input_f_6"),
+                    "transportbooking_direction_description": data.get("input_f_7"),
+                    "address_type": data.get("input_f_8"),
+                    "organization_code": data.get("input_f_9"),
+                    "branch_code": data.get("input_f_10"),
+                    "currency_code": data.get("input_f_11"),
+                    "department_code": data.get("input_f_12"),
+                    "chargeline_branch_code": data.get("input_f_13"),
+                    "chargeline_chargecode_code": data.get("input_f_14"),
+                    "chargeline_costlocal_amount": data.get("input_f_15"),
+                    "chargeline_costos_amount": data.get("input_f_16"),
+                    "chargeline_costoscurrency_code": data.get("input_f_17"),
+                    "chargeline_costosgstvat_amount": data.get("input_f_18"),
+                    "chargeline_creditor_type": data.get("input_f_19"),
+                    "chargeline_creditor_key": data.get("input_f_20"),
+                    "chargeline_department_code": data.get("input_f_21"),
+                    "chargeline_display_sequence": data.get("input_f_22"),
+                    "chargeline_importmetadata_instruction": data.get("input_f_23"),
+                    "chargeline_supplierreference": data.get("input_f_24"),
+                    "customizedfield_datatype": data.get("input_f_25"),
+                    "customizedfield_key": data.get("input_f_26"),
+                    "customizedfield_value": data.get("input_f_27")
+                }
+    elif option == "input_g_0":
+        data = {
+                    "option": option, 
+                    "filename": data.get("input_g_0"), 
+                    "datatarget_type": data.get("input_g_1"), 
+                    "datatarget_key": data.get("input_g_2"),
+                    "company_code": data.get("input_g_3"),
+                    "enterprise_id": data.get("input_g_4"),
+                    "server_id": data.get("input_g_5"),
+                    "transport_bookingdirection_code": data.get("input_g_6"),
+                    "transport_bookingdirection_description": data.get("input_g_7"),
+                    "address_type": data.get("input_g_8"),
+                    "organization_code": data.get("input_g_9"),
+                    "branch_code": data.get("input_g_10"),
+                    "currency_code": data.get("input_g_11"),
+                    "department_code": data.get("input_g_12"),
+                    "chargeline_branch_code": data.get("input_g_13"),
+                    "chargeline_charge_code": data.get("input_g_14"),
+                    "chargeline_costlocal_amount": data.get("input_g_15"),
+                    "chargeline_costos_amount": data.get("input_g_16"),
+                    "chargeline_costoscurrency_code": data.get("input_g_17"),
+                    "chargeline_costosgstvat_amount": data.get("input_g_18"),
+                    "chargeline_creditor_type": data.get("input_g_19"),
+                    "chargeline_creditor_key": data.get("input_g_20"),
+                    "chargeline_department_code": data.get("input_g_21"),
+                    "chargeline_display_sequence": data.get("input_g_22"),
+                    "chargeline_importmetadata_instruction": data.get("input_g_23"),
+                    "chargeline_supplier_reference": data.get("input_g_24"),
+                    "customizedfield_datatype": data.get("input_g_25"),
+                    "customizedfield_key": data.get("input_g_26"),
+                    "customizedfield_value": data.get("input_g_27")
+                }         
 
     elif option == "input_k_0":
         data = {

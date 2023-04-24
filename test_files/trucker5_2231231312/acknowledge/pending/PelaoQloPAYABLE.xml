@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='utf-8'?>
+<UniversalShipment>
+  <Shipment>
+    <DataContext>
+      <DataTargetCollection>
+        <DataTarget>
+          <Type>Pelao</Type>
+          <Key>qlo</Key>
+        </DataTarget>
+      </DataTargetCollection>
+      <Company>
+            <Code>cabeza</Code>
+      </Company>
+      <EnterpriseID>de</EnterpriseID>
+      <ServerID>pene</ServerID>
+    </DataContext>
+    <TransportBookingDirection>
+      <Code>mentalidad</Code>
+      <Description>de</Description>
+    </TransportBookingDirection>
+	<OrganizationAddressCollection>
+	  <OrganizationAddress>
+		<AddressType>tiburón</AddressType>
+		<OrganizationCode>cripto</OrganizationCode>
+	  </OrganizationAddress>
+	</OrganizationAddressCollection>
+    <JobCosting>
+      <Branch>
+        <Code>asshole</Code>
+      </Branch>
+      <Currency>
+        <Code>falopero</Code>
+      </Currency>
+      <Department>
+        <Code>qlo</Code>
+      </Department>
+		<ChargeLineCollection>
+			<ChargeLine>
+				<Branch>
+					<Code>se </Code>
+				</Branch>
+				<ChargeCode>
+					<Code>va</Code>
+				</ChargeCode>
+				<CostLocalAmount>a</CostLocalAmount>
+				<CostOSAmount>las</CostOSAmount>
+				<CostOSCurrency>
+					<Code>maracas</Code>
+				</CostOSCurrency>
+				<CostOSGSTVATAmount>en </CostOSGSTVATAmount>
+				<Creditor>
+					<Type>el</Type>
+					<Key>barrio</Key>
+				</Creditor>	
+				<Department>
+					<Code>rojo</Code>
+				</Department>
+				<DisplaySequence>de</DisplaySequence>
+				<ImportMetaData>
+					<Instruction>Bankok</Instruction>
+				</ImportMetaData>
+				<SupplierReference>y les gustan las cariñosas con rifle</SupplierReference>  
+			</ChargeLine>
+		</ChargeLineCollection>
+    </JobCosting>	
+ </Shipment>
+</UniversalShipment>
