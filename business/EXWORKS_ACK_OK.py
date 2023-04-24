@@ -11,25 +11,23 @@ async def EXWORKS_ACK_OK_READ(file: str):
 
     event_time = root.find("ns:Event/ns:EventTime", ns).text
     event_type = root.find("ns:Event/ns:EventType", ns).text
-    event_reference = root.find("ns:Event/ns:EventReference", ns).text.strip(
-        "|"
-    )
+    event_reference = root.find("ns:Event/ns:EventReference", ns).text
 
-    result["Event Time"] = event_time
-    result["Event Type"] = event_type
-    result["Event Reference"] = event_reference
+    result["Event_Time"] = event_time
+    result["Event_Type"] = event_type
+    result["EventReference"] = event_reference
 
-    transport_booking_type = root.find(
+    datatarget_type = root.find(
         "ns:Event/ns:DataContext/ns:DataTargetCollection/ns:DataTarget/ns:Type",
         ns,
     ).text
-    transport_booking_key = root.find(
+    datatarget_key = root.find(
         "ns:Event/ns:DataContext/ns:DataTargetCollection/ns:DataTarget/ns:Key",
         ns,
     ).text
 
-    result["Data Target Type"] = transport_booking_type
-    result["Data Target Key"] = transport_booking_key
+    result["DataTarget_Type"] = datatarget_type
+    result["DataTarget_Key"] = datatarget_key
 
     company_code = root.find(
         "ns:Event/ns:DataContext/ns:Company/ns:Code", ns
@@ -39,52 +37,64 @@ async def EXWORKS_ACK_OK_READ(file: str):
     ).text
     server_id = root.find("ns:Event/ns:DataContext/ns:ServerID", ns).text
 
-    result["Company Code"] = company_code
-    result["Enterprise ID"] = enterprise_id
-    result["Server ID"] = server_id
+    result["Company_Code"] = company_code
+    result["Enterprise_ID"] = enterprise_id
+    result["Server_ID"] = server_id
 
     is_estimate = root.find("ns:Event/ns:IsEstimate", ns).text
-    result["Is Estimate"] = is_estimate
+    result["Is_Estimate"] = is_estimate
 
     result = [{"col1": x, "col2": y} for x, y in result.items()]
     return result
 
 
-async def EXWORKS_ACK_OK_WRITE(file: str):
+async def EXWORKS_ACK_OK_WRITE(data: dict):
     """
     Take a dictionary and create an XML file with its information using the format of the XML file EXWORKS_ACK_OK.xml.
     """   
-    root = ET.fromstring(file)
+    tree = ET.parse("xml_files/EXWORKS_ACK_OK.xml")
+    root = tree.getroot()
+    ns = {"ns": "http://www.cargowise.com/Schemas/Universal/2012/11"}
 
-    ns = {"mw": "http://www.cargowise.com/Schemas/Universal/2012/11"}
+    ET.register_namespace(
+        "", "http://www.cargowise.com/Schemas/Universal/2012/11"
+    )
 
-    result = {}
+    datatarget_type = root.find(
+        "ns:Event/ns:DataContext/ns:DataTargetCollection/ns:DataTarget/ns:Type",
+        ns,
+    )
+    datatarget_key = root.find(
+        "ns:Event/ns:DataContext/ns:DataTargetCollection/ns:DataTarget/ns:Key",
+        ns,
+    )
 
-    Type = root.find(".//mw:Type", ns).text
-    result["Type"] = Type
+    datatarget_type.text = data.get("datatarget_type", "")
+    datatarget_key.text = data.get("datatarget_key", "")
 
-    key = root.find(".//mw:Key", ns).text
-    result["Key"] = key
+    company_code = root.find(
+        "ns:Event/ns:DataContext/ns:Company/ns:Code", ns
+    )
+    enterprise_id = root.find(
+        "ns:Event/ns:DataContext/ns:EnterpriseID", ns
+    )
+    server_id = root.find("ns:Event/ns:DataContext/ns:ServerID", ns)
 
-    code = root.find(".//mw:Code", ns).text
-    result["Code"] = code
+    company_code.text = data.get("company_code", "")
+    enterprise_id.text = data.get("enterprise_id", "")
+    server_id.text = data.get("server_id", "")
 
-    enterpriseID = root.find(".//mw:EnterpriseID", ns).text
-    result["Enterprise ID"] = enterpriseID
+    event_time = root.find("ns:Event/ns:EventTime", ns)
+    event_type = root.find("ns:Event/ns:EventType", ns)
+    event_reference = root.find("ns:Event/ns:EventReference", ns)
 
-    serverID = root.find(".//mw:ServerID", ns).text
-    result["Server ID"] = serverID
+    event_time.text = data.get("event_time", "")
+    event_type.text = data.get("event_type", "")
+    event_reference.text = data.get("event_reference", "")
 
-    eventTime = root.find(".//mw:EventTime", ns).text
-    result["Event Time"] = eventTime
+    is_estimate = root.find("ns:Event/ns:IsEstimate", ns)
+    is_estimate.text = data.get("is_estimate", "")
 
-    eventType = root.find(".//mw:EventType", ns).text
-    result["Event Type"] = eventType
-
-    eventReference = root.find(".//mw:EventReference", ns).text
-    result["Event Reference"] = eventReference
-
-    isEstimate = root.find(".//mw:IsEstimate", ns).text
-    result["Is Estimate"] = isEstimate
-
-    return result
+    filename_xml = data.get("filename", "")
+    file_path = f'test_files/trucker5_2231231312/acknowledge/pending/{filename_xml}'
+    tree.write(file_path, encoding="utf-8", xml_declaration=True)

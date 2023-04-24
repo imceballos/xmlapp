@@ -1,0 +1,23 @@
+<UniversalDocumentRequest>
+	<DocumentRequest>
+		<DataContext>
+			<DataTargetCollection>
+				<DataTarget>
+					<Type></Type>
+					<Key></Key>
+				</DataTarget>
+			</DataTargetCollection>
+			<Company>
+				<Code></Code>
+			</Company>
+			<EnterpriseID></EnterpriseID>
+			<ServerID></ServerID>
+		</DataContext>
+		<FilterCollection>
+			<Filter>
+				<Type></Type>
+				<Value></Value>
+			</Filter>
+		</FilterCollection>
+	</DocumentRequest>
+</UniversalDocumentRequest>

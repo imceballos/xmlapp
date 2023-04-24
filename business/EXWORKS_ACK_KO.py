@@ -55,9 +55,8 @@ async def EXWORKS_ACK_KO_WRITE(data: dict):
     """
     Take a dictionary and create an XML file with its information using the format of the XML file EXWORKS_ACK_KO.xml.
     """
-    tree = ET.parse("xml_files/EXWORKS_Message_Event_XUE_ACK_KO.xml")
+    tree = ET.parse("xml_files/EXWORKS_ACK_KO.xml")
     root = tree.getroot()
-    data = {}
     ns = {"ns": "http://www.cargowise.com/Schemas/Universal/2012/11"}
 
     ET.register_namespace(
@@ -71,31 +70,31 @@ async def EXWORKS_ACK_KO_WRITE(data: dict):
     DataTarget = DataTargetCollection.find("ns:DataTarget", ns)
     DataTarget_Type = DataTarget.find("ns:Type", ns)
     DataTarget_Key = DataTarget.find("ns:Key", ns)
-    DataTarget_Type.text = data.get("datatarget_type", "")
-    DataTarget_Key.text = data.get("datatarget_key", "")
+    DataTarget_Type.text = data.get("data_target_type", "")
+    DataTarget_Key.text = data.get("data_target_key", "")
 
     Company = DataContext.find("ns:Company", ns)
     Company_Code = Company.find("ns:Code", ns)
     Company_Code.text = data.get("company_code", "")
 
     EnterpriseID = DataContext.find("ns:EnterpriseID", ns)
-    EnterpriseID.text = data.get("enterpriseid", "")
+    EnterpriseID.text = data.get("enterprise_id", "")
 
     ServerID = DataContext.find("ns:ServerID", ns)
-    ServerID.text = data.get("serverid," "")
+    ServerID.text = data.get("server_id", "")
 
     EventTime = Event.find("ns:EventTime", ns)
-    EventTime.text = data.get("eventtime", "")
+    EventTime.text = data.get("event_time", "")
 
     EventType = Event.find("ns:EventType", ns)
-    EventType.text = data.get("eventtype", "")
+    EventType.text = data.get("event_type", "")
 
     EventReference = Event.find("ns:EventReference", ns)
-    EventReference.text = data.get("eventreference", "")
+    EventReference.text = data.get("event_reference", "")
 
     IsEstimate = Event.find("ns:IsEstimate", ns)
-    IsEstimate.text = data.get("isestimate", "")
-
+    IsEstimate.text = data.get("is_estimate", "")
+    
     filename_xml = data.get("filename", "")
-    file_path = f"test_files\{filename_xml}"
+    file_path = f'test_files/trucker5_2231231312/acknowledge/pending/{filename_xml}'
     tree.write(file_path, encoding="utf-8", xml_declaration=True)

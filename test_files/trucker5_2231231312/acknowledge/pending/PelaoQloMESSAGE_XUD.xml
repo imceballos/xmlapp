@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='utf-8'?>
+<UniversalResponse xmlns="http://www.cargowise.com/Schemas/Universal/2011/11" version="1.1">
+	<Status>El negro mas gangster RealG4Life nunca shota</Status>
+	<Data>
+		<UniversalEvent version="1.1">
+			<Event>
+				<DataContext>
+					<DataSourceCollection>
+						<DataSource>
+							<Type>toma</Type>
+							<Key>su cadena de oro</Key>
+						</DataSource>
+					</DataSourceCollection>
+					<Company>
+						<Code>su pistola</Code>
+						<Country>
+							<Code>y va</Code>
+							<Name>en su auto lowrider</Name>
+						</Country>
+						<Name>a Singapur</Name>
+					</Company>
+					<DataProvider>a pitiarse</DataProvider>
+					<EnterpriseID>al pelao qlo mas estafador CriptoAsshole</EnterpriseID>
+					<ServerID>y</ServerID>
+				</DataContext>
+
+				<EventTime>a Gupta qlo mas intocable</EventTime>
+				<EventType>si</EventType>
+				<IsEstimate>los csm</IsEstimate>
+				<AttachedDocumentCollection>
+					<AttachedDocument>
+						<FileName>no nos pagan</FileName>
+						<ImageData>y</ImageData>
+						<Type>
+							<Code>de</Code>
+							<Description>paso</Description>
+						</Type>
+						<DocumentID>se</DocumentID>
+						<IsPublished>los</IsPublished>
+						<SaveDateUTC>culea</SaveDateUTC>
+						<SavedBy>
+							<Code>con</Code>
+							<Name>su BBC</Name>
+						</SavedBy>
+						<Source>
+						<Code />
+						<Description />
+						</Source>
+						<VisibleBranchCode />
+						<VisibleCompanyCode />
+						<VisibleDepartmentCode />
+					</AttachedDocument>
+				</AttachedDocumentCollection>
+				<ContextCollection>
+				</ContextCollection>
+			</Event>
+		</UniversalEvent>
+	</Data>
+	<ProcessingLog />
+</UniversalResponse>

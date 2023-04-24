@@ -96,7 +96,7 @@ async def XUD_RDR_TBN_UUID_READ(file: str):
  
     Source = AttachedDocument.find("ns:Source", ns)
     Source_Code = Source.find("ns:Code", ns).text
-    Source_Description = Source.find("ns:", ns).text
+    Source_Description = Source.find("ns:Description", ns).text
     result['Source_Code'] = Source_Code
     result['Source_Description'] = Source_Description
 
@@ -114,7 +114,8 @@ async def XUD_RDR_TBN_UUID_READ(file: str):
     MessageNumber = MessageNumberCollection.find("ns:MessageNumber", ns).text
     result["MessageNumber"] = MessageNumber
 
-    return
+    result = [{"col1": x, "col2": y} for x, y in result.items()]
+    return result
 
 
 async def XUD_RDR_TBN_UUID_WRITE(data: dict):

@@ -32,10 +32,25 @@ async def MESSAGE_XUD_DTYPE_TB_TIMESTAMP_READ(file: str):
     company_country_code = company.find("ns:Country/ns:Code", ns).text
     company_country_name = company.find("ns:Country/ns:Name", ns).text
 
-    result["Company code"] = company_code
-    result["Company Name"] = company_name
+    result["Company Code"] = company_code
     result["Company Country Code"] = company_country_code
     result["Company Country Name"] = company_country_name
+    result["Company Name"] = company_name
+
+    data_provider = root.find(
+        "ns:Data/ns:UniversalEvent/ns:Event/ns:DataContext/ns:DataProvider", ns
+        ).text
+    result["data_provider"] = data_provider
+ 
+    enterprise_id = root.find(
+        "ns:Data/ns:UniversalEvent/ns:Event/ns:DataContext/ns:EnterpriseID", ns
+        ).text
+    result["enterprise_id"] = enterprise_id
+
+    server_id = root.find(
+        "ns:Data/ns:UniversalEvent/ns:Event/ns:DataContext/ns:ServerID", ns
+        ).text
+    result["server_id"] = server_id
 
     # get the value of the EventTime and EventType elements of the Event
     event = root.find("ns:Data/ns:UniversalEvent/ns:Event", ns)
@@ -115,15 +130,31 @@ async def MESSAGE_XUD_DTYPE_TB_TIMESTAMP_WRITE(data: dict):
     company = root.find(
         "ns:Data/ns:UniversalEvent/ns:Event/ns:DataContext/ns:Company", ns
     )
+
     company_code = company.find("ns:Code", ns)
-    company_name = company.find("ns:Name", ns)
     company_country_code = company.find("ns:Country/ns:Code", ns)
     company_country_name = company.find("ns:Country/ns:Name", ns)
+    company_name = company.find("ns:Name", ns)
 
     company_code.text = data.get("company_code", "")
-    company_name.text = data.get("company_name", "")
     company_country_code.text = data.get("company_country_code", "")
     company_country_name.text = data.get("company_country_name", "")
+    company_name.text = data.get("company_name", "")
+
+    data_provider = root.find(
+        "ns:Data/ns:UniversalEvent/ns:Event/ns:DataContext/ns:DataProvider", ns
+        )
+    data_provider.text = data.get("data_provider", "")
+ 
+    enterprise_id = root.find(
+        "ns:Data/ns:UniversalEvent/ns:Event/ns:DataContext/ns:EnterpriseID", ns
+        )
+    enterprise_id.text = data.get("enterprise_id", "")
+
+    server_id = root.find(
+        "ns:Data/ns:UniversalEvent/ns:Event/ns:DataContext/ns:ServerID", ns
+        )
+    server_id.text = data.get("server_id", "")
 
     event = root.find("ns:Data/ns:UniversalEvent/ns:Event", ns)
     
@@ -142,17 +173,17 @@ async def MESSAGE_XUD_DTYPE_TB_TIMESTAMP_WRITE(data: dict):
     filename = document.find("ns:FileName", ns)
     imagedata = document.find("ns:ImageData", ns)
 
-    filename.text = data.get("filename_attached", "")
+    filename.text = data.get("attached_filename", "")
     imagedata.text = data.get("image_data", "")
 
     # get the value of the Code and Description elements of the Type of the AttachedDocument
     document_type = document.find("ns:Type", ns)
 
     document_type_code = document_type.find("ns:Code", ns)
-    document_type_desc = document_type.find("ns:Description", ns)
+    document_type_desccription = document_type.find("ns:Description", ns)
 
     document_type_code.text = data.get("document_type_code", "")
-    document_type_desc.text = data.get("document_type_description", "")
+    document_type_desccription.text = data.get("document_type_description", "")
 
     document_id = document.find("ns:DocumentID", ns)
     is_published = document.find("ns:IsPublished", ns)
@@ -174,3 +205,4 @@ async def MESSAGE_XUD_DTYPE_TB_TIMESTAMP_WRITE(data: dict):
     filename_xml = data.get("filename", "")
     file_path = f'test_files/trucker5_2231231312/acknowledge/pending/{filename_xml}'
     tree.write(file_path, encoding='utf-8', xml_declaration=True)
+

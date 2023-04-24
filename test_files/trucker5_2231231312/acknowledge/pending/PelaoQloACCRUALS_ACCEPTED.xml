@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='utf-8'?>
+<UniversalShipment>
+  <Shipment>
+    <DataContext>
+      <DataTargetCollection>
+        <DataTarget>
+          <Type>Gupta</Type>
+          <Key>qlo</Key>
+        </DataTarget>
+      </DataTargetCollection>
+      <Company>
+            <Code>se</Code>
+      </Company>
+      <EnterpriseID>gasta</EnterpriseID>
+      <ServerID>la</ServerID>
+    </DataContext>
+    <TransportBookingDirection>
+      <Code>plata</Code>
+      <Description>de</Description>
+    </TransportBookingDirection>
+	<OrganizationAddressCollection>
+	  <OrganizationAddress>
+		<AddressType>los</AddressType>
+		<OrganizationCode>sueldos</OrganizationCode>
+	  </OrganizationAddress>
+	</OrganizationAddressCollection>
+    <JobCosting>
+      <Branch>
+        <Code>en </Code>
+      </Branch>
+      <Currency>
+        <Code>buyo</Code>
+      </Currency>
+      <Department>
+        <Code>y</Code>
+      </Department>
+		<ChargeLineCollection>
+			<ChargeLine>
+				<Branch>
+					<Code>maracas</Code>
+				</Branch>
+				<ChargeCode>
+					<Code>con</Code>
+				</ChargeCode>
+				<CostLocalAmount>rifle</CostLocalAmount>
+				<CostOSAmount>calibre</CostOSAmount>
+				<CostOSCurrency>
+					<Code>7.62</Code>
+				</CostOSCurrency>
+				<CostOSGSTVATAmount>y</CostOSGSTVATAmount>
+				<Creditor>
+					<Type>después</Type>
+					<Key>caga</Key>
+				</Creditor>	
+				<Department>
+					<Code>en</Code>
+				</Department>
+				<DisplaySequence>la </DisplaySequence>
+				<ImportMetaData>
+					<Instruction>calle</Instruction>
+				</ImportMetaData>
+				<SupplierReference>limpiándose</SupplierReference>  
+			</ChargeLine>
+		</ChargeLineCollection>
+    </JobCosting>	
+	<CustomizedFieldCollection Content="Partial">
+        <CustomizedField>
+            <DataType>con</DataType>
+            <Key>la</Key>
+            <Value>mano</Value>
+        </CustomizedField>
+    </CustomizedFieldCollection>
+ </Shipment>
+</UniversalShipment>

@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='utf-8'?>
+<UniversalShipment>
+  <Shipment>
+    <DataContext>
+      <DataTargetCollection>
+        <DataTarget>
+          <Type>El</Type>
+          <Key>pelao</Key>
+        </DataTarget>
+      </DataTargetCollection>
+      <Company>
+            <Code>qlo</Code>
+      </Company>
+      <EnterpriseID>y</EnterpriseID>
+      <ServerID>Gupta</ServerID>
+    </DataContext>
+    <TransportBookingDirection>
+      <Code>no</Code>
+      <Description>nos</Description>
+    </TransportBookingDirection>
+	<OrganizationAddressCollection>
+	  <OrganizationAddress>
+		<AddressType>van</AddressType>
+		<OrganizationCode>a</OrganizationCode>
+	  </OrganizationAddress>
+	</OrganizationAddressCollection>
+    <JobCosting>
+      <Branch>
+        <Code>pagar</Code>
+      </Branch>
+      <Currency>
+        <Code>los</Code>
+      </Currency>
+      <Department>
+        <Code>sueldos</Code>
+      </Department>
+		<ChargeLineCollection>
+			<ChargeLine>
+				<Branch>
+					<Code>porque</Code>
+				</Branch>
+				<ChargeCode>
+					<Code>se</Code>
+				</ChargeCode>
+				<CostLocalAmount>los</CostLocalAmount>
+				<CostOSAmount>van</CostOSAmount>
+				<CostOSCurrency>
+					<Code>a</Code>
+				</CostOSCurrency>
+				<CostOSGSTVATAmount>gastar</CostOSGSTVATAmount>
+				<Creditor>
+					<Type>en</Type>
+					<Key>buyo</Key>
+				</Creditor>	
+				<Department>
+					<Code>falopa</Code>
+				</Department>
+				<DisplaySequence>bitcoins</DisplaySequence>
+				<ImportMetaData>
+					<Instruction>y</Instruction>
+				</ImportMetaData>
+				<SupplierReference>maracas</SupplierReference>  
+			</ChargeLine>
+		</ChargeLineCollection>
+    </JobCosting>	
+	<CustomizedFieldCollection Content="Partial">
+        <CustomizedField>
+            <DataType>con </DataType>
+            <Key>rifle</Key>
+            <Value>los csm</Value>
+        </CustomizedField>
+    </CustomizedFieldCollection>
+ </Shipment>
+</UniversalShipment>
