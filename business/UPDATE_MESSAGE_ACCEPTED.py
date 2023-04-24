@@ -83,7 +83,7 @@ async def UPDATE_MESSAGE_ACCEPTED_READ(file: str):
     return result
 
 
-async def Update_Message_ACCEPTED_WRITE(data: dict):
+async def UPDATE_MESSAGE_ACCEPTED_WRITE(data: dict):
     """
     Take a dictionary and create an XML file with its information using the format of the XML file Update_Message_ACCEPTED.xml.
     """
@@ -101,43 +101,43 @@ async def Update_Message_ACCEPTED_WRITE(data: dict):
     DataTarget_Type = DataTarget.find("Type")
     DataTarget_Key = DataTarget.find("Key")
 
-    DataTarget_Type.text = data.get("DataTarget_Type", "")
-    DataTarget_Key.text = data.get("DataTarget_Key", "")
+    DataTarget_Type.text = data.get("datatarget_type", "")
+    DataTarget_Key.text = data.get("datatarget_key", "")
 
     Company = DataContext.find("Company")
 
     Company_Code = Company.find("Code")
 
-    Company_Code.text = data.get("Company_Code", "")
+    Company_Code.text = data.get("company_code", "")
 
     EnterpriseID = DataContext.find("EnterpriseID")
-    EnterpriseID.text = data.get("EnterpriseID", "")
+    EnterpriseID.text = data.get("enterprise_id", "")
 
     ServerID = DataContext.find("ServerID")
-    ServerID.text = data.get("ServerID", "")
+    ServerID.text = data.get("server_id", "")
 
     NoteCollection = Shipment.find("NoteCollection")
 
     Note = NoteCollection.find("Note")
 
     Description = Note.find("Description")
-    Description.text = data.get("Description", "")
+    Description.text = data.get("description", "")
 
     IsCustomDescription = Note.find("IsCustomDescription")
-    IsCustomDescription.text = data.get("IsCustomDescription", "")
+    IsCustomDescription.text = data.get("iscustom_description", "")
 
     NoteText = Note.find("NoteText")
-    NoteText.text = data.get("NoteText", "")
+    NoteText.text = data.get("notetext", "")
 
     NoteContext = Note.find("NoteContext")
 
     NoteContext_Code = NoteContext.find("Code")
-    NoteContext_Code.text = data.get("NoteContext_Code", "")
+    NoteContext_Code.text = data.get("notecontext_code", "")
 
     Visibility = Note.find("Visibility")
 
     Visibility_Code = Visibility.find("Code")
-    Visibility_Code.text = data.get("Visibility_Code", "")
+    Visibility_Code.text = data.get("visibility_code", "")
 
     OrganizationAddressCollection = Shipment.find(
         "OrganizationAddressCollection"
@@ -147,10 +147,10 @@ async def Update_Message_ACCEPTED_WRITE(data: dict):
     )
 
     AddressType = OrganizationAddress.find("AddressType")
-    AddressType.text = data.get("AddressType", "")
+    AddressType.text = data.get("address_type", "")
 
     OrganizationCode = OrganizationAddress.find("OrganizationCode")
-    OrganizationCode.text = data.get("OrganizationCode", "")
+    OrganizationCode.text = data.get("organization_code", "")
 
     CustomizedFieldCollection = Shipment.find("CustomizedFieldCollection")
     CustomizedField = CustomizedFieldCollection.find("CustomizedField")
@@ -158,9 +158,9 @@ async def Update_Message_ACCEPTED_WRITE(data: dict):
     CustomizedField_DataType = CustomizedField.find("DataType")
     CustomizedField_Key = CustomizedField.find("Key")
     CustomizedField_Value = CustomizedField.find("Value")
-    CustomizedField_DataType.text = data.get("CustomizedField_DataType", "")
-    CustomizedField_Key.text = data.get("CustomizedField_Key", "")
-    CustomizedField_Value.text = data.get("CustomizedField_Value", "")
+    CustomizedField_DataType.text = data.get("customizedfield_datatype", "")
+    CustomizedField_Key.text = data.get("customizedfield_key", "")
+    CustomizedField_Value.text = data.get("customizedfield_value", "")
 
     filename_xml = data.get("filename", "")
     file_path = f'test_files/trucker5_2231231312/acknowledge/pending/{filename_xml}'

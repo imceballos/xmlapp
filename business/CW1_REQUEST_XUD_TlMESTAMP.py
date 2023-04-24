@@ -64,18 +64,18 @@ async def CW1_REQUEST_XUD_TIMESTAMP_WRITE(data: dict):
     company_code = root.find("DocumentRequest/DataContext/Company/Code")
     company_code.text = data.get("company_code", "")
 
-    filter_type = root.find("DocumentRequest/FilterCollection/Filter/Type")
-    filter_value = root.find("DocumentRequest/FilterCollection/Filter/Value")
-
-    filter_type.text = data.get("filter_type", "")
-    filter_value.text = data.get("filter_value", "")
-
     enterprise_id = root.find("DocumentRequest/DataContext/EnterpriseID")
     server_id = root.find("DocumentRequest/DataContext/ServerID")
 
     enterprise_id.text = data.get("enterprise_id", "")
     server_id.text = data.get("server_id", "")
 
+    filter_type = root.find("DocumentRequest/FilterCollection/Filter/Type")
+    filter_value = root.find("DocumentRequest/FilterCollection/Filter/Value")
+
+    filter_type.text = data.get("filter_type", "")
+    filter_value.text = data.get("filter_value", "")
+
     filename_xml = data.get("filename", "")
-    file_path = f"test_files\{filename_xml}"
+    file_path = f'test_files/trucker5_2231231312/acknowledge/pending/{filename_xml}'
     tree.write(file_path, encoding="utf-8", xml_declaration=True)

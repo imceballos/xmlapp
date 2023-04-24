@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <UniversalResponse version="1.1" xmlns="http://www.cargowise.com/Schemas/Universal/2011/11">
-	<Status></Status>
+	<Status>PRS</Status>
 	<Data>
 		<UniversalEvent xmlns="http://www.cargowise.com/Schemas/Universal/2011/11" version="1.1">
 			<Event>
@@ -23,7 +23,6 @@
 					<EnterpriseID></EnterpriseID>
 					<ServerID></ServerID>
 				</DataContext>
-
 				<EventTime></EventTime>
 				<EventType></EventType>
 				<IsEstimate></IsEstimate>
@@ -44,12 +43,12 @@
 							<Name></Name>
 						</SavedBy>
 						<Source>
-						<Code></Code>
-						<Description></Description>
+							<Code/>
+							<Description/>
 						</Source>
-						<VisibleBranchCode></VisibleBranchCode>
-						<VisibleCompanyCode></VisibleCompanyCode>
-						<VisibleDepartmentCode></VisibleDepartmentCode>
+						<VisibleBranchCode/>
+						<VisibleCompanyCode/>
+						<VisibleDepartmentCode/>
 					</AttachedDocument>
 				</AttachedDocumentCollection>
 				<ContextCollection>
@@ -57,5 +56,8 @@
 			</Event>
 		</UniversalEvent>
 	</Data>
-	<ProcessingLog />
+	<MessageNumberCollection>
+		<MessageNumber Type="MessageNumber"></MessageNumber>
+	</MessageNumberCollection>
+	<ProcessingLog/>
 </UniversalResponse>

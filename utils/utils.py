@@ -61,6 +61,11 @@ class UtilFunctions:
         mapper = {
             "input_a_0": "CW1_REQUEST_XUD_TIMESTAMP_WRITE",
             "input_b_0": "MESSAGE_XUD_DTYPE_TB_TIMESTAMP_WRITE",
+			"input_c_0": "EXWORKS_ACK_KO_WRITE",
+			"input_d_0": "EXWORKS_ACK_OK_WRITE",
+			"input_e_0": "UPDATE_MESSAGE_ACCEPTED_WRITE",
+			"input_f_0": "UPDATE_MESSAGE_ACCRUALS_ACCEPTED_WRITE",
+			"input_g_0": "UPDATE_MESSAGE_ACCRUALS_WRITE",
             "input_h_0": "UPDATE_MESSAGE_ALLOCATED_WRITE",
             "input_i_0": "UPDATE_MESSAGE_PAYABLE_UPDATE_WRITE",
             "input_j_0": "XUD_RDR_TBN_UUID_WRITE",

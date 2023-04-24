@@ -60,11 +60,11 @@ async def TBM_DOC_CIV_UUID_READ(file: str):
     return result
 
 
-async def TBM_DOC_CIV_TB00001182_S00013457_uniqueID_WRITE(data: dict):
+async def TBM_DOC_CIV_UUID_WRITE(data: dict):
     """
     Take a dictionary and create an XML file with its information using the format of the XML file TBM_DOC_CIV_TB00001182_S00013457_uniqueID.xml.
     """
-    tree = ET.parse("xml_files/TBM_DOC_CIV_TB00001182_S00013457_uniqueID.xml")
+    tree = ET.parse("xml_files/TBM_DOC_CIV_UUID.xml")
     root = tree.getroot()
 
     ns = {"ns": "http://www.cargowise.com/Schemas/Universal/2011/11"}
@@ -116,5 +116,5 @@ async def TBM_DOC_CIV_TB00001182_S00013457_uniqueID_WRITE(data: dict):
     hbol_destino.text = data.get("hbol_destino", "")
 
     filename_xml = data.get("filename", "")
-    file_path = f"test_files\{filename_xml}"
+    file_path = f'test_files/trucker5_2231231312/acknowledge/pending/{filename_xml}'
     tree.write(file_path, encoding="utf-8", xml_declaration=True)

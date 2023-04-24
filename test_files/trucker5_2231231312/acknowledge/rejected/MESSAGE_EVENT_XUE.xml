@@ -1,0 +1,21 @@
+<UniversalEvent>
+      <Event>
+    <DataContext>
+      <DataTargetCollection>
+        <DataTarget>
+          <Type></Type>
+          <Key></Key>
+        </DataTarget>
+      </DataTargetCollection>
+      <Company>
+            <Code></Code>
+      </Company>
+      <EnterpriseID></EnterpriseID>
+      <ServerID></ServerID>
+    </DataContext>
+        <EventTime></EventTime>
+        <EventType></EventType>
+	<EventReference></EventReference>
+	<IsEstimate></IsEstimate>
+      </Event>
+</UniversalEvent>

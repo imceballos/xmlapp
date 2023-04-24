@@ -49,6 +49,11 @@
 		<select id="options" name="options">
 			<option value="a">CW1_REQUEST_XUD_TIMESTAMP</option>
 			<option value="b">MESSAGE_XUD_DTYPE_TB_TIMESTAMP</option>
+			<option value="c">EXWORKS_ACK_KO</option>
+			<option value="d">EXWORKS_ACK_OK</option>
+			<option value="e">UPDATE_MESSAGE_ACCEPTED</option>
+			<option value="f">UPDATE_MESSAGE_ACCRUALS_ACCEPTED</option>
+			<option value="g">UPDATE_MESSAGE_ACCRUALS</option>
 			<option value="h">UPDATE_MESSAGE_ALLOCATED</option>
 			<option value="i">UPDATE_MESSAGE_PAYABLE_UPDATE</option>
 			<option value="j">XUD_RDR_UUID</option>
@@ -88,36 +93,42 @@
 				<input type="text" id="input-b-3" name="input-b-3"><br>
 				<label for="input-b-4">Company Code:</label>
 				<input type="text" id="input-b-4" name="input-b-4"><br>
-				<label for="input-b-5">Company Name:</label>
+				<label for="input-b-5">Company Country Code:</label>
 				<input type="text" id="input-b-5" name="input-b-5"><br>
-				<label for="input-b-6">Company Country Code:</label>
+				<label for="input-b-6">Company Country Name:</label>
 				<input type="text" id="input-b-6" name="input-b-6"><br>
-				<label for="input-b-7">Company Country Name:</label>
+				<label for="input-b-7">Company Name:</label>
 				<input type="text" id="input-b-7" name="input-b-7"><br>
-				<label for="input-b-8">Event Time:</label>
+				<label for="input-b-8">Data Provider</label>
 				<input type="text" id="input-b-8" name="input-b-8"><br>
-				<label for="input-b-9">Event Type:</label>
+				<label for="input-b-9">Enterprise ID:</label>
 				<input type="text" id="input-b-9" name="input-b-9"><br>
-				<label for="input-b-10">Is Estimate:</label>
+				<label for="input-b-10">Server ID:</label>
 				<input type="text" id="input-b-10" name="input-b-10"><br>
-				<label for="input-b-11">Filename:</label>
+				<label for="input-b-11">Event Type:</label>
 				<input type="text" id="input-b-11" name="input-b-11"><br>
-				<label for="input-b-12">ImageData:</label>
+				<label for="input-b-12">Event Type:</label>
 				<input type="text" id="input-b-12" name="input-b-12"><br>
-				<label for="input-b-13">Document Type Code:</label>
+				<label for="input-b-13">Is Estimate:</label>
 				<input type="text" id="input-b-13" name="input-b-13"><br>
-				<label for="input-b-14">Document Type Description:</label>
+				<label for="input-b-14">Attached Filename:</label>
 				<input type="text" id="input-b-14" name="input-b-14"><br>
-				<label for="input-b-15">Document ID:</label>
+				<label for="input-b-15">ImageData:</label>
 				<input type="text" id="input-b-15" name="input-b-15"><br>
-				<label for="input-b-16">Is Published:</label>
+				<label for="input-b-16">Document Type Code:</label>
 				<input type="text" id="input-b-16" name="input-b-16"><br>
-				<label for="input-b-17">Save Date UTC:</label>
+				<label for="input-b-17">Document Type Description:</label>
 				<input type="text" id="input-b-17" name="input-b-17"><br>
-				<label for="input-b-18">Document Saved By Code:</label>
+				<label for="input-b-18">Document ID:</label>
 				<input type="text" id="input-b-18" name="input-b-18"><br>
-				<label for="input-b-19">Document Saved By Name:</label>
+				<label for="input-b-19">Is Published:</label>
 				<input type="text" id="input-b-19" name="input-b-19"><br>
+				<label for="input-b-20">Save Date UTC:</label>
+				<input type="text" id="input-b-20" name="input-b-20"><br>
+				<label for="input-b-21">Document Saved By Code:</label>
+				<input type="text" id="input-b-21" name="input-b-21"><br>
+				<label for="input-b-22">Document Saved By Name:</label>
+				<input type="text" id="input-b-22" name="input-b-22"><br>
 			</div>
 			<!-- Form for Option EXWORKS_ACK_KO -->
 			<div id="form-c" class="form-group">
@@ -146,21 +157,21 @@
 			<div id="form-d" class="form-group">
 				<label for="input-d-0">Filename:</label>
 				<input type="text" id="input-d-0" name="input-d-0"><br>
-				<label for="input-d-1">Event Time:</label>
+				<label for="input-d-1">Data Target Type:</label>
 				<input type="text" id="input-d-1" name="input-d-1"><br>
-				<label for="input-d-2">Event Type:</label>
+				<label for="input-d-2">Data Target Key:</label>
 				<input type="text" id="input-d-2" name="input-d-2"><br>
-				<label for="input-d-3">Event Reference:</label>
+				<label for="input-d-3">Company Code:</label>
 				<input type="text" id="input-d-3" name="input-d-3"><br>
-				<label for="input-d-4">Data Target Type:</label>
+				<label for="input-d-4">Enterprise ID:</label>
 				<input type="text" id="input-d-4" name="input-d-4"><br>
-				<label for="input-d-5">Data Target Key:</label>
+				<label for="input-d-5">Server ID:</label>
 				<input type="text" id="input-d-5" name="input-d-5"><br>
-				<label for="input-d-6">Company Code:</label>
+				<label for="input-d-6">Event Time:</label>
 				<input type="text" id="input-d-6" name="input-d-6"><br>
-				<label for="input-d-7">Enterprise ID:</label>
+				<label for="input-d-7">Event Type:</label>
 				<input type="text" id="input-d-7" name="input-d-7"><br>
-				<label for="input-d-8">Server ID:</label>
+				<label for="input-d-8">Event Reference:</label>
 				<input type="text" id="input-d-8" name="input-d-8"><br>
 				<label for="input-d-9">Is Estimate:</label>
 				<input type="text" id="input-d-9" name="input-d-9"><br>
@@ -564,6 +575,41 @@
 			for (let i = 0; i < inputCount; i++) {
 				const inputName = `input-b-${i}`;
 				body[`input_b_${i}`] = formData.get(inputName);
+			}
+		}else if (options === 'c') {
+			const formGroup = document.querySelector('#form-c');
+  			const inputCount = formGroup.querySelectorAll('input').length;
+			for (let i = 0; i < inputCount; i++) {
+				const inputName = `input-c-${i}`;
+				body[`input_c_${i}`] = formData.get(inputName);
+		}
+		}else if (options === 'd') {
+			const formGroup = document.querySelector('#form-d');
+  			const inputCount = formGroup.querySelectorAll('input').length;
+			for (let i = 0; i < inputCount; i++) {
+				const inputName = `input-d-${i}`;
+				body[`input_d_${i}`] = formData.get(inputName);
+			}
+		}else if (options === 'e') {
+			const formGroup = document.querySelector('#form-e');
+  			const inputCount = formGroup.querySelectorAll('input').length;
+			for (let i = 0; i < inputCount; i++) {
+				const inputName = `input-e-${i}`;
+				body[`input_e_${i}`] = formData.get(inputName);
+			}
+		}else if (options === 'f') {
+			const formGroup = document.querySelector('#form-f');
+  			const inputCount = formGroup.querySelectorAll('input').length;
+			for (let i = 0; i < inputCount; i++) {
+				const inputName = `input-f-${i}`;
+				body[`input_f_${i}`] = formData.get(inputName);
+			}
+		}else if (options === 'g') {
+			const formGroup = document.querySelector('#form-g');
+  			const inputCount = formGroup.querySelectorAll('input').length;
+			for (let i = 0; i < inputCount; i++) {
+				const inputName = `input-g-${i}`;
+				body[`input_g_${i}`] = formData.get(inputName);
 			}
 		} else if (options === 'h') {
 			const formGroup = document.querySelector('#form-h');
