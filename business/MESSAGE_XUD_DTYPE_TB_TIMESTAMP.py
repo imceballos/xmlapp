@@ -101,7 +101,7 @@ async def MESSAGE_XUD_DTYPE_TB_TIMESTAMP_READ(file: str):
     return result
 
 
-async def MESSAGE_XUD_DTYPE_TB_TIMESTAMP_WRITE(data: dict):
+async def MESSAGE_XUD_DTYPE_TB_TIMESTAMP_WRITE(data: dict, folder_path: str):
     """
     Take a dictionary and create an XML file with its information using the format of the XML file MESSAGE_XUD_DTYPE_TB_TIMESTAMP.xml.
     """
@@ -203,6 +203,6 @@ async def MESSAGE_XUD_DTYPE_TB_TIMESTAMP_WRITE(data: dict):
     document_saved_by_name.text = data.get("document_saved_by_name", "")
 
     filename_xml = data.get("filename", "")
-    file_path = f'test_files/trucker5_2231231312/acknowledge/pending/{filename_xml}'
+    file_path = f'{folder_path}/acknowledge/pending/{filename_xml}'
     tree.write(file_path, encoding='utf-8', xml_declaration=True)
 

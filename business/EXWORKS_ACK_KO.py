@@ -51,7 +51,7 @@ async def EXWORKS_ACK_KO_READ(file: str):
     return result
 
 
-async def EXWORKS_ACK_KO_WRITE(data: dict):
+async def EXWORKS_ACK_KO_WRITE(data: dict, folder_path: str):
     """
     Take a dictionary and create an XML file with its information using the format of the XML file EXWORKS_ACK_KO.xml.
     """
@@ -96,5 +96,5 @@ async def EXWORKS_ACK_KO_WRITE(data: dict):
     IsEstimate.text = data.get("is_estimate", "")
     
     filename_xml = data.get("filename", "")
-    file_path = f'test_files/trucker5_2231231312/acknowledge/pending/{filename_xml}'
+    file_path = f'{folder_path}/acknowledge/pending/{filename_xml}'
     tree.write(file_path, encoding="utf-8", xml_declaration=True)

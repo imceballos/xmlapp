@@ -19,6 +19,7 @@ from utils.ftp import FTPDownloader
 import business as business
 import asyncio #presente en lineas conectadas
 
+
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -119,13 +120,13 @@ async def post_form(request: Request):
     return templates.TemplateResponse("formpost.html", {"request": request})
 
 @app.post("/formpost")
-async def process_form(data: dict, request: Request):
+async def process_form(data: dict, request: Request, user: User = Depends(get_current_user_from_token)):
     """
     Given a dictonary, a new dictionary is created with the corresponding keys and values,
     and a function is called to write the data to an XML file.
     """
-    print("Estoy aca")
-    print(data)
+    print("Hola a todos como estamos")
+    base_folder_path = user.folder_path
     option = list(data.keys())[0]
     if option == "input_a_0":
         data = {    
@@ -400,7 +401,7 @@ async def process_form(data: dict, request: Request):
                 }
     
     xml_writer = getattr(business, UtilFunctions().get_write_func_filename(option))
-    datafile = await xml_writer(data)
+    datafile = await xml_writer(data, base_folder_path)
     return {"message": "XML file successfully created"}
 
 @app.post("/token")
@@ -497,8 +498,11 @@ async def create_connection(request: Request):
 
 
 @app.get("/folder/{folder_name}")
-async def folder_detail(request: Request, folder_name: str):
+async def folder_detail(request: Request, folder_name: str, user: User = Depends(get_current_user_from_token)):
     folder_path = f"test_files/{folder_name}"
+    print("ESTA ASIGNANDO ")
+    user.folder_path = folder_path
+    print(user.folder_path)
     if not os.path.isdir(folder_path):
         return responses.PlainTextResponse("Folder not found", status_code=404)
     files = os.listdir(folder_path)
@@ -517,7 +521,7 @@ async def create_connection_post(request: Request,
     folder_path = "test_files"
 
     folder_name = f"test_files/{name}"
-    required_subfolders = ["request_to_trucker", "acknowledge", 
+    required_subfolders = ["all_files", "request_to_trucker", "acknowledge", 
                 "trucker_response", "trucker_event_instruction_planning",
                 "trucker_event_instruction_actual", "arrival_on_site","pod_ppu"]
     UtilFunctions().create_subdirectories(folder_name, required_subfolders)
@@ -540,10 +544,6 @@ async def perform_operation(request: Request, folder_path: str):
     accepted_files = UtilFunctions().get_files_by_condition(folder_path, encoded_text, "accepted")
     rejected_files = UtilFunctions().get_files_by_condition(folder_path, encoded_text, "rejected")
     pending_files = UtilFunctions().get_files_by_condition(folder_path, encoded_text, "pending")
-    print("VER ARCHIVOS")
-    print(accepted_files)
-    print(rejected_files)
-    print(pending_files)
     return templates.TemplateResponse("index.html", {"request": request, "accepted_files": accepted_files, 
             "rejected_files": rejected_files, "pending_files": pending_files, "folder_level": folder_level,
             "folder_path": f"{folder_path}/"})
@@ -603,7 +603,9 @@ async def download_files_ftp(data: dict):
 
 @app.post("/send_files_ftp")
 async def download_files_ftp(data: dict):
+    print("estoy aca")
     folder_path = decode_from_base64(data["folder_path"])
     file_path = os.path.join(folder_path, f"{data['status']}/", data["filename"])
+    print("Corrio el post o no")
     ddd.upload_file(file_path)
     return {"message": "Successfully updated"}

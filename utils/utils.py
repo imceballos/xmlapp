@@ -120,8 +120,5 @@ class UtilFunctions:
 
     def get_files_directory(self, folder_path, cond):
         elements = set(os.listdir(os.path.join(folder_path, cond)))
-        print("ESTOY ACA HOY HELLO WORLD")
-        print(os.path.join(f"{folder_path}"))
-        print([{"name": file, "size": os.path.getsize(os.path.join(f"{folder_path}/{cond}", file)), "folder": encode_to_base64(f"{folder_path}/")} for file in os.listdir(f"{folder_path}/{cond}")])
         return [{"name": file, "size": os.path.getsize(os.path.join(f"{folder_path}/{cond}", file)), "folder": encode_to_base64(f"{folder_path}/")} for file in os.listdir(f"{folder_path}/{cond}")]
         #return set(os.listdir(os.path.join(folder_path, cond)))

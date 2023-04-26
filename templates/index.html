@@ -167,6 +167,24 @@
             margin-right: 50px;
             width: 5%;
         }
+        #loading, #sending {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        #loading p, #sending p  {
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            color: white;
+        }
 
 
     </style>
@@ -179,7 +197,13 @@
         <a href="{{ url_for('post_form') }}">
             <button class="postform-button">Generate order</button>
         </a>
-    </div>     
+    </div>   
+    <div id="loading" style="display: none;">
+        <p>Loading...</p>
+    </div>
+    <div id="sending" style="display: none;">
+        <p>Sending...</p>
+    </div>
     <div class="container">
         {% for status, files in {'pending': pending_files, 'accepted': accepted_files, 'rejected': rejected_files}.items() %}
             <div class="{{ status }}-table">
@@ -293,6 +317,9 @@
         }
 
         function downloadfilesftp(folder_path) {
+            const loadingElement = document.getElementById("loading");
+            const downloadButton = document.getElementById("download-btn");
+            loadingElement.style.display = "flex";
             fetch('/download_files_ftp', {
                 method: 'POST',
                 headers: {
@@ -311,10 +338,15 @@
             }).catch(error => {
                 console.error(error);
                 alert('Failed to update file status');
-            });
+            }).finally(() => {
+                loadingElement.style.display = "none";
+                });
         }
 
         function sendFileftp(filename, folder_path, status) {
+            const sendingElement = document.getElementById("sending");
+            const sendingButton = document.getElementById("sendfile-button");
+            sendingElement.style.display = "flex";
             fetch('/send_files_ftp', {
                 method: 'POST',
                 headers: {
@@ -333,7 +365,9 @@
             }).catch(error => {
                 console.error(error);
                 alert('Failed to update file status');
-            });
+            }).finally(() => {
+                sendingElement.style.display = "none";
+                });
         }
 
         function showConfirmation(name, folder, status) {

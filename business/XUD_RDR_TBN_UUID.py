@@ -118,7 +118,7 @@ async def XUD_RDR_TBN_UUID_READ(file: str):
     return result
 
 
-async def XUD_RDR_TBN_UUID_WRITE(data: dict):
+async def XUD_RDR_TBN_UUID_WRITE(data: dict, folder_path: str):
     """
     Take a dictionary and create an XML file with its information using the format of the XML file XUD_RDR_TBN_UUID.xml.
     """
@@ -238,5 +238,5 @@ async def XUD_RDR_TBN_UUID_WRITE(data: dict):
     VisibleDepartmentCode.text = data.get('visible_department_code', "")
 
     filename_xml = data.get("filename", "")
-    file_path = f'test_files/trucker5_2231231312/acknowledge/pending/{filename_xml}'
+    file_path = f'{folder_path}/acknowledge/pending/{filename_xml}'
     tree.write(file_path, encoding='utf-8', xml_declaration=True)
