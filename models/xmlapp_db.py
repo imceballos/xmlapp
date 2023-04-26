@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker, relationship
 import uuid
 import re
 
-from base import Base
+from .base import Base
 
 class Person(Base):
     __tablename__ = "person"
