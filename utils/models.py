@@ -5,6 +5,7 @@ from passlib.handlers.sha2_crypt import sha512_crypt as crypto
 class User(BaseModel):
     username: str
     hashed_password: str
+    folder_path: str
 
 class DataBase(BaseModel):
     user: List[User]
@@ -18,8 +19,8 @@ class File(BaseModel):
 
 DB = DataBase(
     user=[
-        User(username="user1@gmail.com", hashed_password=crypto.hash("12345")),
-        User(username="user2@gmail.com", hashed_password=crypto.hash("12345")),
+        User(username="user1@gmail.com", hashed_password=crypto.hash("12345"), folder_path=""),
+        User(username="user2@gmail.com", hashed_password=crypto.hash("12345"), folder_path=""),
     ]
 )
 

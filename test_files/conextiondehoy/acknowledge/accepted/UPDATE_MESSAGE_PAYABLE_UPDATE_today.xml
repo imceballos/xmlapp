@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='utf-8'?>
+<UniversalShipment>
+  <Shipment>
+    <DataContext>
+      <DataTargetCollection>
+        <DataTarget>
+          <Type>Hello</Type>
+          <Key>world</Key>
+        </DataTarget>
+      </DataTargetCollection>
+      <Company>
+            <Code>this</Code>
+      </Company>
+      <EnterpriseID>is</EnterpriseID>
+      <ServerID>the</ServerID>
+    </DataContext>
+    <TransportBookingDirection>
+      <Code>boring</Code>
+      <Description>session</Description>
+    </TransportBookingDirection>
+	<OrganizationAddressCollection>
+	  <OrganizationAddress>
+		<AddressType>to</AddressType>
+		<OrganizationCode>test</OrganizationCode>
+	  </OrganizationAddress>
+	</OrganizationAddressCollection>
+    <JobCosting>
+      <Branch>
+        <Code>the</Code>
+      </Branch>
+      <Currency>
+        <Code>xmls</Code>
+      </Currency>
+      <Department>
+        <Code>file</Code>
+      </Department>
+		<ChargeLineCollection>
+			<ChargeLine>
+				<Branch>
+					<Code />
+				</Branch>
+				<ChargeCode>
+					<Code />
+				</ChargeCode>
+				<CostLocalAmount />
+				<CostOSAmount />
+				<CostOSCurrency>
+					<Code />
+				</CostOSCurrency>
+				<CostOSGSTVATAmount />
+				<Creditor>
+					<Type />
+					<Key />
+				</Creditor>	
+				<Department>
+					<Code />
+				</Department>
+				<DisplaySequence />
+				<ImportMetaData>
+					<Instruction />
+				</ImportMetaData>
+				<SupplierReference />  
+			</ChargeLine>
+		</ChargeLineCollection>
+    </JobCosting>	
+ </Shipment>
+</UniversalShipment>
