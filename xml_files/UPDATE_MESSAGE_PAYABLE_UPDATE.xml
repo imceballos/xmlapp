@@ -3,99 +3,62 @@
     <DataContext>
       <DataTargetCollection>
         <DataTarget>
-          <Type>TransportBooking</Type>
-          <Key>TB00000976</Key>
+          <Type></Type>
+          <Key></Key>
         </DataTarget>
       </DataTargetCollection>
       <Company>
-            <Code>SG1</Code>
+            <Code></Code>
       </Company>
-      <EnterpriseID>B52</EnterpriseID>
-      <ServerID>TST</ServerID>
+      <EnterpriseID></EnterpriseID>
+      <ServerID></ServerID>
     </DataContext>
     <TransportBookingDirection>
-      <Code>ORG</Code>
-      <Description>Pickup</Description>
+      <Code></Code>
+      <Description></Description>
     </TransportBookingDirection>
 	<OrganizationAddressCollection>
 	  <OrganizationAddress>
-		<AddressType>TransportCompanyDocumentaryAddress</AddressType>
-		<OrganizationCode>TRUTESSIN</OrganizationCode>
+		<AddressType></AddressType>
+		<OrganizationCode></OrganizationCode>
 	  </OrganizationAddress>
 	</OrganizationAddressCollection>
     <JobCosting>
       <Branch>
-        <Code>S01</Code>
+        <Code></Code>
       </Branch>
       <Currency>
-        <Code>SGD</Code>
+        <Code></Code>
       </Currency>
       <Department>
-        <Code>FES</Code>
+        <Code></Code>
       </Department>
 		<ChargeLineCollection>
 			<ChargeLine>
 				<Branch>
-					<Code>S01</Code>
+					<Code></Code>
 				</Branch>
 				<ChargeCode>
-					<Code>10569</Code>
+					<Code></Code>
 				</ChargeCode>
-				<CostLocalAmount>9999.0000</CostLocalAmount>
-				<CostOSAmount>9999.0000</CostOSAmount>
+				<CostLocalAmount></CostLocalAmount>
+				<CostOSAmount></CostOSAmount>
 				<CostOSCurrency>
-					<Code>SGD</Code>
+					<Code></Code>
 				</CostOSCurrency>
-				<CostOSGSTVATAmount>0</CostOSGSTVATAmount>
+				<CostOSGSTVATAmount></CostOSGSTVATAmount>
 				<Creditor>
-					<Type>Organization</Type>
-					<Key>TRUTESSIN</Key>
+					<Type></Type>
+					<Key></Key>
 				</Creditor>	
 				<Department>
-					<Code>FES</Code>
+					<Code></Code>
 				</Department>
-				<DisplaySequence>1</DisplaySequence>
+				<DisplaySequence></DisplaySequence>
 				<ImportMetaData>
-					<Instruction>Insert</Instruction>
+					<Instruction></Instruction>
 				</ImportMetaData>
-				<SupplierReference>TB00000976</SupplierReference>  
-			</ChargeLine>
-			<ChargeLine>
-				<Branch>
-					<Code>S01</Code>
-				</Branch>
-				<ChargeCode>
-					<Code>10452</Code>
-				</ChargeCode>
-				<CostLocalAmount>1700.0000</CostLocalAmount>
-				<EstimatedCost>1700.0000</EstimatedCost>
-				<CostOSAmount>1700.0000</CostOSAmount>
-				<CostOSCurrency>
-					<Code>SGD</Code>
-				</CostOSCurrency>
-				<CostOSGSTVATAmount>0</CostOSGSTVATAmount>
-				<Creditor>
-					<Type>Organization</Type>
-					<Key>TRUTESSIN</Key>
-				</Creditor>	
-				<Department>
-					<Code>FES</Code>
-				</Department>
-				<DisplaySequence>1</DisplaySequence>
-				<ImportMetaData>
-					<Instruction>Update</Instruction>
-					<MatchingCriteriaCollection>
-						<MatchingCriteria>
-						<FieldName>ChargeCode</FieldName>
-						<Value>10569</Value>
-						</MatchingCriteria>
-						<MatchingCriteria>
-						<FieldName>SupplierReference</FieldName>
-						<Value>TB00000976</Value>
-						</MatchingCriteria>
-					</MatchingCriteriaCollection>
-				</ImportMetaData>
-				<SupplierReference>TB00000976</SupplierReference>  
+				<SupplierReference></SupplierReference>  
 			</ChargeLine>
 		</ChargeLineCollection>
     </JobCosting>	

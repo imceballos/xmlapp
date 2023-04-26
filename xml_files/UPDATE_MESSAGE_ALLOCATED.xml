@@ -36,18 +36,8 @@
 		<CustomizedField>
             <DataType></DataType>
             <Key></Key>
-            <Value>This is my test Trucker ID 1234</Value>
-        </CustomizedField>
-		<CustomizedField>
-            <DataType>String</DataType>
-            <Key>Trailers ID</Key>
-            <Value>This is my test Trailers ID 1234</Value>
-        </CustomizedField>
-				<CustomizedField>
-            <DataType>String</DataType>
-            <Key>Driver Name</Key>
-            <Value>This is my test Driver Name 1234</Value>
-        </CustomizedField>		
+            <Value></Value>
+        </CustomizedField>	
     </CustomizedFieldCollection>
  </Shipment>
 </UniversalShipment>

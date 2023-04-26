@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 import datetime
 
 from fastapi import Depends, FastAPI, HTTPException, Request, Response, status
@@ -9,6 +9,7 @@ from passlib.handlers.sha2_crypt import sha512_crypt as crypto
 from jose import JWTError, jwt
 
 from .models import User, get_user
+from models.xmlapp_db import Person
 
 
 class OAuth2PasswordBearerWithCookie(OAuth2):
@@ -64,10 +65,10 @@ class AuthenticationMethods:
         return encoded_jwt
 
     def authenticate_user(self, username: str, plain_password: str) -> User:
-        user = get_user(username)
+        user = Person.find_by_email(username)
         if not user:
             return False
-        if not crypto.verify(plain_password, user.hashed_password):
+        if not user.password == plain_password:
             return False
         return user
 

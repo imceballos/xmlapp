@@ -89,7 +89,7 @@
             width: 50%;
         }
         
-        .accept-button, .reject-button, .delete-button {
+        .accept-button, .reject-button, .delete-button, .downloadftp-button, .postform-button, .sendfile-button {
             background-color: #4CAF50;
             color: white;
             border: none;
@@ -102,11 +102,29 @@
             cursor: pointer;
             border-radius: 2px;
         }
-        
-        .accept-button:hover, .reject-button:hover, .delete-button:hover {
+
+        .downloadftp-button {
+            position: absolute;
+            font-size: 15px;
+            top: 0;
+            left: 0;
+            }
+
+        .postform-button {
+            position: relative;
+            font-size: 15px;
+            z-index: 1;
+            }
+     
+        .accept-button:hover, .reject-button:hover, .delete-button:hover, .downloadftp-button:hover, .postform-button:hover, .sendfile-button:hover {
             background-color: #3e8e41;
         }
         
+        .button-container {
+            position: absolute;
+            top: 200px;
+            right: 80px;
+        }
 
         .confirmation-overlay {
             position: fixed;
@@ -149,13 +167,42 @@
             margin-right: 50px;
             width: 5%;
         }
+        #loading, #sending {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        #loading p, #sending p  {
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            color: white;
+        }
 
 
     </style>
 </head>
 <body>
-    <div class="button-wrapper">
-        <button onclick="location.href='/formpost'">Generate order</button>
+    <div class="button-container">
+        <a>
+            <button type="button" class="downloadftp-button" onclick="downloadfilesftp('{{ folder_path }}')">Download files</button>
+        </a><br><br>
+        <a href="{{ url_for('post_form') }}">
+            <button class="postform-button">Generate order</button>
+        </a>
+    </div>   
+    <div id="loading" style="display: none;">
+        <p>Loading...</p>
+    </div>
+    <div id="sending" style="display: none;">
+        <p>Sending...</p>
     </div>
     <div class="container">
         {% for status, files in {'pending': pending_files, 'accepted': accepted_files, 'rejected': rejected_files}.items() %}
@@ -170,13 +217,14 @@
                             <th>Action</th>
                         {% endif %}
                         <th>View</th>
+                        <th>Action</th>
                     </tr>
                     {% for file in files %}
                         <tr>
                             <td>{{ file.name }}</td>
                             <td>{{ '{:.2f}'.format(file.size / 1024) }} KB</td>
                             <td>
-                                <a href="{{ url_for('download_file', filename=file.name, folder=file.folder) }}">
+                                <a href="{{ url_for('download_file', filename=file.name, folder=file.folder, status=status) }}">
                                     <div class="download-icon"></div>
                                 </a>
                             </td>
@@ -193,6 +241,9 @@
                                 <td>
                                     <a href="{{ url_for('view_xml', filename=file.name, folder=file.folder, status=status) }}">View</a>
                                 </td>
+                            <td>
+                                <button type="button" class="sendfile-button" onclick="sendFileftp('{{ file.name }}', '{{ file.folder }}', '{{ status }}')">Send</button>
+                            </td>
                             </tr>
                     {% endfor %}
                 </table>
@@ -263,6 +314,60 @@
                 console.error(error);
                 alert('Failed to update file status');
             });
+        }
+
+        function downloadfilesftp(folder_path) {
+            const loadingElement = document.getElementById("loading");
+            const downloadButton = document.getElementById("download-btn");
+            loadingElement.style.display = "flex";
+            fetch('/download_files_ftp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({"folder_path": folder_path})
+            }).then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Failed to update file status');
+                }
+            }).then(data => {
+                console.log(data.message);
+                location.reload(); // reload the page to update the file list
+            }).catch(error => {
+                console.error(error);
+                alert('Failed to update file status');
+            }).finally(() => {
+                loadingElement.style.display = "none";
+                });
+        }
+
+        function sendFileftp(filename, folder_path, status) {
+            const sendingElement = document.getElementById("sending");
+            const sendingButton = document.getElementById("sendfile-button");
+            sendingElement.style.display = "flex";
+            fetch('/send_files_ftp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({"filename": filename, "folder_path": folder_path, "status": status})
+            }).then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Failed to update file status');
+                }
+            }).then(data => {
+                console.log(data.message);
+                location.reload(); // reload the page to update the file list
+            }).catch(error => {
+                console.error(error);
+                alert('Failed to update file status');
+            }).finally(() => {
+                sendingElement.style.display = "none";
+                });
         }
 
         function showConfirmation(name, folder, status) {

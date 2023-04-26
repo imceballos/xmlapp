@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='utf-8'?>
+<UniversalShipment>
+  <Shipment>
+    <DataContext>
+      <DataTargetCollection>
+        <DataTarget>
+          <Type>hjhj</Type>
+          <Key>hj</Key>
+        </DataTarget>
+      </DataTargetCollection>
+      <Company>
+            <Code>h</Code>
+      </Company>
+      <EnterpriseID>hj</EnterpriseID>
+      <ServerID>jk</ServerID>
+    </DataContext>
+    <TransportBookingDirection>
+      <Code />
+      <Description>jk</Description>
+    </TransportBookingDirection>
+	<OrganizationAddressCollection>
+	  <OrganizationAddress>
+		<AddressType />
+		<OrganizationCode />
+	  </OrganizationAddress>
+	</OrganizationAddressCollection>
+    <JobCosting>
+      <Branch>
+        <Code />
+      </Branch>
+      <Currency>
+        <Code />
+      </Currency>
+      <Department>
+        <Code />
+      </Department>
+		<ChargeLineCollection>
+			<ChargeLine>
+				<Branch>
+					<Code />
+				</Branch>
+				<ChargeCode>
+					<Code />
+				</ChargeCode>
+				<CostLocalAmount />
+				<CostOSAmount />
+				<CostOSCurrency>
+					<Code />
+				</CostOSCurrency>
+				<CostOSGSTVATAmount />
+				<Creditor>
+					<Type />
+					<Key />
+				</Creditor>	
+				<Department>
+					<Code />
+				</Department>
+				<DisplaySequence />
+				<ImportMetaData>
+					<Instruction />
+				</ImportMetaData>
+				<SupplierReference />  
+			</ChargeLine>
+		</ChargeLineCollection>
+    </JobCosting>	
+	<CustomizedFieldCollection Content="Partial">
+        <CustomizedField>
+            <DataType />
+            <Key />
+            <Value />
+        </CustomizedField>
+    </CustomizedFieldCollection>
+ </Shipment>
+</UniversalShipment>

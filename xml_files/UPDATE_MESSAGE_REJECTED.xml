@@ -3,40 +3,40 @@
     <DataContext>
       <DataTargetCollection>
         <DataTarget>
-          <Type>TransportBooking</Type>
-          <Key>TB00000257</Key>
+          <Type></Type>
+          <Key></Key>
         </DataTarget>
       </DataTargetCollection>
       <Company>
-            <Code>SG1</Code>
+            <Code></Code>
       </Company>
-      <EnterpriseID>B52</EnterpriseID>
-      <ServerID>TST</ServerID>
+      <EnterpriseID></EnterpriseID>
+      <ServerID></ServerID>
     </DataContext>
 	<NoteCollection Content="Partial">
         <Note>
-            <Description>Trucker Rejection Reason</Description>
-            <IsCustomDescription>true</IsCustomDescription>
-            <NoteText>This is my testnote1234</NoteText>
+            <Description></Description>
+            <IsCustomDescription></IsCustomDescription>
+            <NoteText></NoteText>
             <NoteContext>
-                <Code>AAA</Code>
+                <Code></Code>
             </NoteContext>
             <Visibility>
-                <Code>INT</Code>
+                <Code></Code>
             </Visibility>
         </Note>
     </NoteCollection>
 	<OrganizationAddressCollection>
 	  <OrganizationAddress>
-		<AddressType>TransportCompanyDocumentaryAddress</AddressType>
-		<OrganizationCode>DUJTRALEH</OrganizationCode>
+		<AddressType></AddressType>
+		<OrganizationCode></OrganizationCode>
 	  </OrganizationAddress>
 	</OrganizationAddressCollection>
 	<CustomizedFieldCollection Content="Partial">
         <CustomizedField>
-            <DataType>String</DataType>
-            <Key>ROAD EDI Status</Key>
-            <Value>REJECTED</Value>
+            <DataType></DataType>
+            <Key></Key>
+            <Value></Value>
         </CustomizedField>
     </CustomizedFieldCollection>
  </Shipment>
