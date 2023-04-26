@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request, Form, File, UploadFile, Depends, HTTPExcep
 from fastapi.security import OAuth2PasswordRequestForm
 from starlette.responses import RedirectResponse
 from fastapi.responses import FileResponse, HTMLResponse, Response
+from sqlalchemy import create_engine
 
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -15,6 +16,8 @@ from utils.login import LoginForm
 from utils.utils import UtilFunctions
 from utils.encrypt import decode_from_base64, encode_to_base64
 from utils.ftp import FTPDownloader
+from models.base import Base
+from models.xmlapp_db import Person
 
 import business as business
 import asyncio #presente en lineas conectadas
@@ -126,7 +129,7 @@ async def process_form(data: dict, request: Request, user: User = Depends(get_cu
     and a function is called to write the data to an XML file.
     """
     print("Hola a todos como estamos")
-    base_folder_path = user.folder_path
+    base_folder_path = "test_files/new"
     option = list(data.keys())[0]
     if option == "input_a_0":
         data = {    
@@ -412,7 +415,7 @@ def login_for_access_token(
     user = auth_method.authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password")
-    access_token = auth_method.create_access_token(data={"username": user.username})
+    access_token = auth_method.create_access_token(data={"username": user.first_name})
     
     # Set an HttpOnly cookie in the response. `httponly=True` prevents 
     # JavaScript from reading the cookie.
@@ -498,11 +501,9 @@ async def create_connection(request: Request):
 
 
 @app.get("/folder/{folder_name}")
-async def folder_detail(request: Request, folder_name: str, user: User = Depends(get_current_user_from_token)):
+async def folder_detail(request: Request, folder_name: str):
     folder_path = f"test_files/{folder_name}"
     print("ESTA ASIGNANDO ")
-    user.folder_path = folder_path
-    print(user.folder_path)
     if not os.path.isdir(folder_path):
         return responses.PlainTextResponse("Folder not found", status_code=404)
     files = os.listdir(folder_path)
@@ -521,9 +522,7 @@ async def create_connection_post(request: Request,
     folder_path = "test_files"
 
     folder_name = f"test_files/{name}"
-    required_subfolders = ["all_files", "request_to_trucker", "acknowledge", 
-                "trucker_response", "trucker_event_instruction_planning",
-                "trucker_event_instruction_actual", "arrival_on_site","pod_ppu"]
+    required_subfolders = ["frombollore", "tobollore", "staging"]
     UtilFunctions().create_subdirectories(folder_name, required_subfolders)
 
     folders = [name for name in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, name))]
@@ -533,6 +532,7 @@ async def create_connection_post(request: Request,
 
 @app.get("/get_template")
 async def perform_operation(request: Request, folder_path: str):
+    print(Person.find_by_email("imceballos1@gmail.com"))
     #await asyncio.to_thread(downloader.download_files, folder_path)
     #await asyncio.gather(downloader.download_files(folder_path))
     #await asyncio.gather(download_new_files(folder_path))

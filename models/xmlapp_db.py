@@ -1,27 +1,28 @@
-from sqlalchemy import create_engine, ForeignKey, Column, String, Integer
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine, ForeignKey, Column, String, Integer, Enum
 from sqlalchemy.orm import sessionmaker, relationship
+import uuid
 import re
 
-Base = declarative_base()
+from base import Base
 
 class Person(Base):
-    __tablename__ = "people"
+    __tablename__ = "person"
 
-    id = Column("id", Integer, primary_key=True)
+    id = Column("id", String(length=80), primary_key=True)
     first_name = Column("first_name", String(length=80), nullable=False)
     last_name = Column("last_name", String(length=80), nullable=False)
     email = Column("email", String(length=60), nullable=False, unique=True)
-    username = Column("username", String(length=60),nullable=False, unique=True)
-    company = Column("company", String(length=60),nullable=False)
+    password = Column("password", String(length=256), nullable=False)
+    company = Column("company", String(length=60), nullable=False)
 
-    def __init__(self, id, first_name, last_name, email, username, company):
-        self.id = id
+    def __init__(self,  first_name, last_name, email, password, company):
+        self.id = str(uuid.uuid4())
         self.first_name = self._sanitize_input(first_name)
         self.last_name = self._sanitize_input(last_name)
         self.email = self._validate_email(email)
-        self.username = username
+        self.password = password
         self.company = company
+        self.session = self._session()
 
     def __repr__(self):
        return f"{self.id} {self.first_name} {self.last_name} {self.email} {self.company}"
@@ -35,13 +36,6 @@ class Person(Base):
     def find_by_public_id(cls, public_id):
         session = cls._session()
         return session.query(cls).filter_by(public_id=public_id).first()
-
-    @classmethod
-    #Definir classmethods para: Buscar por first_name, last_name, por id, por email
-    #Agregar atributo company al tablero users, agregar un classmethod para company
-    #Agregar verificadores de email, de caracteres sanitizados y setear un largo maximo de VARCHAR(60-80) 
-    #Files: uuid, filename, path, condition
-    #Crear metodos de clase para filename, path, contenido dentro de, condition.
 
     @classmethod
     def find_by_first_name(cls, first_name):
@@ -63,7 +57,6 @@ class Person(Base):
         session = cls._session()
         return session.query(cls).filter_by(email=email).first()
     
-    #Actualiza
     @classmethod
     def update_by_id(cls, id, update_dict):
         session = cls._session()
@@ -84,34 +77,43 @@ class Person(Base):
         return Session()
 
     def _sanitize_input(self, input_str):
-    # Reemplaza los caracteres no alfanuméricos y los espacios en blanco por guiones bajos
         return re.sub(r'[^\w\s]', '', input_str).replace(' ', '_')
 
     def _validate_email(self, email):
-    # Verifica que el email tenga un formato válido
         if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
             raise ValueError("El email es inválido")
         return email
     
-# Crear una clase de modelo para la tabla "Files"
 class Files(Base):
-    __tablename__ = 'Files'
+    __tablename__ = 'files'
 
-    uvid = Column("uvid", Integer, primary_key=True)
-    filename = Column("filename", String)
-    path = Column("path", String)
-    assignedto = Column("assignedto", String, ForeignKey('people.username'))
-    condition = Column("condition", String)
+    uuid = Column("uuid", String(length=80), primary_key=True)
+    filename = Column("filename", String(length=80), nullable=False)
+    path = Column("path", String(length=80), nullable=False)
+    assignedto = Column("assignedto", String, ForeignKey('person.id'))
+    status = Column(Enum('accepted', 'rejected', 'pending', name='status'), default='pending')
+    stage = Column("stage", String(length=80), nullable=False)
 
-    user = relationship('people', foreign_keys=[assignedto])  
+    def __init__(self, filename, path, assignedto, stage):
+        self.uuid = str(uuid.uuid4())
+        self.filename = filename
+        self.path = path
+        self.assignedto = assignedto
+        self.stage = stage
 
     def __repr__(self):
-        return f"{self.uvid} {self.filename} {self.path} {self.assignedto} {self.condition}"  
+        return f"{self.uuid} {self.filename} {self.path} {self.assignedto} {self.status}"  
     
     @classmethod
-    def find_by_uvid(cls, uvid):
+    def _session(cls):
+        engine = create_engine("sqlite:///mydb.db")
+        Session = sessionmaker(bind=engine)
+        return Session()
+
+    @classmethod
+    def find_by_uuid(cls, uuid):
         session = cls._session()
-        return session.query(cls).filter_by(uvid=uvid).first()
+        return session.query(cls).filter_by(uuid=uuid).first()
 
     @classmethod
     def find_by_filename(cls, filename):
@@ -119,18 +121,26 @@ class Files(Base):
         return session.query(cls).filter_by(filename=filename).first()
 
     @classmethod
-    def find_by_condition(cls, condition):
+    def find_by_condition(cls, status):
         session = cls._session()
-        return session.query(cls).filter_by(condition=condition).all()
+        return session.query(cls).filter_by(status=status).all()
     
-#engine = create_engine("sqlite:///mydb.db", echo=True)
-#Base.metadata.create_all(bind=engine)
+
 
 #Session = sessionmaker(bind=engine)
 #session = Session()
 
-#person = Person(1, "Israel", "Ceballos", "imceballos@gmail.com")
+#person = Person("Israel", "Ceballos", "imceballos1@gmail.com", "imceballos", "testing")
 #session.add(person)
 #session.commit()
 
-#print(Person.find_by_email("imceballos@gmail.com"))
+#print(Person.find_by_email("imceballos1@gmail.com"))
+
+#faile = Files("Helloxml", "hELLOWORLD.xml", "51534e87-ea89-456a-a42a-5e255a437a62")
+
+#session.add(faile)
+#session.commit()
+
+#elem = Files.find_by_condition("pending")
+#for el in elem:
+#    print(el.uuid, el.status, el.filename)
