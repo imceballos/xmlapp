@@ -407,7 +407,7 @@ async def create_connection_post(request: Request,
 
 @app.get("/get_template")
 async def perform_operation(request: Request, folder_path: str):
-    await asyncio.to_thread(downloader.download_files, folder_path)
+ #   await asyncio.to_thread(downloader.download_files, folder_path)
     #await asyncio.gather(downloader.download_files(folder_path))
     #await asyncio.gather(download_new_files(folder_path))
 
@@ -416,6 +416,16 @@ async def perform_operation(request: Request, folder_path: str):
     rejected_files = UtilFunctions().get_files_by_condition(folder_path, encoded_text, "rejected")
     pending_files = UtilFunctions().get_files_by_condition(folder_path, encoded_text, "pending")
     return templates.TemplateResponse("index.html", {"request": request, "accepted_files": accepted_files, "rejected_files": rejected_files, "pending_files": pending_files})
+
+
+@app.get("/recover_password")
+async def recover_password(request: Request):
+    return templates.TemplateResponse("recover_password.html", {"request": request})
+
+
+@app.get("/help")
+async def help(request: Request):
+    return templates.TemplateResponse("help.html", {"request": request})
 
 
 @app.get("/showfolder")
