@@ -549,6 +549,16 @@ async def perform_operation(request: Request, folder_path: str):
             "folder_path": f"{folder_path}/"})
 
 
+@app.get("/recover_password")
+async def recover_password(request: Request):
+    return templates.TemplateResponse("recover_password.html", {"request": request})
+
+
+@app.get("/help")
+async def help(request: Request):
+    return templates.TemplateResponse("help.html", {"request": request})
+
+
 @app.get("/showfolder")
 async def show_folder(request: Request):
     return templates.TemplateResponse('folder.html', {"request": request})

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+	text-align: center;
+      }
+      #profile {
+        margin-top: 80px;
+        background-color: #ffffff;
+        border-radius: 5px;
+        padding: 30px;
+      }
+      h1 {
+        font-size: 36px;
+        font-weight: bold;
+        color: #000000;
+        margin-bottom: 30px;
+      }
+      p {
+        font-size: 18px;
+        color: #000000;
+        line-height: 1.5;
+      }
+     .text-justify {
+     text-align: justify;
+     }
+     .text-center {
+     text-align: center;
+     }
+     .answer {
+			display: none;
+		}
+    .question {
+			border-bottom: 2px solid #000000;
+			padding-bottom: 5px;
+			cursor: pointer;
+		}
+    </style>
+  </head>
+  <body>
+    <div class="container mt-5" id="profile">
+      <h1>Welcome to the Help Section!</h1>
+      <p class="text-justify">In this section, you will find all the information you need to use our platform easily and effectively.
+	        If you have any questions or issues, feel free to consult them here! Regarding the login process, it's very simple. You just need to enter your username and password
+	      on the login screen and click "Sign in." If you don't remember your login information, you can use 
+	      the "Forgot password" option to reset it.Once you have logged in, you can see all the available tasks, 
+        including pending requests for files that need to be accepted or rejected.Remember that on our platform, 
+        you can send and receive files securely and reliably.</p>
+      <p>If you have any other questions or issues, don't hesitate to contact us through our
+         contact form. We'll be happy to assist you with whatever you need.</p>
+
+      <h2 class="question text-justify">Create Connection</h2>
+      <p class="answer text-justify">the user must create a connection by entering the name of the connection, the location and the name of the company</p> 
+      <h2 class="question text-justify">Main View</h2>
+      <p class="answer text-justify">All the accesses to the platform modules are available here:</p> 
+      <h2 class="question text-justify">Sections</h2>
+      <p class="answer text-justify">These are the specific operations that you can perform: Request to Trucker, Acknowledge, Trucker Response, Trucker Event Instruction Planning, Trucker Event Instruction Actual, Arrival on Site, POD / PPU </p> 
+      <h2 class="question text-justify">Buttons: Send</h2>
+      <p class="answer text-justify">This option allows the XML files that are available on the platform to be synchronized with the server</p>
+      <h2 class="question text-justify">Generate Order</h2>
+      <p class="answer text-justify">This option allows you to work with different XML file formats. you must select the xml file you want to create and then enter the data for the selected file type in the form</p>   
+    </div>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+      // obtenemos todas las preguntas y respuestas
+      const questions = document.querySelectorAll('.question');
+      const answers = document.querySelectorAll('.answer');
+  
+      // agregamos un evento click a cada pregunta
+      questions.forEach((question, index) => {
+        question.addEventListener('click', () => {
+          if (answers[index].style.display === 'block') {
+            // si la respuesta ya está visible, la ocultamos
+            answers[index].style.display = 'none';
+          } else {
+            // si la respuesta no está visible, ocultamos todas las respuestas
+            answers.forEach(answer => {
+              answer.style.display = 'none';
+            });
+  
+             // y mostramos la respuesta correspondiente a la pregunta clickeada
+            answers[index].style.display = 'block';
+          }
+        });
+      });
+    </script>
+  </body>
+{% include '_site_map.html' %}
+</html>
