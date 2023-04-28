@@ -1,22 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
 <UniversalDocumentRequest>
 	<DocumentRequest>
 		<DataContext>
 			<DataTargetCollection>
 				<DataTarget>
-					<Type></Type>
-					<Key></Key>
+					<Type>a</Type>
+					<Key>b</Key>
 				</DataTarget>
 			</DataTargetCollection>
 			<Company>
-				<Code></Code>
+				<Code>c</Code>
 			</Company>
-			<EnterpriseID></EnterpriseID>
-			<ServerID></ServerID>
+			<EnterpriseID>d</EnterpriseID>
+			<ServerID>e</ServerID>
 		</DataContext>
 		<FilterCollection>
 			<Filter>
-				<Type></Type>
-				<Value></Value>
+				<Type>f</Type>
+				<Value>g</Value>
 			</Filter>
 		</FilterCollection>
 	</DocumentRequest>

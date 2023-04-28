@@ -89,9 +89,6 @@ class UtilFunctions:
         self.create_directory(main_folder)
         for subfolder in dir_names:
             self.create_directory(f"{main_folder}/{subfolder}")
-            self.create_directory(f"{main_folder}/{subfolder}/accepted")
-            self.create_directory(f"{main_folder}/{subfolder}/rejected")
-            self.create_directory(f"{main_folder}/{subfolder}/pending")
 
     def delete_directory(self, folder_name: str):
         if os.path.isdir(folder_name):
@@ -120,9 +117,6 @@ class UtilFunctions:
 
     def get_files_directory(self, folder_path, cond):
         elements = set(os.listdir(os.path.join(folder_path, cond)))
-        print("ESTOY ACA HOY HELLO WORLD")
-        print(os.path.join(f"{folder_path}"))
-        print([{"name": file, "size": os.path.getsize(os.path.join(f"{folder_path}/{cond}", file)), "folder": encode_to_base64(f"{folder_path}/")} for file in os.listdir(f"{folder_path}/{cond}")])
         return [{"name": file, "size": os.path.getsize(os.path.join(f"{folder_path}/{cond}", file)), "folder": encode_to_base64(f"{folder_path}/")} for file in os.listdir(f"{folder_path}/{cond}")]
         #return set(os.listdir(os.path.join(folder_path, cond)))
     
@@ -136,3 +130,8 @@ class UtilFunctions:
         else:
             return get_in
 
+
+    def replace_path(self, file_path, replacement):
+        path_parts = file_path.split("/")
+        new_path_parts = path_parts[:-2] + [replacement] + [path_parts[-1]]
+        return "/".join(new_path_parts)

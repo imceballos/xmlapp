@@ -1,48 +1,56 @@
-from sqlalchemy import create_engine, ForeignKey, Column, String, Integer, CHAR
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-Base = declarative_base()
 
-class Person(Base):
-    __tablename__ = "people"
+db = declarative_base()
+engine = create_engine("sqlite:///mydb.db")
+Session = sessionmaker(bind=engine)
+session = Session()
 
-    id = Column("id", Integer, primary_key=True)
-    first_name = Column("first_name", String)
-    last_name = Column("last_name", String)
-    email = Column("email", String)
+class Base(db):
+    __abstract__ = True
 
-    def __init__(self, id, first_name, last_name, email):
-        self.id = id
-        self.first_name = first_name
-        self.last_name = last_name
-        self.email = email
+    def __init__(self):
+        self.session = session
 
     def __repr__(self):
-       return f"{self.id} {self.first_name} {self.last_name} {self.email}"
+        mydict = vars(self)
+        mydict.pop("_sa_instance_state")
+        return mydict
 
-    @classmethod
-    def find_by_email(cls, email):
-        session = cls._session()
-        return session.query(cls).filter_by(email=email).first()
+    def save(self):
+        try:
+            session.add(self)
+            session.commit()
+            return self
+        except Exception as exc:
+            print("log exc {}".format(str(exc)))
+            return False
 
-    @classmethod
-    def find_by_public_id(cls, public_id):
-        session = cls._session()
-        return session.query(cls).filter_by(public_id=public_id).first()
+    def delete(self):
+        try:
+            session.delete(self)
+            session.commit()
+            return True
+        except Exception as exc:
+            print("log exc {}".format(str(exc)))
+            return False
 
-    @classmethod
-    #Definir classmethods para: Buscar por first_name, last_name, por id, por email
-    #Agregar atributo company al tablero users, agregar un classmethod para company
-    #Agregar verificadores de email, de caracteres sanitizados y setear un largo maximo de VARCHAR(60-80) 
-    #Files: uuid, filename, path, condition
-    #Crear metodos de clase para filename, path, contenido dentro de, condition.
+    def update(self, props: dict):
+        try:
+            for key, value in props.items():
+                print("ENTRO ACA AL MENOS O NO")
+                print(key, value)
+                setattr(self, key, value)
 
-    @classmethod
-    def _session(cls):
-        engine = create_engine("sqlite:///mydb.db")
-        Session = sessionmaker(bind=engine)
-        return Session()
+            session.commit()
+            session.flush()
+            return self
+        except Exception as exc:
+            print("log exc {}".format(str(exc)))
+            return False
+
 
 #engine = create_engine("sqlite:///mydb.db", echo=True)
 #Base.metadata.create_all(bind=engine)
@@ -54,4 +62,4 @@ class Person(Base):
 #session.add(person)
 #session.commit()
 
-print(Person.find_by_email("imceballos@gmail.com"))
+#print(Person.find_by_email("imceballos@gmail.com"))
