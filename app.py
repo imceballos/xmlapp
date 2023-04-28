@@ -503,12 +503,14 @@ async def view_xml(request: Request, filename: str, folder: str, status: str):
 
 @app.get("/", response_class=HTMLResponse)
 async def create_connection(request: Request, user: User = Depends(auth_method.get_current_user_from_cookie)):
-    folder_path = "test_files"
-    print("Quiero ver aca hou")
-    conn_asigned = [conn.connname for conn in Connections.find_conn_assignedto(user.id)]
-    #folder_names = [name for name in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, name))]
-    return templates.TemplateResponse("connections.html", {"request": request, "folders": conn_asigned})
-    #return RedirectResponse(url="/")
+    if user:
+        folder_path = "test_files"
+        print("Quiero ver aca hou")
+        conn_asigned = [conn.connname for conn in Connections.find_conn_assignedto(user.id)]
+        #folder_names = [name for name in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, name))]
+        return templates.TemplateResponse("connections.html", {"request": request, "folders": conn_asigned})
+        #return RedirectResponse(url="/")
+    return RedirectResponse(url="/auth/login")
 
 
 @app.get("/folder/{folder_name}")
