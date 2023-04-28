@@ -19,6 +19,8 @@ from utils.ftp import FTPDownloader
 from models.base import Base
 from models.xmlapp_db import Person, Connections, Files
 
+from datetime import datetime
+
 import business as business
 import asyncio #presente en lineas conectadas
 
@@ -162,101 +164,18 @@ async def process_form(data: dict, request: Request, user: User = Depends(get_cu
                     "server_id": data.get("input_b_10"),
                     "event_time": data.get("input_b_11"),
                     "event_type": data.get("input_b_12"),
-                    "is_estimate": data.get("input_b_13"),
-                    "attached_filename": data.get("input_b_14"),
-                    "image_data": data.get("input_b_15"),
+                    "is_estimate": UtilFunctions().is_empty(data.get("input_b_13", "") ,"false"),
+                    "attached_filename": data.get("input_b_14", "NO ATTACHED PDF DOCUMENT"),
+                    "image_data": data.get("input_b_15", "NO ATTACHED PDF DOCUMENT"),
                     "document_type_code": data.get("input_b_16"),
                     "document_type_description": data.get("input_b_17"),
                     "document_id": data.get("input_b_18"),
-                    "is_published": data.get("input_b_19"),
-                    "save_date_utc": data.get("input_b_20"),
-                    "document_saved_by_code": data.get("input_b_21"),
-                    "document_saved_by_name": data.get("input_b_22")                  
+                    "is_published": UtilFunctions().is_empty(data.get("input_b_19", "") ,"false"),
+                    #"save_date_utc": data.get("input_b_20", ""),
+                    "save_date_utc": str(datetime.utcnow()),
+                    "document_saved_by_code": data.get("input_b_20"),
+                    "document_saved_by_name": data.get("input_b_21")                  
                     }
-    elif option == "input_h_0":
-        data = {
-                    "option": option, 
-                    "filename": data.get("input_h_0"), 
-                    "datatarget_type": data.get("input_h_1"), 
-                    "datatarget_key": data.get("input_h_2"),
-                    "company_code": data.get("input_h_3"),
-                    "enterpriseid": data.get("input_h_4"),
-                    "serverid": data.get("input_h_5"),
-                    "description": data.get("input_h_6"),
-                    "iscustom_description": data.get("input_h_7"),
-                    "notetext": data.get("input_h_8"),
-                    "notecontext_code": data.get("input_h_9"),
-                    "visibility_code": data.get("input_h_10"),
-                    "address_type": data.get("input_h_11"),
-                    "organization_code": data.get("input_h_12"),
-                    "customizedfield_datatype": data.get("input_h_13"),
-                    "customized_field_key": data.get("input_h_14"),
-                    "customized_field_value": data.get("input_h_15")
-                }
-        
-    elif option == "input_i_0":
-        data = {
-                    "option": option, 
-                    "filename": data.get("input_i_0"), 
-                    "datatarget_type": data.get("input_i_1"), 
-                    "datatarget_key": data.get("input_i_2"),
-                    "company_code": data.get("input_i_3"),
-                    "enterpriseid": data.get("input_i_4"),
-                    "serverid": data.get("input_i_5"),
-                    "transportbookingdirection_code": data.get("input_i_6"),
-                    "transportbookingdirection_description": data.get("input_i_7"),
-                    "addresstype": data.get("input_i_8"),
-                    "organizationcode": data.get("input_i_9"),
-                    "branch_code": data.get("input_i_10"),
-                    "currency_code": data.get("input_i_11"),
-                    "department_code": data.get("input_i_12"),
-                    "chargeline_branch_code": data.get("input_i_13"),
-                    "chargeline_chargecode_code": data.get("input_i_14"),
-                    "chargeline_costlocalamount": data.get("input_i_15"),
-                    "chargeline_costosamount": data.get("input_i_16"),
-                    "chargeline_costoscurrency_code": data.get("input_i_17"),
-                    "chargeline_costosgstvatamount": data.get("input_i_18"),
-                    "chargeline_creditor_type": data.get("input_i_19"),
-                    "chargeline_creditor_key": data.get("input_i_20"),
-                    "chargeline_department_code": data.get("input_i_21"),
-                    "chargeline_displaysequence": data.get("input_i_22"),
-                    "chargeline_importmetadata_instruction": data.get("input_i_23"),
-                    "chargeline_supplierreference": data.get("input_i_24")
-                }
-        
-    elif option == "input_j_0":
-        data = {
-                    "option": option, 
-                    "filename": data.get("input_j_0"), 
-                    "status": data.get("input_j_1"), 
-                    "datasource_type": data.get("input_j_2"),
-                    "datasource_key": data.get("input_j_3"),
-                    "companycode": data.get("input_j_4"),
-                    "companycountry_code": data.get("input_j_5"),
-                    "companycountry_name": data.get("input_j_6"),
-                    "company_name": data.get("input_j_7"),
-                    "dataprovider": data.get("input_j_8"),
-                    "enterpriseid": data.get("input_j_9"),
-                    "serverid": data.get("input_j_10"),
-                    "eventtime": data.get("input_j_11"),
-                    "eventtype": data.get("input_j_12"),
-                    "isestimate": data.get("input_j_13"),
-                    "attacheddocument_filename": data.get("input_j_14"),
-                    "imagedata": data.get("input_j_15"),
-                    "type_code": data.get("input_j_16"),
-                    "type_description": data.get("input_j_17"),
-                    "documentid": data.get("input_j_18"),
-                    "ispublished": data.get("input_j_19"),
-                    "savedateutc": data.get("input_j_20"),
-                    "savedby_code": data.get("input_j_21"),
-                    "savedby_name": data.get("input_j_22"),
-                    "source_code": data.get("input_j_23"),
-                    "source_description": data.get("input_j_24"),
-                    "visible_branch_code": data.get("input_j_25"),               
-                    "visible_company_code": data.get("input_j_26"),                   
-                    "visible_department_code": data.get("input_j_27"),
-                    "messagenumber": data.get("input_j_28")
-                }
     elif option == "input_c_0":
         data = {
                     "option": option, 
@@ -266,10 +185,10 @@ async def process_form(data: dict, request: Request, user: User = Depends(get_cu
                     "company_code": data.get("input_c_3"),
                     "enterprise_id": data.get("input_c_4"),
                     "server_id": data.get("input_c_5"),
-                    "event_time": data.get("input_c_6"),
-                    "event_type": data.get("input_c_7"),
-                    "event_reference": data.get("input_c_8"),
-                    "is_estimate": data.get("input_c_9")
+                    "event_time": str(datetime.now()),
+                    "event_type": data.get("input_c_6"),
+                    "event_reference": data.get("input_c_7"),
+                    "is_estimate": UtilFunctions().is_empty(data.get("input_c_8", "") ,"false"),
                 }
     elif option == "input_d_0":
         data = {
@@ -280,10 +199,11 @@ async def process_form(data: dict, request: Request, user: User = Depends(get_cu
                     "company_code": data.get("input_d_3"),
                     "enterprise_id": data.get("input_d_4"),
                     "server_id": data.get("input_d_5"),
-                    "event_time": data.get("input_d_6"), 
-                    "event_type": data.get("input_d_7"),
-                    "event_reference": data.get("input_d_8"),
-                    "is_estimate": data.get("input_d_9")
+                    "event_time": str(datetime.now()), 
+                    "event_type": data.get("input_d_6"),
+                    "event_reference": data.get("input_d_7"),
+                    "is_estimate": UtilFunctions().is_empty(data.get("input_d_8", "") ,"false"),
+
                 }
     elif option == "input_e_0":
         data = {
@@ -295,7 +215,7 @@ async def process_form(data: dict, request: Request, user: User = Depends(get_cu
                     "enterprise_id": data.get("input_e_4"),
                     "server_id": data.get("input_e_5"),
                     "description": data.get("input_e_6"),
-                    "iscustom_description": data.get("input_e_7"),
+                    "iscustom_description": UtilFunctions().is_empty(data.get("input_e_7", "") ,"false"),
                     "notetext": data.get("input_e_8"),
                     "notecontext_code": data.get("input_e_9"),
                     "visibility_code": data.get("input_e_10"),
@@ -369,7 +289,88 @@ async def process_form(data: dict, request: Request, user: User = Depends(get_cu
                     "customizedfield_key": data.get("input_g_26"),
                     "customizedfield_value": data.get("input_g_27")
                 }         
-
+    elif option == "input_h_0":
+        data = {
+                    "option": option, 
+                    "filename": data.get("input_h_0"), 
+                    "datatarget_type": data.get("input_h_1"), 
+                    "datatarget_key": data.get("input_h_2"),
+                    "company_code": data.get("input_h_3"),
+                    "enterpriseid": data.get("input_h_4"),
+                    "serverid": data.get("input_h_5"),
+                    "description": data.get("input_h_6"),
+                    "iscustom_description": UtilFunctions().is_empty(data.get("input_h_7", "") ,"false"),
+                    "notetext": data.get("input_h_8"),
+                    "notecontext_code": data.get("input_h_9"),
+                    "visibility_code": data.get("input_h_10"),
+                    "address_type": data.get("input_h_11"),
+                    "organization_code": data.get("input_h_12"),
+                    "customizedfield_datatype": data.get("input_h_13"),
+                    "customized_field_key": data.get("input_h_14"),
+                    "customized_field_value": data.get("input_h_15")
+                }
+    elif option == "input_i_0":
+        data = {
+                    "option": option, 
+                    "filename": data.get("input_i_0"), 
+                    "datatarget_type": data.get("input_i_1"), 
+                    "datatarget_key": data.get("input_i_2"),
+                    "company_code": data.get("input_i_3"),
+                    "enterpriseid": data.get("input_i_4"),
+                    "serverid": data.get("input_i_5"),
+                    "transportbookingdirection_code": data.get("input_i_6"),
+                    "transportbookingdirection_description": data.get("input_i_7"),
+                    "addresstype": data.get("input_i_8"),
+                    "organizationcode": data.get("input_i_9"),
+                    "branch_code": data.get("input_i_10"),
+                    "currency_code": data.get("input_i_11"),
+                    "department_code": data.get("input_i_12"),
+                    "chargeline_branch_code": data.get("input_i_13"),
+                    "chargeline_chargecode_code": data.get("input_i_14"),
+                    "chargeline_costlocalamount": data.get("input_i_15"),
+                    "chargeline_costosamount": data.get("input_i_16"),
+                    "chargeline_costoscurrency_code": data.get("input_i_17"),
+                    "chargeline_costosgstvatamount": data.get("input_i_18"),
+                    "chargeline_creditor_type": data.get("input_i_19"),
+                    "chargeline_creditor_key": data.get("input_i_20"),
+                    "chargeline_department_code": data.get("input_i_21"),
+                    "chargeline_displaysequence": data.get("input_i_22"),
+                    "chargeline_importmetadata_instruction": data.get("input_i_23"),
+                    "chargeline_supplierreference": data.get("input_i_24")
+                }  
+    elif option == "input_j_0":
+        data = {
+                    "option": option, 
+                    "filename": data.get("input_j_0"), 
+                    "status": data.get("input_j_1"), 
+                    "datasource_type": data.get("input_j_2"),
+                    "datasource_key": data.get("input_j_3"),
+                    "companycode": data.get("input_j_4"),
+                    "companycountry_code": data.get("input_j_5"),
+                    "companycountry_name": data.get("input_j_6"),
+                    "company_name": data.get("input_j_7"),
+                    "dataprovider": data.get("input_j_8"),
+                    "enterpriseid": data.get("input_j_9"),
+                    "serverid": data.get("input_j_10"),
+                    "eventtime": str(datetime.now()),
+                    "eventtype": data.get("input_j_11"),
+                    "isestimate": UtilFunctions().is_empty(data.get("input_j_12", "") ,"false"),
+                    "attacheddocument_filename": data.get("input_j_13"),
+                    "imagedata": data.get("input_j_14"),
+                    "type_code": data.get("input_j_15"),
+                    "type_description": data.get("input_j_16"),
+                    "documentid": data.get("input_j_17"),
+                    "ispublished": UtilFunctions().is_empty(data.get("input_j_18", "") ,"false"),
+                    "savedateutc": str(datetime.utcnow()),
+                    "savedby_code": data.get("input_j_19"),
+                    "savedby_name": data.get("input_j_20"),
+                    "source_code": data.get("input_j_21"),
+                    "source_description": data.get("input_j_22"),
+                    "visible_branch_code": data.get("input_j_23"),               
+                    "visible_company_code": data.get("input_j_24"),                   
+                    "visible_department_code": data.get("input_j_25"),
+                    "messagenumber": data.get("input_j_26")
+                }
     elif option == "input_k_0":
         data = {
                     "option": option, 
@@ -380,7 +381,7 @@ async def process_form(data: dict, request: Request, user: User = Depends(get_cu
                     "enterpriseid": data.get("input_k_4"),
                     "serverid": data.get("input_k_5"),
                     "description": data.get("input_k_6"),
-                    "iscustomdescription": data.get("input_k_7"),
+                    "iscustomdescription": UtilFunctions().is_empty(data.get("input_k_7", "") ,"false"),
                     "notetext": data.get("input_k_8"),
                     "notecontext_code": data.get("input_k_9"),
                     "visibility_code": data.get("input_k_10"),
@@ -400,10 +401,10 @@ async def process_form(data: dict, request: Request, user: User = Depends(get_cu
                     "company_code": data.get("input_l_3"),
                     "enterpriseid": data.get("input_l_4"),
                     "serverid": data.get("input_l_5"),
-                    "eventtime": data.get("input_l_6"),
-                    "eventtype": data.get("input_l_7"),
-                    "eventreference": data.get("input_l_8"),
-                    "isestimate": data.get("input_l_9")
+                    "eventtime": str(datetime.now()),
+                    "eventtype": data.get("input_l_6"),
+                    "eventreference": data.get("input_l_7"),
+                    "isestimate": UtilFunctions().is_empty(data.get("input_l_8", "") ,"false"),
                 }
     
     xml_writer = getattr(business, UtilFunctions().get_write_func_filename(option))

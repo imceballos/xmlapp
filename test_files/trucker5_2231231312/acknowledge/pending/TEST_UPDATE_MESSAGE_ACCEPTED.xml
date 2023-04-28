@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='utf-8'?>
+<UniversalShipment>
+  <Shipment>
+    <DataContext>
+      <DataTargetCollection>
+        <DataTarget>
+          <Type>1</Type>
+          <Key>2</Key>
+        </DataTarget>
+      </DataTargetCollection>
+      <Company>
+            <Code>3</Code>
+      </Company>
+      <EnterpriseID>4</EnterpriseID>
+      <ServerID>5</ServerID>
+    </DataContext>
+	<NoteCollection Content="Partial">
+        <Note>
+            <Description>6</Description>
+            <IsCustomDescription>true</IsCustomDescription>
+            <NoteText>7</NoteText>
+            <NoteContext>
+                <Code>8</Code>
+            </NoteContext>
+            <Visibility>
+                <Code>9</Code>
+            </Visibility>
+        </Note>
+    </NoteCollection>
+	<OrganizationAddressCollection>
+	  <OrganizationAddress>
+		<AddressType>10</AddressType>
+		<OrganizationCode>11</OrganizationCode>
+	  </OrganizationAddress>
+	</OrganizationAddressCollection>
+	<CustomizedFieldCollection Content="Partial">
+        <CustomizedField>
+            <DataType>12</DataType>
+            <Key>13</Key>
+            <Value>14</Value>
+        </CustomizedField>		
+    </CustomizedFieldCollection>
+ </Shipment>
+</UniversalShipment>

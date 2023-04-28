@@ -20,6 +20,7 @@
 		}
 		label {
 			display: block;
+			flex-wrap: wrap;
 			margin-bottom: 5px;
 			font-size: 16px;
 		}
@@ -110,11 +111,11 @@
 				<label for="input-b-12">Event Type:</label>
 				<input type="text" id="input-b-12" name="input-b-12"><br>
 				<label for="input-b-13">Is Estimate:</label>
-				<input type="text" id="input-b-13" name="input-b-13"><br>
+				<input type="checkbox" id="input-b-13" name="input-b-13" value="true">				
 				<label for="input-b-14">Attached Filename:</label>
-				<input type="text" id="input-b-14" name="input-b-14"><br>
-				<label for="input-b-15">ImageData:</label>
-				<input type="text" id="input-b-15" name="input-b-15"><br>
+				<input type="file" id="input-b-14" name="input-b-14" multiple>
+				<label style="display: none;" for="input-b-15">ImageData:</label>
+				<input type="hidden" id="input-b-15" name="input-b-15"><br>
 				<label for="input-b-16">Document Type Code:</label>
 				<input type="text" id="input-b-16" name="input-b-16"><br>
 				<label for="input-b-17">Document Type Description:</label>
@@ -122,13 +123,13 @@
 				<label for="input-b-18">Document ID:</label>
 				<input type="text" id="input-b-18" name="input-b-18"><br>
 				<label for="input-b-19">Is Published:</label>
-				<input type="text" id="input-b-19" name="input-b-19"><br>
-				<label for="input-b-20">Save Date UTC:</label>
+				<label><input type="checkbox" id="input-b-19" name="input-b-19" value="true">Yes</label><br>				
+				<!--<label style="display: none;" for="input-b-20">Save Date UTC:</label>
+				<input type="hidden" id="input-b-20" name="input-b-20"><br>-->
+				<label for="input-b-20">Document Saved By Code:</label>
 				<input type="text" id="input-b-20" name="input-b-20"><br>
-				<label for="input-b-21">Document Saved By Code:</label>
-				<input type="text" id="input-b-21" name="input-b-21"><br>
 				<label for="input-b-22">Document Saved By Name:</label>
-				<input type="text" id="input-b-22" name="input-b-22"><br>
+				<input type="text" id="input-b-21" name="input-b-21"><br>
 			</div>
 			<!-- Form for Option EXWORKS_ACK_KO -->
 			<div id="form-c" class="form-group">
@@ -144,14 +145,14 @@
 				<input type="text" id="input-c-4" name="input-c-4"><br>
 				<label for="input-c-5">Server ID:</label>
 				<input type="text" id="input-c-5" name="input-c-5"><br>
-				<label for="input-c-6">Event Time:</label>
+				<!--<label for="input-c-6">Event Time:</label>
+				<input type="text" id="input-c-6" name="input-c-6"><br>-->
+				<label for="input-c-6">Event Type:</label>
 				<input type="text" id="input-c-6" name="input-c-6"><br>
-				<label for="input-c-7">Event Type:</label>
+				<label for="input-c-7">Event Reference:</label>
 				<input type="text" id="input-c-7" name="input-c-7"><br>
-				<label for="input-c-8">Event Reference:</label>
-				<input type="text" id="input-c-8" name="input-c-8"><br>
-				<label for="input-c-9">Is Estimate:</label>
-				<input type="text" id="input-c-9" name="input-c-9"><br>
+				<label for="input-c-8">Is Estimate:</label>
+				<label><input type="checkbox" id="input-c-8" name="input-c-8" value="true">Yes</label><br>				
 			</div>
 					<!-- Form for Option EXWORKS_ACK_OK -->
 			<div id="form-d" class="form-group">
@@ -167,14 +168,14 @@
 				<input type="text" id="input-d-4" name="input-d-4"><br>
 				<label for="input-d-5">Server ID:</label>
 				<input type="text" id="input-d-5" name="input-d-5"><br>
-				<label for="input-d-6">Event Time:</label>
+				<!--<label for="input-d-6">Event Time:</label>
+				<input type="text" id="input-d-6" name="input-d-6"><br>-->
+				<label for="input-d-6">Event Type:</label>
 				<input type="text" id="input-d-6" name="input-d-6"><br>
-				<label for="input-d-7">Event Type:</label>
+				<label for="input-d-7">Event Reference:</label>
 				<input type="text" id="input-d-7" name="input-d-7"><br>
-				<label for="input-d-8">Event Reference:</label>
-				<input type="text" id="input-d-8" name="input-d-8"><br>
-				<label for="input-d-9">Is Estimate:</label>
-				<input type="text" id="input-d-9" name="input-d-9"><br>
+				<label for="input-d-8">Is Estimate:</label>
+				<label><input type="checkbox" id="input-d-8" name="input-d-8" value="true">Yes</label><br>				
 			</div>
 					<!-- UPDATE_MESSAGE_ACCEPTED -->
 			<div id="form-e" class="form-group">
@@ -192,22 +193,24 @@
 				<input type="text" id="input-e-5" name="input-e-5"><br>
 				<label for="input-e-6">Description:</label>
 				<input type="text" id="input-e-6" name="input-e-6"><br>
-				<label for="input-e-7">Note Text:</label>
-				<input type="text" id="input-e-7" name="input-e-7"><br>
-				<label for="input-e-8">Note Context Code:</label>
+				<label for="input-e-7">Is custom description?:</label>
+				<label><input type="checkbox" id="input-e-7" name="input-e-7" value="true">Yes</label><br>				
+				<label for="input-e-8">Note Text:</label>
 				<input type="text" id="input-e-8" name="input-e-8"><br>
-				<label for="input-e-9">Visibility Code:</label>
+				<label for="input-e-9">Note Context Code:</label>
 				<input type="text" id="input-e-9" name="input-e-9"><br>
-				<label for="input-e-10">Address Type:</label>
+				<label for="input-e-10">Visibility Code:</label>
 				<input type="text" id="input-e-10" name="input-e-10"><br>
-				<label for="input-e-11">Organization Code:</label>
+				<label for="input-e-11">Address Type:</label>
 				<input type="text" id="input-e-11" name="input-e-11"><br>
-				<label for="input-e-12">Customized Field DataType:</label>
+				<label for="input-e-12">Organization Code:</label>
 				<input type="text" id="input-e-12" name="input-e-12"><br>
-				<label for="input-e-13">Customized Field Key:</label>
+				<label for="input-e-13">Customized Field DataType:</label>
 				<input type="text" id="input-e-13" name="input-e-13"><br>
-				<label for="input-e-14">Customized Field Value:</label>
+				<label for="input-e-14">Customized Field Key:</label>
 				<input type="text" id="input-e-14" name="input-e-14"><br>
+				<label for="input-e-15">Customized Field Value:</label>
+				<input type="text" id="input-e-15" name="input-e-15"><br>
 			</div>
 						<!-- UPDATE_MESSAGE_ACCRUALS_ACCEPTED -->
 			<div id="form-f" class="form-group">
@@ -344,7 +347,7 @@
 				<label for="input-h-6">Description:</label>
 				<input type="text" id="input-h-6" name="input-h-6"><br>
 				<label for="input-h-7">IsCustomDescription:</label>
-				<input type="text" id="input-h-7" name="input-h-7"><br>
+				<label><input type="checkbox" id="input-h-7" name="input-h-7" value="true">Yes</label><br>				
 				<label for="input-h-8">NoteText:</label>
 				<input type="text" id="input-h-8" name="input-h-8"><br>
 				<label for="input-h-9">NoteContext Code:</label>
@@ -441,42 +444,42 @@
 				<input type="text" id="input-j-9" name="input-j-9"><br>
 				<label for="input-j-10">ServerID:</label>
 				<input type="text" id="input-j-10" name="input-j-10"><br>
-				<label for="input-j-11">EventTime:</label>
+				<!--<label for="input-j-11">EventTime:</label>
+				<input type="text" id="input-j-11" name="input-j-11"><br>-->
+				<label for="input-j-11">EventType:</label>
 				<input type="text" id="input-j-11" name="input-j-11"><br>
-				<label for="input-j-12">EventType:</label>
-				<input type="text" id="input-j-12" name="input-j-12"><br>
-				<label for="input-j-13">IsEstimate:</label>
-				<input type="text" id="input-j-13" name="input-j-13"><br>
-				<label for="input-j-14">FileName:</label>
-				<input type="text" id="input-j-14" name="input-j-14"><br>
-				<label for="input-j-15">ImageData:</label>
+				<label for="input-j-12">IsEstimate:</label>
+				<label><input type="checkbox" id="input-j-12" name="input-j-12" value="true">Yes</label><br>				
+				<label for="input-j-13">PDF file:</label>
+				<input type="file" id="input-j-13" name="input-j-13"><br>
+				<label style="display: none;" for="input-j-14">ImageData:</label>
+				<input type="hidden" id="input-j-14" name="input-j-14"><br>
+				<label for="input-j-15">Type Code:</label>
 				<input type="text" id="input-j-15" name="input-j-15"><br>
-				<label for="input-j-16">Type Code:</label>
+				<label for="input-j-16">Type Description:</label>
 				<input type="text" id="input-j-16" name="input-j-16"><br>
-				<label for="input-j-17">Type Description:</label>
+				<label for="input-j-17">DocumentID:</label>
 				<input type="text" id="input-j-17" name="input-j-17"><br>
-				<label for="input-j-18">DocumentID:</label>
-				<input type="text" id="input-j-18" name="input-j-18"><br>
-				<label for="input-j-19">IsPublished:</label>
-				<input type="text" id="input-j-19" name="input-j-19"><br>
-				<label for="input-j-20">SaveDateUTC:</label>
-				<input type="text" id="input-j-20" name="input-j-20"><br>			
-				<label for="input-j-21">SavedBy Code:</label>
-				<input type="text" id="input-j-21" name="input-j-21"><br>		
-				<label for="input-j-22">SavedBy Name:</label>
+				<label for="input-j-18">IsPublished:</label>
+				<label><input type="checkbox" id="input-j-18" name="input-j-18" value="true">Yes</label><br>				
+				<!--<label for="input-j-19">SaveDateUTC:</label>
+				<input type="text" id="input-j-19" name="input-j-19"><br>-->		
+				<label for="input-j-19">SavedBy Code:</label>
+				<input type="text" id="input-j-19" name="input-j-19"><br>		
+				<label for="input-j-20">SavedBy Name:</label>
+				<input type="text" id="input-j-20" name="input-j-20"><br>
+				<label for="input-j-21">Source Code:</label>
+				<input type="text" id="input-j-21" name="input-j-21"><br>
+				<label for="input-j-22">Source Description:</label>
 				<input type="text" id="input-j-22" name="input-j-22"><br>
-				<label for="input-j-23">Source Code:</label>
+				<label for="input-j-23">Visible Branch Code:</label>
 				<input type="text" id="input-j-23" name="input-j-23"><br>
-				<label for="input-j-24">Source Description:</label>
+				<label for="input-j-24">Visible Company Code:</label>
 				<input type="text" id="input-j-24" name="input-j-24"><br>
-				<label for="input-j-25">Visible Branch Code:</label>
-				<input type="text" id="input-j-25" name="input-j-25"><br>
-				<label for="input-j-26">Visible Company Code:</label>
-				<input type="text" id="input-j-26" name="input-j-26"><br>
-				<label for="input-j-27">Visible Department Code:</label>
-				<input type="text" id="input-j-27" name="input-j-27"><br>				
-				<label for="input-j-28">MessageNumber:</label>
-				<input type="text" id="input-j-28" name="input-j-28"><br>		
+				<label for="input-j-25">Visible Department Code:</label>
+				<input type="text" id="input-j-25" name="input-j-25"><br>				
+				<label for="input-j-26">MessageNumber:</label>
+				<input type="text" id="input-j-26" name="input-j-26"><br>		
 			</div>
 
 			<!-- Form for Option UPDATE_MESSAGE_REJECTED -->
@@ -496,7 +499,7 @@
 				<label for="input-k-6">Description:</label>
 				<input type="text" id="input-k-6" name="input-k-6"><br>
 				<label for="input-k-7">IsCustomDescription:</label>
-				<input type="text" id="input-k-7" name="input-k-7"><br>
+				<label><input type="checkbox" id="input-k-7" name="input-k-7" value="true">Yes</label><br>				
 				<label for="input-ck-8">NoteText:</label>
 				<input type="text" id="input-k-8" name="input-k-8"><br>
 				<label for="input-k-9">NoteContext Code:</label>
@@ -529,14 +532,14 @@
 				<input type="text" id="input-l-4" name="input-l-4"><br>
 				<label for="input-l-5">ServerID:</label>
 				<input type="text" id="input-l-5" name="input-l-5"><br>
-				<label for="input-l-6">EventTime:</label>
+				<!--<label for="input-l-6">EventTime:</label>
+				<input type="text" id="input-l-6" name="input-l-6"><br>-->
+				<label for="input-l-6">EventType:</label>
 				<input type="text" id="input-l-6" name="input-l-6"><br>
-				<label for="input-l-7">EventType:</label>
+				<label for="input-l-7">EventReference:</label>
 				<input type="text" id="input-l-7" name="input-l-7"><br>
-				<label for="input-l-8">EventReference:</label>
-				<input type="text" id="input-l-8" name="input-l-8"><br>
-				<label for="input-l-9">IsEstimate:</label>
-				<input type="text" id="input-l-9" name="input-l-9"><br>				
+				<label for="input-l-8">IsEstimate:</label>
+				<label><input type="checkbox" id="input-l-8" name="input-l-8" value="true">Yes</label><br>				
 			</div>
 		</div>
 		<input type="submit" value="Submit">
@@ -573,8 +576,16 @@
 			const formGroup = document.querySelector('#form-b');
   			const inputCount = formGroup.querySelectorAll('input').length;
 			for (let i = 0; i < inputCount; i++) {
-				const inputName = `input-b-${i}`;
-				body[`input_b_${i}`] = formData.get(inputName);
+				if (i === 15) {
+				const fileInput = document.querySelector('#input-b-14');
+				const file = fileInput.files[0];
+				const { data, filename } = await readFile(file);
+			    body[`input_b_${14}`] = filename;
+			    body[`input_b_${15}`] = data;
+				} else {
+					const inputName = `input-b-${i}`;
+					body[`input_b_${i}`] = formData.get(inputName);
+				}
 			}
 		}else if (options === 'c') {
 			const formGroup = document.querySelector('#form-c');
@@ -629,8 +640,16 @@
 			const formGroup = document.querySelector('#form-j');
   			const inputCount = formGroup.querySelectorAll('input').length;
 			for (let i = 0; i < inputCount; i++) {
-				const inputName = `input-j-${i}`;
-				body[`input_j_${i}`] = formData.get(inputName);
+				if (i === 14) {
+				const fileInput = document.querySelector('#input-j-13');
+				const file = fileInput.files[0];
+				const { data, filename } = await readFile(file);
+			    body[`input_j_${13}`] = filename;
+			    body[`input_j_${14}`] = data;
+				} else {
+					const inputName = `input-j-${i}`;
+					body[`input_j_${i}`] = formData.get(inputName);
+				}
 			}
 		} else if (options === 'k') {
 			const formGroup = document.querySelector('#form-k');
@@ -662,6 +681,13 @@
 			console.error(error);
 		}
 	});
+	function readFile(file) {
+		const reader = new FileReader();
+		return new Promise((resolve) => {
+			reader.onload = () => resolve({ data: reader.result, filename: file.name });
+			reader.readAsDataURL(file);
+		});
+		}
 	</script>
 </body>
 {% include '_site_map.html' %}
