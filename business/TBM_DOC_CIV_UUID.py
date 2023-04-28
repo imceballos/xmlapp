@@ -116,5 +116,7 @@ async def TBM_DOC_CIV_UUID_WRITE(data: dict, folder_path: str):
     hbol_destino.text = data.get("hbol_destino", "")
 
     filename_xml = data.get("filename", "")
-    file_path = f'{folder_path}/acknowledge/pending/{filename_xml}'
+    file_path = f'{folder_path}/staging/{filename_xml}'
     tree.write(file_path, encoding="utf-8", xml_declaration=True)
+    file_size = os.path.getsize(file_path)
+    return {"filename": filename_xml, "path": file_path, "size": file_size}

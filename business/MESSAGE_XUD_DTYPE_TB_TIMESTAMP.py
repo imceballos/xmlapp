@@ -203,6 +203,7 @@ async def MESSAGE_XUD_DTYPE_TB_TIMESTAMP_WRITE(data: dict, folder_path: str):
     document_saved_by_name.text = data.get("document_saved_by_name", "")
 
     filename_xml = data.get("filename", "")
-    file_path = f'{folder_path}/acknowledge/pending/{filename_xml}'
-    tree.write(file_path, encoding='utf-8', xml_declaration=True)
-
+    file_path = f'{folder_path}/staging/{filename_xml}'
+    tree.write(file_path, encoding="utf-8", xml_declaration=True)
+    file_size = os.path.getsize(file_path)
+    return {"filename": filename_xml, "path": file_path, "size": file_size}
