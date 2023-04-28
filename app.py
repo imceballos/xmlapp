@@ -133,7 +133,6 @@ async def process_form(data: dict, request: Request, user: User = Depends(get_cu
     current_conn = Connections.find_by_connname(current_user.currentconn)
     current_conn_path = current_conn.path
     current_conn_uuid = current_conn.uuid
-    print(data)
     base_folder_path = current_conn_path
     option = list(data.keys())[0]
     if option == "input_a_0":

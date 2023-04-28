@@ -10,6 +10,9 @@ from sqlalchemy import create_engine
 engine = create_engine("sqlite:///mydb.db", echo=True)
 Base.metadata.create_all(bind=engine)
 
+p4 = Person("Andrei", "Popescu", "andrei@gmail.com", "password4", "", "spvrigo")
+p4.save()
+
 p3 = Person("Jesus", "Martinez", "jesus@gmail.com", "password3", "", "spvrigo")
 p3.save()
 
