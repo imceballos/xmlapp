@@ -119,3 +119,8 @@ class UtilFunctions:
         elements = set(os.listdir(os.path.join(folder_path, cond)))
         return [{"name": file, "size": os.path.getsize(os.path.join(f"{folder_path}/{cond}", file)), "folder": encode_to_base64(f"{folder_path}/")} for file in os.listdir(f"{folder_path}/{cond}")]
         #return set(os.listdir(os.path.join(folder_path, cond)))
+
+    def replace_path(self, file_path, replacement):
+        path_parts = file_path.split("/")
+        new_path_parts = path_parts[:-2] + [replacement] + [path_parts[-1]]
+        return "/".join(new_path_parts)

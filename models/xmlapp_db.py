@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker, relationship
 import uuid
 import re
 
-from .base import Base
+from .base import Base, session
 
 class Person(Base):
     __tablename__ = "person"
@@ -13,19 +13,20 @@ class Person(Base):
     last_name = Column("last_name", String(length=80), nullable=False)
     email = Column("email", String(length=60), nullable=False, unique=True)
     password = Column("password", String(length=256), nullable=False)
+    currentconn = Column("currentconn", String, ForeignKey('connections.uuid'))
     company = Column("company", String(length=60), nullable=False)
 
-    def __init__(self,  first_name, last_name, email, password, company):
+    def __init__(self,  first_name, last_name, email, password, currentconn, company):
         self.id = str(uuid.uuid4())
         self.first_name = self._sanitize_input(first_name)
         self.last_name = self._sanitize_input(last_name)
         self.email = self._validate_email(email)
         self.password = password
+        self.currentconn = currentconn
         self.company = company
-        self.session = self._session()
 
     def __repr__(self):
-       return f"{self.id} {self.first_name} {self.last_name} {self.email} {self.company}"
+       return f"{self.id} {self.first_name} {self.last_name} {self.email} {self.company} {self.currentconn}"
 
     @classmethod
     def find_by_email(cls, email):
@@ -40,7 +41,7 @@ class Person(Base):
     @classmethod
     def find_by_first_name(cls, first_name):
         session = cls._session()
-        return session.query(cls).filter_by(first_name=first_name).all()
+        return session.query(cls).filter_by(first_name=first_name).first()
     
     @classmethod
     def find_by_last_name(cls, last_name):
@@ -72,9 +73,7 @@ class Person(Base):
 
     @classmethod
     def _session(cls):
-        engine = create_engine("sqlite:///mydb.db")
-        Session = sessionmaker(bind=engine)
-        return Session()
+        return session
 
     def _sanitize_input(self, input_str):
         return re.sub(r'[^\w\s]', '', input_str).replace(' ', '_')
@@ -90,25 +89,22 @@ class Files(Base):
     uuid = Column("uuid", String(length=80), primary_key=True)
     filename = Column("filename", String(length=80), nullable=False)
     path = Column("path", String(length=80), nullable=False)
-    assignedto = Column("assignedto", String, ForeignKey('person.id'))
+    size =  Column("size", Integer())
+    assignedto = Column("assignedto", String, ForeignKey('connections.uuid'))
     status = Column(Enum('accepted', 'rejected', 'pending', name='status'), default='pending')
     stage = Column("stage", String(length=80), nullable=False)
 
-    def __init__(self, filename, path, assignedto, stage):
+    def __init__(self, filename, path, assignedto, status,stage, size):
         self.uuid = str(uuid.uuid4())
         self.filename = filename
         self.path = path
         self.assignedto = assignedto
+        self.status = status
         self.stage = stage
+        self.size = size
 
     def __repr__(self):
         return f"{self.uuid} {self.filename} {self.path} {self.assignedto} {self.status}"  
-    
-    @classmethod
-    def _session(cls):
-        engine = create_engine("sqlite:///mydb.db")
-        Session = sessionmaker(bind=engine)
-        return Session()
 
     @classmethod
     def find_by_uuid(cls, uuid):
@@ -124,8 +120,63 @@ class Files(Base):
     def find_by_condition(cls, status):
         session = cls._session()
         return session.query(cls).filter_by(status=status).all()
-    
 
+    @classmethod
+    def find_by_path(cls, path):
+        session = cls._session()
+        return session.query(cls).filter_by(path=path).first()
+    
+    @classmethod
+    def find_by_status_assignedto(cls, status, assignedto):
+        session = cls._session()
+        return session.query(cls).filter(cls.status==status, cls.assignedto==assignedto).all()
+
+    @classmethod
+    def find_by_filename_assignedto(cls, filename, assignedto):
+        session = cls._session()
+        return session.query(cls).filter(cls.filename==filename, cls.assignedto==assignedto).first()
+
+    @classmethod
+    def _session(cls):
+        return session
+   
+class Connections(Base):
+    __tablename__ = 'connections'
+
+    uuid = Column("uuid", String(length=80), primary_key=True)
+    connname = Column("connname", String(length=80), nullable=False)
+    server = Column("server", String(length=80), nullable=False)
+    username = Column("username", String, ForeignKey('person.id'))
+    password = Column("password", String(length=80), nullable=False)
+    assignedto = Column("assignedto", String, ForeignKey('person.id'))
+    path = Column("path", String(length=80), nullable=False)
+
+
+    def __init__(self, connname, server, username, password, assignedto):
+        self.uuid = str(uuid.uuid4())
+        self.connname = connname
+        self.server = server
+        self.username = username
+        self.password = password
+        self.assignedto = assignedto
+        self.session = self._session()
+
+    def __repr__(self):
+        return f"{self.uuid} {self.connname} {self.username}"  
+    
+    @classmethod
+    def _session(cls):
+        return session
+
+    @classmethod
+    def find_by_connname(cls, conn_name):
+        session = cls._session()
+        return session.query(cls).filter_by(connname=conn_name).first()
+
+    @classmethod
+    def find_conn_assignedto(cls, assignedto):
+        session = cls._session()
+        return session.query(cls).filter_by(assignedto=assignedto).all()
 
 #Session = sessionmaker(bind=engine)
 #session = Session()

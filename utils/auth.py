@@ -81,6 +81,8 @@ class AuthenticationMethods:
             token = token.removeprefix("Bearer").strip()
             try:
                 payload = jwt.decode(token, self.settings.SECRET_KEY, algorithms=[self.settings.ALGORITHM])
+                print("PAYLOAD")
+                print(payload)
                 username: str = payload.get("username")
                 if username is None:
                     raise credentials_exception
@@ -88,7 +90,7 @@ class AuthenticationMethods:
                 print(e)
                 raise credentials_exception
             
-            user = get_user(username)
+            user = Person.find_by_first_name(username)
             return user
 
 
@@ -99,7 +101,9 @@ class AuthenticationMethods:
         Use this function from inside other routes to get the current user. Good
         for views that should work for both logged in, and not logged in users.
         """
+        print("Estoy aca o no acaso")
         token = request.cookies.get(self.settings.COOKIE_NAME)
+        print(token)
         user = self.decode_token(token)
         return user
 

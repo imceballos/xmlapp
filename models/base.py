@@ -1,13 +1,18 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
 
 db = declarative_base()
+engine = create_engine("sqlite:///mydb.db")
+Session = sessionmaker(bind=engine)
+session = Session()
 
 class Base(db):
     __abstract__ = True
 
     def __init__(self):
-        self.session = self._session()
+        self.session = session
 
     def __repr__(self):
         mydict = vars(self)
@@ -16,8 +21,8 @@ class Base(db):
 
     def save(self):
         try:
-            self.session.add(self)
-            self.session.commit()
+            session.add(self)
+            session.commit()
             return self
         except Exception as exc:
             print("log exc {}".format(str(exc)))
@@ -25,18 +30,26 @@ class Base(db):
 
     def delete(self):
         try:
-            self.session.delete(self)
-            self.session.commit()
+            session.delete(self)
+            session.commit()
             return True
         except Exception as exc:
             print("log exc {}".format(str(exc)))
             return False
 
-    @classmethod
-    def _session(cls):
-        engine = create_engine("sqlite:///mydb.db")
-        Session = sessionmaker(bind=engine)
-        return Session()
+    def update(self, props: dict):
+        try:
+            for key, value in props.items():
+                print("ENTRO ACA AL MENOS O NO")
+                print(key, value)
+                setattr(self, key, value)
+
+            session.commit()
+            session.flush()
+            return self
+        except Exception as exc:
+            print("log exc {}".format(str(exc)))
+            return False
 
 
 #engine = create_engine("sqlite:///mydb.db", echo=True)

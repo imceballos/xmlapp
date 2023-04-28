@@ -221,28 +221,28 @@
                     </tr>
                     {% for file in files %}
                         <tr>
-                            <td>{{ file.name }}</td>
+                            <td>{{ file.filename }}</td>
                             <td>{{ '{:.2f}'.format(file.size / 1024) }} KB</td>
                             <td>
-                                <a href="{{ url_for('download_file', filename=file.name, folder=file.folder, status=status) }}">
+                                <a href="{{ url_for('download_file', filename=file.filename, folder=file.path, status=file.status) }}">
                                     <div class="download-icon"></div>
                                 </a>
                             </td>
                             {% if status == 'accepted' %}
                                 <td>
-                                    <button type="button" class="reject-button" onclick="showConfirmation('{{ file.name }}', '{{ file.folder }}', '{{ status }}')">Reject</button>
+                                    <button type="button" class="reject-button" onclick="showConfirmation('{{ file.filename }}', '{{ file.path }}', '{{ file.status }}')">Reject</button>
                                 </td>
                             {% elif status == 'pending' %}
                                 <td>
-                                    <button type="button" class="accept-button" onclick="acceptFile('{{ file.name }}', '{{ file.folder }}', '{{ status }}')">Accept</button>
-                                    <button type="button" class="reject-button" onclick="showConfirmation('{{ file.name }}', '{{ file.folder }}', '{{ status }}')">Reject</button>
+                                    <button type="button" class="accept-button" onclick="acceptFile('{{ file.filename }}', '{{ file.path }}', '{{ file.status }}', '{{ file.uuid }}')">Accept</button>
+                                    <button type="button" class="reject-button" onclick="showConfirmation('{{ file.filename }}', '{{ file.path }}', '{{ file.status }}')">Reject</button>
                                 </td>
                             {% endif %}
                                 <td>
-                                    <a href="{{ url_for('view_xml', filename=file.name, folder=file.folder, status=status) }}">View</a>
+                                    <a href="{{ url_for('view_xml', filename=file.filename, folder=file.path, status=status) }}">View</a>
                                 </td>
                             <td>
-                                <button type="button" class="sendfile-button" onclick="sendFileftp('{{ file.name }}', '{{ file.folder }}', '{{ status }}')">Send</button>
+                                <button type="button" class="sendfile-button" onclick="sendFileftp('{{ file.filename }}', '{{ file.path }}', '{{ file.status }}')">Send</button>
                             </td>
                             </tr>
                     {% endfor %}
