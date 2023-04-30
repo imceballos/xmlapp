@@ -16,10 +16,11 @@ from utils.login import LoginForm
 from utils.utils import UtilFunctions
 from utils.encrypt import decode_from_base64, encode_to_base64
 from utils.ftp import FTPDownloader
+from utils.logger import Logger
 from models.base import Base
 from models.xmlapp_db import Person, Connections, Files
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import business as business
 import asyncio #presente en lineas conectadas
@@ -29,7 +30,7 @@ app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
-
+logger = Logger(__name__)
 settings = Settings()
 auth_method = AuthenticationMethods(settings)
 oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl="token", settings = settings)
@@ -47,6 +48,36 @@ def get_current_user_from_token(token: str = Depends(oauth2_scheme)) -> User:
     """
     user = auth_method.decode_token(token)
     return user
+
+
+@app.middleware("http")
+async def refresh_token_middleware(request: Request, call_next):
+    # Get the user's access token from the cookie
+    access_token = auth_method.get_access_token_from_cookie(request)
+    print("EL access token")
+    print(access_token)
+    if access_token:
+        # Check if the access token is about to expire
+        token_data = auth_method.decode_access_token(access_token)
+        print("TOKEN DATA", token_data)
+        token_exp = datetime.fromtimestamp(token_data["exp"])
+        time_until_expire = token_exp - datetime.utcnow()
+
+        if time_until_expire < timedelta(minutes=5):
+            # Generate a new access token
+            new_access_token = auth_method.refresh_token(token_data)
+
+            # Set the new access token in the response cookie
+            response = await call_next(request)
+            response.set_cookie(
+                key=settings.COOKIE_NAME,
+                value=f"Bearer {new_access_token}",
+                httponly=True
+            )
+            return response
+
+    # Call the next middleware or endpoint
+    return await call_next(request)
 
 
 @app.get("/statusfiles")
@@ -442,6 +473,7 @@ def login_get(request: Request):
         context = {
             "request": request,
         }
+        logger.info("Not Authenticated User redirected to login View")
         return templates.TemplateResponse("login.html", context)
     return RedirectResponse(url="/")
 
@@ -454,19 +486,22 @@ async def login_post(request: Request):
         try:
             response = RedirectResponse("/", status.HTTP_302_FOUND)
             login_for_access_token(response=response, form_data=form)
+            logger.info(f"Login succesfully: {form.username}")
             form.__dict__.update(msg="Login Successful!")
             return response
         except HTTPException:
             form.__dict__.update(msg="")
+            logger.info(f"Login error: {form.username}")
             form.__dict__.get("errors").append("Incorrect Email or Password")
             return templates.TemplateResponse("login.html", form.__dict__)
     return templates.TemplateResponse("login.html", form.__dict__)
 
 
 @app.get("/auth/logout", response_class=HTMLResponse)
-def login_get():
+def login_get(user: User = Depends(auth_method.get_current_user_from_cookie)):
     response = RedirectResponse(url="/auth/login")
     response.delete_cookie(settings.COOKIE_NAME)
+    logger.info(f"Logged out: {user.username}")
     return response
 
 @app.get("/profile", response_class=HTMLResponse)
@@ -538,6 +573,7 @@ async def create_connection_post(request: Request,
     folder_name = f"test_files/{name}"
     conn.path = folder_name
     conn.save()
+    logger.info(f"Connection {name} created by {username}")
 
     required_subfolders = ["frombollore", "tobollore", "staging"]
     UtilFunctions().create_subdirectories(folder_name, required_subfolders)
