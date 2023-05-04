@@ -1,5 +1,6 @@
-from sqlalchemy import create_engine, ForeignKey, Column, String, Integer, Enum, Boolean
+from sqlalchemy import create_engine, ForeignKey, Column, String, Integer, Enum, Boolean, DateTime
 from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.sql import func
 import uuid
 import re
 
@@ -94,7 +95,8 @@ class Files(Base):
     status = Column(Enum('accepted', 'rejected', 'pending', name='status'), default='pending')
     sent = Column("sent", Boolean, default=False)
     stage = Column("stage", String(length=80), nullable=False)
-    extension = Column("extension", string(length=32), nullable=False)
+    extension = Column("extension", String(length=32), nullable=False)
+    lastactivity = Column("lastactivity", DateTime(timezone=True), default=func.now())
 
     def __init__(self, filename, path, assignedto, status,stage, size):
         self.uuid = str(uuid.uuid4())
@@ -111,13 +113,13 @@ class Files(Base):
 
     @classmethod
     def get_extension(self, filename):
-        if any(filepath.endswith(ext) for ext in ('.jpg', '.png')):
+        if any(filename.endswith(ext) for ext in ('.jpg', '.png')):
             return "jpg"
-        elif filepath.endswith('.pdf'):
+        elif filename.endswith('.pdf'):
             return "pdf"
-        elif filepath.endswith('.txt'):
+        elif filename.endswith('.txt'):
             return "txt"
-        elif filepath.endswith('.xml'):
+        elif filename.endswith('.xml'):
             return "xml"
         else:
             return "unk"

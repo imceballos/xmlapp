@@ -135,7 +135,7 @@ class UtilFunctions:
         new_path_parts = path_parts[:-2] + [replacement] + [path_parts[-1]]
         return "/".join(new_path_parts)
 
-    def get_input_to_write(data: dict, option: str):
+    def get_input_to_write(self, data: dict, option: str):
         if option == "input_a_0":
             data = {    
                         "option": option, 

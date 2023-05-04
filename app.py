@@ -14,7 +14,6 @@ from utils.settings import Settings
 from utils.models import User, File
 from utils.login import LoginForm
 from utils.utils import UtilFunctions
-from UtilFunctions import get_input_to_write
 from utils.encrypt import decode_from_base64, encode_to_base64
 from utils.ftp import FTPDownloader
 from models.base import Base
@@ -127,11 +126,10 @@ async def process_form(data: dict, request: Request, user: User = Depends(get_cu
     """
     current_user = Person.find_by_id(user.id)
     current_conn = Connections.find_by_connname(current_user.currentconn)
-    current_conn_path = current_conn.path
-    current_conn_uuid = current_conn.uuid
-    base_folder_path = current_conn_path
+    current_conn_path, current_conn_uuid = current_conn.path, current_conn.uuid
+
     option = list(data.keys())[0]
-    data=get_input_to_write(data, option)
+    data = UtilFunctions().get_input_to_write(data, option)
     xml_writer = getattr(business, UtilFunctions().get_write_func_filename(option))
     datafile = await xml_writer(data, current_conn_path)
     filename = datafile.get("filename", "")
@@ -140,7 +138,6 @@ async def process_form(data: dict, request: Request, user: User = Depends(get_cu
 
     newfile = Files(filename, path, current_conn_uuid, "pending", "1", size)
     newfile.save()
-    _ = await xml_writer(data)
     return {"message": "XML file successfully created"}
 
 @app.post("/token")
@@ -230,7 +227,6 @@ async def view_xml(request: Request, filename: str, folder: str, status: str):
 async def create_connection(request: Request, user: User = Depends(auth_method.get_current_user_from_cookie)):
     if user:
         folder_path = "test_files"
-        print("Quiero ver aca hou")
         conn_asigned = [conn.connname for conn in Connections.find_conn_assignedto(user.id)]
         #folder_names = [name for name in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, name))]
         return templates.TemplateResponse("connections.html", {"request": request, "folders": conn_asigned})
@@ -266,7 +262,6 @@ async def create_connection_post(request: Request,
     folders = [name for name in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, name))]
     context = {"request": request, "folders": folders}
 
-    #print("Ver filtering")
     gg = Connections.find_by_connname("testinghelloworld1234")
     return  {"message": "Successfully updated"}
 
@@ -334,35 +329,28 @@ async def perform_operation1(data: dict, request: Request):
 
 @app.post("/update_file_status")
 async def update_file_status(files: List[File]):
-    print("HORA DE VER ACA UPDATE")
-    print(files)
-    file_name = files[0].name
-    file_folder = decode_from_base64(files[0].folder)
-    file_status = files[0].status
-    file_currentstatus = files[0].currentstatus
-    source_file = file_folder
-    print(file_folder, file_status)
+    file_name, file_folder, file_status = files[0].name, decode_from_base64(files[0].folder), files[0].status
     destination_file = UtilFunctions().replace_path(file_folder, file_status)
     file_updated = Files.find_by_path(encode_to_base64(file_folder))
     file_updated.update({"status": file_status})
     
-    decoded_text = decode_from_base64(files.folder)
-    source_file = f"{decoded_text}/{files.currentstatus}/{files.name}"
-    destination_file =  f"{decoded_text}/{files.status}/{files.name}"
-    if files.name in os.listdir(f"{decoded_text}/{files.status}"):
-        if files.name.split('.')[0]+'-2'+'.xml' in os.listdir(f"{decoded_text}/{files.status}"):
-            n=2
-            for f in os.listdir(f"{decoded_text}/{files.status}"):
-                if files.name.split('.')[0]+'-' in f:
-                    last_n = int(f.split('-')[1].split('.')[0])
-                    if last_n > n:
-                        n = last_n
-            os.rename(source_file, destination_file.split('.')[0]+'-'+str(n+1)+'.xml')
-            n=3
-        else:
-            os.rename(source_file, destination_file.split('.')[0]+'-'+str(2)+'.xml')
-    else:
-        os.rename(source_file, destination_file)
+    #decoded_text = decode_from_base64(files.folder)
+    #source_file = f"{decoded_text}/{files.currentstatus}/{files.name}"
+    #destination_file =  f"{decoded_text}/{files.status}/{files.name}"
+    #if files.name in os.listdir(f"{decoded_text}/{files.status}"):
+    #    if files.name.split('.')[0]+'-2'+'.xml' in os.listdir(f"{decoded_text}/{files.status}"):
+    #        n=2
+    #        for f in os.listdir(f"{decoded_text}/{files.status}"):
+    #            if files.name.split('.')[0]+'-' in f:
+    #                last_n = int(f.split('-')[1].split('.')[0])
+    #                if last_n > n:
+    #                    n = last_n
+    #        os.rename(source_file, destination_file.split('.')[0]+'-'+str(n+1)+'.xml')
+    #        n=3
+    #    else:
+    #        os.rename(source_file, destination_file.split('.')[0]+'-'+str(2)+'.xml')
+    #else:
+    #    os.rename(source_file, destination_file)
     return {"message": "Successfully updated"}
 
 
