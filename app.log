@@ -75,3 +75,9 @@
 2023-04-29 06:36:27,333 - app - INFO - Login succesfully: jesus@gmail.com
 2023-04-29 06:41:14,654 - app - INFO - Not Authenticated User redirected to login View
 2023-04-29 06:41:21,588 - app - INFO - Login succesfully: jesus@gmail.com
+2023-05-03 01:33:51,355 - app - INFO - Not Authenticated User redirected to login View
+2023-05-03 01:33:59,444 - app - INFO - Login succesfully: jesus@gmail.com
+2023-05-03 01:40:13,953 - app - INFO - Not Authenticated User redirected to login View
+2023-05-03 01:40:19,274 - app - INFO - Login succesfully: jesus@gmail.com
+2023-05-03 01:41:02,535 - app - INFO - User Jesus clicked the profile section
+2023-05-03 01:41:43,911 - app - INFO - User Jesus: clicked the profile section

@@ -92,11 +92,12 @@ async def index(request: Request):
 
 
 @app.get("/download/{filename}/{folder}/{status}")
-async def download_file(folder: str, filename: str, status: str):
+async def download_file(folder: str, filename: str, status: str, user: User = Depends(auth_method.get_current_user_from_cookie)):
     """
     Endpoint that returns the content of a file as a download
     """
     file_path = decode_from_base64(folder)
+    logger.info(f"User {user.username} download file {filename}")
     return FileResponse(file_path, media_type="application/octet-stream", filename=filename)
 
 
@@ -505,11 +506,13 @@ def login_get(user: User = Depends(auth_method.get_current_user_from_cookie)):
     return response
 
 @app.get("/profile", response_class=HTMLResponse)
-def index(request: Request, user: User = Depends(get_current_user_from_token)):
+def index(request: Request, user: User = Depends(auth_method.get_current_user_from_cookie)):
     context = {
         "user": user,
         "request": request
-    }
+    } 
+   
+    logger.info(f"User {user.first_name}: clicked the profile section")
     return templates.TemplateResponse("profile.html", context)
 
 @app.exception_handler(HTTPException)
@@ -617,11 +620,13 @@ async def perform_operation(request: Request, folder_path: str, user: User = Dep
 
 @app.get("/recover_password")
 async def recover_password(request: Request):
+    logger.info(f"User {user.first_name}: clicked the recover password section")
     return templates.TemplateResponse("recover_password.html", {"request": request})
 
 
 @app.get("/help")
-async def help(request: Request):
+async def help(request: Request, user: User = Depends(auth_method.get_current_user_from_cookie)):
+    logger.info(f"User {user.first_name}: clicked the help section")
     return templates.TemplateResponse("help.html", {"request": request})
 
 
@@ -659,6 +664,7 @@ async def update_file_status(files: List[File]):
     print(file_folder, file_status)
     destination_file = UtilFunctions().replace_path(file_folder, file_status)
     file_updated = Files.find_by_path(encode_to_base64(file_folder))
+    logger.info(f"User {user.username} update status of file {file_updated.filename} from {file_updated.status} to {file_status}")
     file_updated.update({"status": file_status})
     #decoded_text = decode_from_base64(files.folder)
     #destination_file =  f"{decoded_text}/{files.status}/{files.name}"
@@ -693,14 +699,17 @@ async def download_files_ftp(data: dict, user: User = Depends(auth_method.get_cu
         if not Files.find_by_filename_assignedto(cfile.get("filename"), current_conn_uuid):
             newfile = Files(cfile.get("filename"), encode_to_base64(cfile.get("path")), current_conn_uuid, "pending", "1", cfile.get("size"))
             newfile.save()
+            logger.info(f"User {user.username} receive file from FTP server: {cfile.get('filename')}")
     return {"message": "Successfully updated"}
 
 @app.post("/send_files_ftp")
 async def download_files_ftp(data: dict):
-    print("estoy aca")
+    print("estoy aca viendo FTP SEND")
+    print(data)
     folder_path = decode_from_base64(data["folder_path"])
     print(folder_path)
     #file_path = os.path.join(folder_path, f"{data['status']}/", data["filename"])
     print("Corrio el post o no")
     ddd.upload_file(folder_path)
+    logger.info(f"User {user.username} send file to FTP server:")
     return {"message": "Successfully updated"}
