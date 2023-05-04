@@ -117,7 +117,7 @@ class AuthenticationMethods:
         user = self.decode_token(token)
         return user
 
-    def get_current_user_from_token(token: str) -> User:
+    def get_current_user_from_token(self, token: str) -> User:
         """
         Get the current user from the cookies in a request.
 
