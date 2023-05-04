@@ -52,22 +52,15 @@ def get_current_user_from_token(token: str = Depends(oauth2_scheme)) -> User:
 
 @app.middleware("http")
 async def refresh_token_middleware(request: Request, call_next):
-    # Get the user's access token from the cookie
     access_token = auth_method.get_access_token_from_cookie(request)
-    print("EL access token")
-    print(access_token)
     if access_token:
-        # Check if the access token is about to expire
         token_data = auth_method.decode_access_token(access_token)
-        print("TOKEN DATA", token_data)
         token_exp = datetime.fromtimestamp(token_data["exp"])
         time_until_expire = token_exp - datetime.utcnow()
 
         if time_until_expire < timedelta(minutes=5):
-            # Generate a new access token
             new_access_token = auth_method.refresh_token(token_data)
 
-            # Set the new access token in the response cookie
             response = await call_next(request)
             response.set_cookie(
                 key=settings.COOKIE_NAME,
@@ -76,7 +69,6 @@ async def refresh_token_middleware(request: Request, call_next):
             )
             return response
 
-    # Call the next middleware or endpoint
     return await call_next(request)
 
 
