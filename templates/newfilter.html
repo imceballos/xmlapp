@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Log Viewer</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+  <style>
+    button.filter-btn {
+        background-color: #008CBA;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        }
+
+    .options {
+        display: none;
+        width: 250px;
+        padding: 10px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+        }
+
+    .options button {
+        display: block;
+        width: 100%;
+        background-color: #008CBA;
+        color: white;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        margin-bottom: 5px;
+        border-radius: 5px;
+        }
+
+    .filter-btn-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        }
+
+    .filter-btn-container button.filter-btn {
+        flex: 1;
+        margin-right: 10px;
+        }
+
+    .filter-options {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        }
+
+    .filter-options .options {
+        position: absolute;
+        top: 0;
+        right: calc(100% + 10px);
+        }
+
+    @media (max-width: 768px) {
+        .filter-btn-container {
+            flex-direction: column;
+        }
+
+    .filter-btn-container button.filter-btn {
+            margin-right: 0;
+            margin-bottom: 10px;
+        }
+        }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Log Viewer</h1>
+    <div class="filter-btn-container">
+      <button class="filter-btn">Filter</button>
+      <div class="filter-options">
+        <div class="options">
+          <button class="date-filter-btn">Filter by Date</button>
+          <button class="user-filter-btn">Filter by User</button>
+          <button class="level-filter-btn">Filter by Level</button>
+          <button class="clear-filter-btn">Clear Filters</button>
+        </div>
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>User</th>
+          <th>Level</th>
+          <th>Message</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Table rows here -->
+      </tbody>
+    </table>
+  </div>
+  <script>
+    // Paste your JavaScript code here
+  </script>
+</body>
+</html>

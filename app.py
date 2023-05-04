@@ -87,7 +87,7 @@ async def download_file(folder: str, filename: str, status: str, user: User = De
     Endpoint that returns the content of a file as a download
     """
     file_path = decode_from_base64(folder)
-    logger.info(f"User {user.username} download file {filename}")
+    logger.info(f"User {user.first_name}: download file {filename}")
     return FileResponse(file_path, media_type="application/octet-stream", filename=filename)
 
 
@@ -348,11 +348,11 @@ async def perform_operation1(data: dict, request: Request):
     return {"url": "/get_template", "data": 1, "files":  xml_files, "folder_path": folder_path}
 
 @app.post("/update_file_status")
-async def update_file_status(files: List[File]):
+async def update_file_status(files: List[File], user: User = Depends(auth_method.get_current_user_from_cookie)):
     file_name, file_folder, file_status = files[0].name, decode_from_base64(files[0].folder), files[0].status
     destination_file = UtilFunctions().replace_path(file_folder, file_status)
     file_updated = Files.find_by_path(encode_to_base64(file_folder))
-    logger.info(f"User {user.username}: update status of file {file_updated.filename} from {file_updated.status} to {file_status}")
+    logger.info(f"User {user.first_name}: update status of file {file_updated.filename} from {file_updated.status} to {file_status}")
     file_updated.update({"status": file_status})
     
     #decoded_text = decode_from_base64(files.folder)
@@ -385,12 +385,48 @@ async def download_files_ftp(data: dict, user: User = Depends(auth_method.get_cu
         if not Files.find_by_filename_assignedto(cfile.get("filename"), current_conn_uuid):
             newfile = Files(cfile.get("filename"), encode_to_base64(cfile.get("path")), current_conn_uuid, "pending", "1", cfile.get("size"))
             newfile.save()
-            logger.info(f"User {user.username}: receive file from FTP server {cfile.get('filename')}")
+            logger.info(f"User {user.first_name}: receive file from FTP server {cfile.get('filename')}")
     return {"message": "Successfully updated"}
 
 @app.post("/send_files_ftp")
-async def download_files_ftp(data: dict):
+async def download_files_ftp(data: dict, user: User = Depends(auth_method.get_current_user_from_cookie)):
     folder_path = decode_from_base64(data["folder_path"])
     ddd.upload_file(folder_path)
-    logger.info(f"User {user.username}: send file to FTP server:")
+    logger.info(f"User {user.first_name}: send {data.get('filename')} to FTP server")
     return {"message": "Successfully updated"}
+
+
+@app.get("/activity", response_class=HTMLResponse)
+async def display_logs(request: Request, date: str = None):
+
+    if date is not None:
+        try:
+            date = datetime.strptime(date, "%Y-%m-%d")
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid date format")
+        start_time = date
+        end_time = date + timedelta(days=100)
+    else:
+        start_time = datetime.min
+        end_time = datetime.max
+
+    logs = []
+    with open('app.log') as file:
+        for line in file:
+            try:
+                content = line.split(" - ")
+                timestamp_str, log_type, log_info = content[0],  content[2],  content[3] 
+                timestamp = datetime.strptime(timestamp_str.split(",")[0], "%Y-%m-%d %H:%M:%S")
+                if start_time <= timestamp <= end_time:
+                    logs.append({"timestamp": timestamp, "type": log_type, "info": log_info})
+            except (ValueError, IndexError):
+                pass
+
+    return templates.TemplateResponse("activity.html", {"request": request, "logs": logs})
+
+
+
+@app.get("/filterview", response_class=HTMLResponse)
+async def filter_view(request: Request, date: str = None):
+    files = Files.find_all()
+    return templates.TemplateResponse("filterview.html", {"request": request, "files": files})

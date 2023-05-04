@@ -81,3 +81,24 @@
 2023-05-03 01:40:19,274 - app - INFO - Login succesfully: jesus@gmail.com
 2023-05-03 01:41:02,535 - app - INFO - User Jesus clicked the profile section
 2023-05-03 01:41:43,911 - app - INFO - User Jesus: clicked the profile section
+2023-05-04 01:15:03,941 - app - INFO - Connection testing created by testaccount@virgogroup.com.sg
+2023-05-04 01:16:31,013 - app - INFO - User Jesus download file CW1_request.xml
+2023-05-04 01:18:07,858 - app - INFO - User Jesus: update status of file CW1_request.xml from pending to accepted
+2023-05-04 01:18:19,313 - app - INFO - User Jesus: update status of file CW1_request.xml from accepted to rejected
+2023-05-04 01:19:51,421 - app - INFO - User Jesus: download file CW1_request.xml
+2023-05-04 01:22:46,446 - app - INFO - User Jesus: send file to FTP server:
+2023-05-04 01:23:22,924 - app - INFO - User Jesus: send file to FTP server:
+2023-05-04 01:25:11,945 - app - INFO - User Jesus: receive file from FTP server testing.txt
+2023-05-04 01:25:11,952 - app - INFO - User Jesus: receive file from FTP server newfile.txt
+2023-05-04 01:25:11,952 - app - INFO - User Jesus: receive file from FTP server newtest.txt
+2023-05-04 02:02:22,210 - app - INFO - User Jesus: clicked the profile section
+2023-05-04 02:02:35,105 - app - INFO - User Jesus: clicked the help section
+2023-05-04 02:43:05,996 - app - INFO - User Jesus: clicked the help section
+2023-05-04 02:59:20,538 - app - INFO - User Jesus: download file CW1_request.xml
+2023-05-04 03:00:24,264 - app - INFO - User Jesus: download file newtest.txt
+2023-05-04 03:33:50,473 - app - INFO - Not Authenticated User redirected to login View
+2023-05-04 03:47:53,736 - app - INFO - Not Authenticated User redirected to login View
+2023-05-04 03:53:15,658 - app - INFO - Not Authenticated User redirected to login View
+2023-05-04 04:09:17,029 - app - INFO - Not Authenticated User redirected to login View
+2023-05-04 04:33:38,661 - app - INFO - Not Authenticated User redirected to login View
+2023-05-04 04:35:07,856 - app - INFO - Not Authenticated User redirected to login View

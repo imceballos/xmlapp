@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Logs</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      text-align: left;
+      padding: 8px;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+  <script>
+    function filterTable() {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("filter");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("log-table");
+      tr = table.getElementsByTagName("tr");
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td");
+        for (j = 0; j < td.length; j++) {
+          txtValue = td[j].textContent || td[j].innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+            break;
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body>
+  <h1>Logs</h1>
+  <form method="get" action="/logs">
+    <label for="date">Filter by date:</label>
+    <input type="date" id="date" name="date">
+    <br>
+    <label for="user">Filter by user:</label>
+    <input type="text" id="user" name="user">
+    <br>
+    <label for="level">Filter by level:</label>
+    <select id="level" name="level">
+      <option value="">All</option>
+      <option value="INFO">INFO</option>
+      <option value="WARN">WARN</option>
+      <option value="CRITICAL">CRITICAL</option>
+      <option value="ERROR">ERROR</option>
+    </select>
+    <br>
+    <button type="submit">Filter</button>
+  </form>
+  <br>
+  <input type="text" id="filter" onkeyup="filterTable()" placeholder="Filter logs...">
+  <br>
+  <br>
+  <table id="log-table">
+    <thead>
+      <tr>
+        <th>Timestamp</th>
+        <th>Level</th>
+        <th>Message</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for log in logs %}
+      <tr>
+        <td>{{ log.timestamp }}</td>
+        <td>{{ log.type }}</td>
+        <td>{{ log.info }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>

@@ -156,6 +156,17 @@ class Files(Base):
         return session.query(cls).filter(cls.filename==filename, cls.assignedto==assignedto).first()
 
     @classmethod
+    def find_all(cls):
+        content = []
+        session = cls._session()
+        elements = session.query(cls).all()
+        for elem in elements:
+            content.append({"filename": elem.filename, "size": elem.size, "status": elem.status, 
+                            "assignedto": elem.assignedto, "sent": elem.sent, "stage": elem.stage, 
+                            "path": elem.path})
+        return content
+
+    @classmethod
     def _session(cls):
         return session
    
