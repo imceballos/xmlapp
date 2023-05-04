@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, ForeignKey, Column, String, Integer, Enum
+from sqlalchemy import create_engine, ForeignKey, Column, String, Integer, Enum, Boolean
 from sqlalchemy.orm import sessionmaker, relationship
 import uuid
 import re
@@ -92,7 +92,9 @@ class Files(Base):
     size =  Column("size", Integer())
     assignedto = Column("assignedto", String, ForeignKey('connections.uuid'))
     status = Column(Enum('accepted', 'rejected', 'pending', name='status'), default='pending')
+    sent = Column("sent", Boolean, default=False)
     stage = Column("stage", String(length=80), nullable=False)
+    extension = Column("extension", string(length=32), nullable=False)
 
     def __init__(self, filename, path, assignedto, status,stage, size):
         self.uuid = str(uuid.uuid4())
@@ -102,9 +104,24 @@ class Files(Base):
         self.status = status
         self.stage = stage
         self.size = size
+        self.extension = self.get_extension(filename)
 
     def __repr__(self):
         return f"{self.uuid} {self.filename} {self.path} {self.assignedto} {self.status}"  
+
+    @classmethod
+    def get_extension(self, filename):
+        if any(filepath.endswith(ext) for ext in ('.jpg', '.png')):
+            return "jpg"
+        elif filepath.endswith('.pdf'):
+            return "pdf"
+        elif filepath.endswith('.txt'):
+            return "txt"
+        elif filepath.endswith('.xml'):
+            return "xml"
+        else:
+            return "unk"
+
 
     @classmethod
     def find_by_uuid(cls, uuid):
