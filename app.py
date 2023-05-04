@@ -16,9 +16,11 @@ from utils.login import LoginForm
 from utils.utils import UtilFunctions
 from utils.encrypt import decode_from_base64, encode_to_base64
 from utils.ftp import FTPDownloader
+from utils.logger import Logger
 from models.base import Base
 from models.xmlapp_db import Person, Connections, Files
 
+from datetime import datetime, timedelta
 import business as business
 
 
@@ -26,7 +28,7 @@ app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
-
+logger = Logger(__name__)
 settings = Settings()
 auth_method = AuthenticationMethods(settings)
 oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl="token", settings = settings)
@@ -45,6 +47,29 @@ def get_current_user_from_token(token: str = Depends(oauth2_scheme)) -> User:
     user = auth_method.decode_token(token)
     return user
 
+
+@app.middleware("http")
+async def refresh_token_middleware(request: Request, call_next):
+    access_token = auth_method.get_access_token_from_cookie(request)
+    if access_token:
+        token_data = auth_method.decode_access_token(access_token)
+        token_exp = datetime.fromtimestamp(token_data["exp"])
+        time_until_expire = token_exp - datetime.utcnow()
+
+        if time_until_expire < timedelta(minutes=5):
+            new_access_token = auth_method.refresh_token(token_data)
+
+            response = await call_next(request)
+            response.set_cookie(
+                key=settings.COOKIE_NAME,
+                value=f"Bearer {new_access_token}",
+                httponly=True
+            )
+            return response
+
+    return await call_next(request)
+
+
 @app.get("/statusfiles")
 async def index(request: Request):
     """
@@ -57,11 +82,12 @@ async def index(request: Request):
 
 
 @app.get("/download/{filename}/{folder}/{status}")
-async def download_file(folder: str, filename: str, status: str):
+async def download_file(folder: str, filename: str, status: str, user: User = Depends(auth_method.get_current_user_from_cookie)):
     """
     Endpoint that returns the content of a file as a download
     """
     file_path = decode_from_base64(folder)
+    logger.info(f"User {user.username} download file {filename}")
     return FileResponse(file_path, media_type="application/octet-stream", filename=filename)
 
 
@@ -90,7 +116,6 @@ async def process_form(file: UploadFile, request: Request, user: User = Depends(
     """
     Endpoint that processes the uploaded file and saves it to disk
     """    
-    # Save the uploaded file to disk
     contents = await file.read()
     filename = file.filename
     
@@ -132,9 +157,7 @@ async def process_form(data: dict, request: Request, user: User = Depends(get_cu
     data = UtilFunctions().get_input_to_write(data, option)
     xml_writer = getattr(business, UtilFunctions().get_write_func_filename(option))
     datafile = await xml_writer(data, current_conn_path)
-    filename = datafile.get("filename", "")
-    path = encode_to_base64(datafile.get("path", ""))
-    size = datafile.get("size", "")
+    filename, path, size = datafile.get("filename", ""), encode_to_base64(datafile.get("path", "")), datafile.get("size", "")
 
     newfile = Files(filename, path, current_conn_uuid, "pending", "1", size)
     newfile.save()
@@ -166,6 +189,7 @@ def login_get(request: Request):
         context = {
             "request": request,
         }
+        logger.info("Not Authenticated User redirected to login View")
         return templates.TemplateResponse("login.html", context)
     return RedirectResponse(url="/")
 
@@ -178,27 +202,32 @@ async def login_post(request: Request):
         try:
             response = RedirectResponse("/", status.HTTP_302_FOUND)
             login_for_access_token(response=response, form_data=form)
+            logger.info(f"Login succesfully: {form.username}")
             form.__dict__.update(msg="Login Successful!")
             return response
         except HTTPException:
             form.__dict__.update(msg="")
+            logger.info(f"Login error: {form.username}")
             form.__dict__.get("errors").append("Incorrect Email or Password")
             return templates.TemplateResponse("login.html", form.__dict__)
     return templates.TemplateResponse("login.html", form.__dict__)
 
 
 @app.get("/auth/logout", response_class=HTMLResponse)
-def login_get():
+def login_get(user: User = Depends(auth_method.get_current_user_from_cookie)):
     response = RedirectResponse(url="/auth/login")
     response.delete_cookie(settings.COOKIE_NAME)
+    logger.info(f"Logged out: {user.username}")
     return response
 
 @app.get("/profile", response_class=HTMLResponse)
-def index(request: Request, user: User = Depends(get_current_user_from_token)):
+def index(request: Request, user: User = Depends(auth_method.get_current_user_from_cookie)):
     context = {
         "user": user,
         "request": request
-    }
+    } 
+   
+    logger.info(f"User {user.first_name}: clicked the profile section")
     return templates.TemplateResponse("profile.html", context)
 
 @app.exception_handler(HTTPException)
@@ -228,9 +257,7 @@ async def create_connection(request: Request, user: User = Depends(auth_method.g
     if user:
         folder_path = "test_files"
         conn_asigned = [conn.connname for conn in Connections.find_conn_assignedto(user.id)]
-        #folder_names = [name for name in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, name))]
         return templates.TemplateResponse("connections.html", {"request": request, "folders": conn_asigned})
-        #return RedirectResponse(url="/")
     return RedirectResponse(url="/auth/login")
 
 @app.get("/folder/{folder_name}")
@@ -256,6 +283,7 @@ async def create_connection_post(request: Request,
     folder_name = f"test_files/{name}"
     conn.path = folder_name
     conn.save()
+    logger.info(f"Connection {name} created by {username}")
 
     required_subfolders = ["frombollore", "tobollore", "staging"]
     UtilFunctions().create_subdirectories(folder_name, required_subfolders)
@@ -272,24 +300,14 @@ async def perform_operation(request: Request, folder_path: str, user: User = Dep
     #await asyncio.gather(downloader.download_files(folder_path))
     #await asyncio.gather(download_new_files(folder_path))
 
-    #ddd.download_files(folder_path)
-    print("que hay aca")
-    print(user.currentconn)
     current_user = Person.find_by_id(user.id)
     current_conn = current_user.currentconn
     current_conn_uuid = Connections.find_by_connname(current_conn).uuid
-    print(current_conn_uuid)
     accepted_files = Files.find_by_status_assignedto("accepted", current_conn_uuid)
     rejected_files = Files.find_by_status_assignedto("rejected", current_conn_uuid)
     pending_files = Files.find_by_status_assignedto("pending", current_conn_uuid)
-    print("files",accepted_files, rejected_files, pending_files)
     encoded_text = encode_to_base64(folder_path)
     folder_level = folder_path.split("/")[-1]
-    print("HELLO WORLD")
-    print(folder_level, folder_path, encoded_text)
-    #accepted_files = UtilFunctions().get_files_by_condition(folder_path, encoded_text, "accepted")
-    #rejected_files = UtilFunctions().get_files_by_condition(folder_path, encoded_text, "rejected")
-    #pending_files = UtilFunctions().get_files_by_condition(folder_path, encoded_text, "pending")
     return templates.TemplateResponse("index.html", {"request": request, "accepted_files": accepted_files, 
             "rejected_files": rejected_files, "pending_files": pending_files, "folder_level": folder_level,
             "folder_path": f"{folder_path}/"})
@@ -297,11 +315,13 @@ async def perform_operation(request: Request, folder_path: str, user: User = Dep
 
 @app.get("/recover_password")
 async def recover_password(request: Request):
+    logger.info(f"User {user.first_name}: clicked the recover password section")
     return templates.TemplateResponse("recover_password.html", {"request": request})
 
 
 @app.get("/help")
-async def help(request: Request):
+async def help(request: Request, user: User = Depends(auth_method.get_current_user_from_cookie)):
+    logger.info(f"User {user.first_name}: clicked the help section")
     return templates.TemplateResponse("help.html", {"request": request})
 
 
@@ -332,6 +352,7 @@ async def update_file_status(files: List[File]):
     file_name, file_folder, file_status = files[0].name, decode_from_base64(files[0].folder), files[0].status
     destination_file = UtilFunctions().replace_path(file_folder, file_status)
     file_updated = Files.find_by_path(encode_to_base64(file_folder))
+    logger.info(f"User {user.username}: update status of file {file_updated.filename} from {file_updated.status} to {file_status}")
     file_updated.update({"status": file_status})
     
     #decoded_text = decode_from_base64(files.folder)
@@ -356,8 +377,6 @@ async def update_file_status(files: List[File]):
 
 @app.post("/download_files_ftp")
 async def download_files_ftp(data: dict, user: User = Depends(auth_method.get_current_user_from_cookie)):
-    print("VER NOW")
-    print(data)
     received_files = ddd.download_files(data["folder_path"])
     current_user = Person.find_by_id(user.id)
     current_conn = Connections.find_by_connname(current_user.currentconn)
@@ -366,14 +385,12 @@ async def download_files_ftp(data: dict, user: User = Depends(auth_method.get_cu
         if not Files.find_by_filename_assignedto(cfile.get("filename"), current_conn_uuid):
             newfile = Files(cfile.get("filename"), encode_to_base64(cfile.get("path")), current_conn_uuid, "pending", "1", cfile.get("size"))
             newfile.save()
+            logger.info(f"User {user.username}: receive file from FTP server {cfile.get('filename')}")
     return {"message": "Successfully updated"}
 
 @app.post("/send_files_ftp")
 async def download_files_ftp(data: dict):
-    print("estoy aca")
     folder_path = decode_from_base64(data["folder_path"])
-    print(folder_path)
-    #file_path = os.path.join(folder_path, f"{data['status']}/", data["filename"])
-    print("Corrio el post o no")
     ddd.upload_file(folder_path)
+    logger.info(f"User {user.username}: send file to FTP server:")
     return {"message": "Successfully updated"}
