@@ -102,3 +102,14 @@
 2023-05-04 04:09:17,029 - app - INFO - Not Authenticated User redirected to login View
 2023-05-04 04:33:38,661 - app - INFO - Not Authenticated User redirected to login View
 2023-05-04 04:35:07,856 - app - INFO - Not Authenticated User redirected to login View
+2023-05-04 15:07:32,613 - app - INFO - User Jesus: clicked the profile section
+2023-05-04 16:43:05,908 - app - INFO - Not Authenticated User redirected to login View
+2023-05-04 17:36:44,400 - app - INFO - Not Authenticated User redirected to login View
+2023-05-04 17:38:20,726 - app - INFO - Not Authenticated User redirected to login View
+2023-05-04 17:38:28,195 - app - INFO - Login succesfully: jesus@gmail.com
+2023-05-04 17:38:38,213 - app - INFO - User Jesus: clicked the recover password section
+2023-05-04 17:39:13,954 - app - INFO - User Jesus: clicked the recover password section
+2023-05-04 17:59:56,002 - app - ERROR - time data '2023-04-29T14:00' does not match format '%Y-%m-%d %H:%M:%S,%f'
+2023-05-04 19:46:53,513 - app - INFO - Not Authenticated User redirected to login View
+2023-05-04 20:00:26,565 - app - INFO - Not Authenticated User redirected to login View
+2023-05-04 20:00:27,563 - app - INFO - Not Authenticated User redirected to login View

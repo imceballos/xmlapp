@@ -315,7 +315,7 @@ async def perform_operation(request: Request, folder_path: str, user: User = Dep
 
 @app.get("/recover_password")
 async def recover_password(request: Request):
-    logger.info(f"User {user.first_name}: clicked the recover password section")
+    logger.info(f"User unk: clicked the recover password section")
     return templates.TemplateResponse("recover_password.html", {"request": request})
 
 
@@ -424,6 +424,19 @@ async def display_logs(request: Request, date: str = None):
 
     return templates.TemplateResponse("activity.html", {"request": request, "logs": logs})
 
+@app.post("/filter_logs")
+async def filter_logs(request: Request, data: dict, user: User = Depends(auth_method.get_current_user_from_cookie)):
+    flogs = []
+    logs = logger.logging_select('app.log', [[(data.get("datestart", ""), data.get("dateend", ""))], [data.get("level", "")], [data.get("user", "")]])
+    for sublog in logs:
+        content = sublog.split(" - ")
+        timestamp_str, log_type, log_info = content[0],  content[2],  content[3]                 
+        timestamp = datetime.strptime(timestamp_str.split(",")[0], "%Y-%m-%d %H:%M:%S")
+        flogs.append({"timestamp": timestamp, "type": log_type, "info": log_info})
+
+    print("Estos son los logs")
+    print(flogs)
+    return {"logs": flogs}
 
 
 @app.get("/filterview", response_class=HTMLResponse)

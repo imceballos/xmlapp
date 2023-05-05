@@ -3,50 +3,89 @@
 <head>
   <title>Logs</title>
   <style>
+		h1 {
+			text-align: center;
+			margin-bottom: 20px;
+			margin-top: 60px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		}
+    
     table {
       border-collapse: collapse;
-      width: 100%;
+      width: 80%;
+      margin: 0 auto;
     }
+
     th, td {
       text-align: left;
       padding: 8px;
     }
+
     th {
       background-color: #f2f2f2;
     }
-  </style>
-  <script>
-    function filterTable() {
-      var input, filter, table, tr, td, i, txtValue;
-      input = document.getElementById("filter");
-      filter = input.value.toUpperCase();
-      table = document.getElementById("log-table");
-      tr = table.getElementsByTagName("tr");
-      for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td");
-        for (j = 0; j < td.length; j++) {
-          txtValue = td[j].textContent || td[j].innerText;
-          if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            tr[i].style.display = "";
-            break;
-          } else {
-            tr[i].style.display = "none";
-          }
-        }
-      }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
     }
-  </script>
+
+    #filter {
+      padding: 10px;
+      border: 1px solid #ddd;
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    label {
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 2px;
+  }
+
+    input, select {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 6px 8px;
+      font-size: 12px;
+      margin-bottom: 3px;
+    }
+
+    /* CSS for submit button */
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 12px;
+      margin-top: 3px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    /* CSS for hover effect on submit button */
+    button:hover {
+      background-color: #3e8e41;
+    }
+  </style>
 </head>
 <body>
   <h1>Logs</h1>
-  <form method="get" action="/logs">
-    <label for="date">Filter by date:</label>
-    <input type="date" id="date" name="date">
+  <form method="post" style="display: flex; flex-direction: column; align-items: center;">
+    <label for="datestart">Start date:</label>
+    <input type="datetime-local" id="datestart" name="datestart">
     <br>
-    <label for="user">Filter by user:</label>
+    <label for="dateend">End date :</label>
+    <input type="datetime-local" id="dateend" name="dateend">
+    <br>
+    <label for="user">Activity:</label>
     <input type="text" id="user" name="user">
     <br>
-    <label for="level">Filter by level:</label>
+    <label for="level">Level:</label>
     <select id="level" name="level">
       <option value="">All</option>
       <option value="INFO">INFO</option>
@@ -55,11 +94,8 @@
       <option value="ERROR">ERROR</option>
     </select>
     <br>
-    <button type="submit">Filter</button>
+    <button type="button" onclick="sendForm()">Filter</button>
   </form>
-  <br>
-  <input type="text" id="filter" onkeyup="filterTable()" placeholder="Filter logs...">
-  <br>
   <br>
   <table id="log-table">
     <thead>
@@ -79,5 +115,39 @@
       {% endfor %}
     </tbody>
   </table>
+  <script>
+    async function sendForm() {
+  const datestart = document.getElementById('datestart').value;
+  const dateend = document.getElementById('dateend').value;
+  const user = document.getElementById('user').value;
+  const level = document.getElementById('level').value;
+
+  const data = { datestart: datestart, dateend: dateend, user: user, level: level };
+
+  const response = await fetch('/filter_logs', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+
+  const result = await response.json();
+  const tableBody = document.querySelector('#log-table tbody');
+  tableBody.innerHTML = '';
+  result.logs.forEach(log => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${log.timestamp}</td>
+      <td>${log.type}</td>
+      <td>${log.info}</td>
+    `;
+    tableBody.appendChild(row);
+  });
+}
+     
+  </script>
 </body>
+{% include '_site_map.html' %}
+
 </html>
