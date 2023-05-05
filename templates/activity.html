@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Logs</title>
+  <style>
+		h1 {
+			text-align: center;
+			margin-bottom: 20px;
+			margin-top: 60px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		}
+    
+    table {
+      border-collapse: collapse;
+      width: 80%;
+      margin: 0 auto;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 8px;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    #filter {
+      padding: 10px;
+      border: 1px solid #ddd;
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    label {
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 2px;
+  }
+
+    input, select {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 6px 8px;
+      font-size: 12px;
+      margin-bottom: 3px;
+    }
+
+    /* CSS for submit button */
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 12px;
+      margin-top: 3px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    /* CSS for hover effect on submit button */
+    button:hover {
+      background-color: #3e8e41;
+    }
+  </style>
+</head>
+<body>
+  <h1>Logs</h1>
+  <form method="post" style="display: flex; flex-direction: column; align-items: center;">
+    <label for="datestart">Start date:</label>
+    <input type="datetime-local" id="datestart" name="datestart">
+    <br>
+    <label for="dateend">End date :</label>
+    <input type="datetime-local" id="dateend" name="dateend">
+    <br>
+    <label for="user">Activity:</label>
+    <input type="text" id="user" name="user">
+    <br>
+    <label for="level">Level:</label>
+    <select id="level" name="level">
+      <option value="">All</option>
+      <option value="INFO">INFO</option>
+      <option value="WARN">WARN</option>
+      <option value="CRITICAL">CRITICAL</option>
+      <option value="ERROR">ERROR</option>
+    </select>
+    <br>
+    <button type="button" onclick="sendForm()">Filter</button>
+  </form>
+  <br>
+  <table id="log-table">
+    <thead>
+      <tr>
+        <th>Timestamp</th>
+        <th>Level</th>
+        <th>Message</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for log in logs %}
+      <tr>
+        <td>{{ log.timestamp }}</td>
+        <td>{{ log.type }}</td>
+        <td>{{ log.info }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <script>
+    async function sendForm() {
+  const datestart = document.getElementById('datestart').value;
+  const dateend = document.getElementById('dateend').value;
+  const user = document.getElementById('user').value;
+  const level = document.getElementById('level').value;
+
+  const data = { datestart: datestart, dateend: dateend, user: user, level: level };
+
+  const response = await fetch('/filter_logs', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+
+  const result = await response.json();
+  const tableBody = document.querySelector('#log-table tbody');
+  tableBody.innerHTML = '';
+  result.logs.forEach(log => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${log.timestamp}</td>
+      <td>${log.type}</td>
+      <td>${log.info}</td>
+    `;
+    tableBody.appendChild(row);
+  });
+}
+     
+  </script>
+</body>
+{% include '_site_map.html' %}
+
+</html>

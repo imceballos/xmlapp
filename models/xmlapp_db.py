@@ -1,5 +1,6 @@
-from sqlalchemy import create_engine, ForeignKey, Column, String, Integer, Enum
+from sqlalchemy import create_engine, ForeignKey, Column, String, Integer, Enum, Boolean, DateTime
 from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.sql import func
 import uuid
 import re
 
@@ -92,7 +93,10 @@ class Files(Base):
     size =  Column("size", Integer())
     assignedto = Column("assignedto", String, ForeignKey('connections.uuid'))
     status = Column(Enum('accepted', 'rejected', 'pending', name='status'), default='pending')
+    sent = Column("sent", Boolean, default=False)
     stage = Column("stage", String(length=80), nullable=False)
+    extension = Column("extension", String(length=32), nullable=False)
+    lastactivity = Column("lastactivity", DateTime(timezone=True), default=func.now())
 
     def __init__(self, filename, path, assignedto, status,stage, size):
         self.uuid = str(uuid.uuid4())
@@ -102,9 +106,24 @@ class Files(Base):
         self.status = status
         self.stage = stage
         self.size = size
+        self.extension = self.get_extension(filename)
 
     def __repr__(self):
         return f"{self.uuid} {self.filename} {self.path} {self.assignedto} {self.status}"  
+
+    @classmethod
+    def get_extension(self, filename):
+        if any(filename.endswith(ext) for ext in ('.jpg', '.png')):
+            return "jpg"
+        elif filename.endswith('.pdf'):
+            return "pdf"
+        elif filename.endswith('.txt'):
+            return "txt"
+        elif filename.endswith('.xml'):
+            return "xml"
+        else:
+            return "unk"
+
 
     @classmethod
     def find_by_uuid(cls, uuid):
@@ -135,6 +154,17 @@ class Files(Base):
     def find_by_filename_assignedto(cls, filename, assignedto):
         session = cls._session()
         return session.query(cls).filter(cls.filename==filename, cls.assignedto==assignedto).first()
+
+    @classmethod
+    def find_all(cls):
+        content = []
+        session = cls._session()
+        elements = session.query(cls).all()
+        for elem in elements:
+            content.append({"filename": elem.filename, "size": elem.size, "status": elem.status, 
+                            "assignedto": elem.assignedto, "sent": elem.sent, "stage": elem.stage, 
+                            "path": elem.path})
+        return content
 
     @classmethod
     def _session(cls):

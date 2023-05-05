@@ -1,0 +1,115 @@
+2023-04-29 03:33:49,936 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 03:34:14,376 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 03:47:58,399 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 03:48:56,873 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 04:17:43,866 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 04:17:53,276 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 04:31:58,234 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 04:33:14,561 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 04:33:14,590 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 04:33:31,010 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 04:33:31,027 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 04:36:39,440 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 04:44:12,431 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 04:44:19,980 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 04:53:26,865 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 04:53:35,607 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 05:07:43,501 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:07:51,019 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 05:12:06,484 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:12:15,832 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 05:22:51,380 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:22:56,623 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 05:25:59,638 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:26:05,705 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 05:34:27,365 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:34:36,166 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 05:34:42,578 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:34:43,704 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:34:44,461 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:34:46,837 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:34:50,187 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:34:51,073 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:34:52,257 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:34:52,976 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:35:27,772 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:35:28,581 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:35:49,184 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:35:58,446 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 05:36:16,664 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:36:20,205 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:36:22,610 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:36:23,545 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:37:02,709 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:37:03,746 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:37:10,027 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 05:40:47,936 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:40:54,013 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 05:44:58,884 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:45:05,434 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 05:48:15,921 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:48:16,125 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 05:48:22,002 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 06:10:05,551 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 06:10:12,574 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 06:14:09,885 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 06:14:15,025 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 06:18:44,401 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 06:18:50,441 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 06:20:05,312 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 06:20:11,893 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 06:21:11,081 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 06:21:16,151 - app - INFO - Login error: jesus@gmail.com
+2023-04-29 06:21:21,906 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 06:25:28,255 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 06:25:33,220 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 06:25:56,812 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 06:26:01,620 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 06:27:11,118 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 06:27:16,679 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 06:29:35,953 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 06:29:42,470 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 06:34:36,328 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 06:34:42,112 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 06:36:22,256 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 06:36:27,333 - app - INFO - Login succesfully: jesus@gmail.com
+2023-04-29 06:41:14,654 - app - INFO - Not Authenticated User redirected to login View
+2023-04-29 06:41:21,588 - app - INFO - Login succesfully: jesus@gmail.com
+2023-05-03 01:33:51,355 - app - INFO - Not Authenticated User redirected to login View
+2023-05-03 01:33:59,444 - app - INFO - Login succesfully: jesus@gmail.com
+2023-05-03 01:40:13,953 - app - INFO - Not Authenticated User redirected to login View
+2023-05-03 01:40:19,274 - app - INFO - Login succesfully: jesus@gmail.com
+2023-05-03 01:41:02,535 - app - INFO - User Jesus clicked the profile section
+2023-05-03 01:41:43,911 - app - INFO - User Jesus: clicked the profile section
+2023-05-04 01:15:03,941 - app - INFO - Connection testing created by testaccount@virgogroup.com.sg
+2023-05-04 01:16:31,013 - app - INFO - User Jesus download file CW1_request.xml
+2023-05-04 01:18:07,858 - app - INFO - User Jesus: update status of file CW1_request.xml from pending to accepted
+2023-05-04 01:18:19,313 - app - INFO - User Jesus: update status of file CW1_request.xml from accepted to rejected
+2023-05-04 01:19:51,421 - app - INFO - User Jesus: download file CW1_request.xml
+2023-05-04 01:22:46,446 - app - INFO - User Jesus: send file to FTP server:
+2023-05-04 01:23:22,924 - app - INFO - User Jesus: send file to FTP server:
+2023-05-04 01:25:11,945 - app - INFO - User Jesus: receive file from FTP server testing.txt
+2023-05-04 01:25:11,952 - app - INFO - User Jesus: receive file from FTP server newfile.txt
+2023-05-04 01:25:11,952 - app - INFO - User Jesus: receive file from FTP server newtest.txt
+2023-05-04 02:02:22,210 - app - INFO - User Jesus: clicked the profile section
+2023-05-04 02:02:35,105 - app - INFO - User Jesus: clicked the help section
+2023-05-04 02:43:05,996 - app - INFO - User Jesus: clicked the help section
+2023-05-04 02:59:20,538 - app - INFO - User Jesus: download file CW1_request.xml
+2023-05-04 03:00:24,264 - app - INFO - User Jesus: download file newtest.txt
+2023-05-04 03:33:50,473 - app - INFO - Not Authenticated User redirected to login View
+2023-05-04 03:47:53,736 - app - INFO - Not Authenticated User redirected to login View
+2023-05-04 03:53:15,658 - app - INFO - Not Authenticated User redirected to login View
+2023-05-04 04:09:17,029 - app - INFO - Not Authenticated User redirected to login View
+2023-05-04 04:33:38,661 - app - INFO - Not Authenticated User redirected to login View
+2023-05-04 04:35:07,856 - app - INFO - Not Authenticated User redirected to login View
+2023-05-04 15:07:32,613 - app - INFO - User Jesus: clicked the profile section
+2023-05-04 16:43:05,908 - app - INFO - Not Authenticated User redirected to login View
+2023-05-04 17:36:44,400 - app - INFO - Not Authenticated User redirected to login View
+2023-05-04 17:38:20,726 - app - INFO - Not Authenticated User redirected to login View
+2023-05-04 17:38:28,195 - app - INFO - Login succesfully: jesus@gmail.com
+2023-05-04 17:38:38,213 - app - INFO - User Jesus: clicked the recover password section
+2023-05-04 17:39:13,954 - app - INFO - User Jesus: clicked the recover password section
+2023-05-04 17:59:56,002 - app - ERROR - time data '2023-04-29T14:00' does not match format '%Y-%m-%d %H:%M:%S,%f'
+2023-05-04 19:46:53,513 - app - INFO - Not Authenticated User redirected to login View
+2023-05-04 20:00:26,565 - app - INFO - Not Authenticated User redirected to login View
+2023-05-04 20:00:27,563 - app - INFO - Not Authenticated User redirected to login View

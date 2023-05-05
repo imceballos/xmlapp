@@ -93,6 +93,16 @@ class AuthenticationMethods:
             user = Person.find_by_first_name(username)
             return user
 
+    def decode_access_token(self, token: str):
+        try:
+            payload = jwt.decode(token, self.settings.SECRET_KEY, algorithms=[self.settings.ALGORITHM])
+            return payload
+        except:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Access token has expired",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
 
     def get_current_user_from_cookie(self, request: Request) -> User:
         """
@@ -107,7 +117,7 @@ class AuthenticationMethods:
         user = self.decode_token(token)
         return user
 
-    def get_current_user_from_token(token: str) -> User:
+    def get_current_user_from_token(self, token: str) -> User:
         """
         Get the current user from the cookies in a request.
 
@@ -116,3 +126,36 @@ class AuthenticationMethods:
         """
         user = self.decode_token(token)
         return user
+
+    def get_access_token_from_cookie(self, request: Request) -> str:
+        """
+        Retrieves the access token from the HTTP-only cookie.
+        """
+        cookies = request.cookies
+        token_cookie = cookies.get(self.settings.COOKIE_NAME)
+        if token_cookie:
+            # Retrieve the token value from the "Bearer {token}" string.
+            token = token_cookie.split()[1]
+            return token
+        else:
+            return ""
+
+
+    def refresh_token(self, token_data: Dict[str, str]) -> str:
+        try:
+            print("VEAMOS aca")
+            print(token_data)
+            username = token_data.get("username")
+        except:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid token",
+            )
+        user = Person.find_by_first_name(username)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="User not found",
+            )
+        access_token = self.create_access_token({"username": user.first_name})
+        return access_token

@@ -16,20 +16,19 @@ from utils.login import LoginForm
 from utils.utils import UtilFunctions
 from utils.encrypt import decode_from_base64, encode_to_base64
 from utils.ftp import FTPDownloader
+from utils.logger import Logger
 from models.base import Base
 from models.xmlapp_db import Person, Connections, Files
 
-from datetime import datetime
-
+from datetime import datetime, timedelta
 import business as business
-import asyncio #presente en lineas conectadas
 
 
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
-
+logger = Logger(__name__)
 settings = Settings()
 auth_method = AuthenticationMethods(settings)
 oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl="token", settings = settings)
@@ -49,6 +48,28 @@ def get_current_user_from_token(token: str = Depends(oauth2_scheme)) -> User:
     return user
 
 
+@app.middleware("http")
+async def refresh_token_middleware(request: Request, call_next):
+    access_token = auth_method.get_access_token_from_cookie(request)
+    if access_token:
+        token_data = auth_method.decode_access_token(access_token)
+        token_exp = datetime.fromtimestamp(token_data["exp"])
+        time_until_expire = token_exp - datetime.utcnow()
+
+        if time_until_expire < timedelta(minutes=5):
+            new_access_token = auth_method.refresh_token(token_data)
+
+            response = await call_next(request)
+            response.set_cookie(
+                key=settings.COOKIE_NAME,
+                value=f"Bearer {new_access_token}",
+                httponly=True
+            )
+            return response
+
+    return await call_next(request)
+
+
 @app.get("/statusfiles")
 async def index(request: Request):
     """
@@ -61,11 +82,12 @@ async def index(request: Request):
 
 
 @app.get("/download/{filename}/{folder}/{status}")
-async def download_file(folder: str, filename: str, status: str):
+async def download_file(folder: str, filename: str, status: str, user: User = Depends(auth_method.get_current_user_from_cookie)):
     """
     Endpoint that returns the content of a file as a download
     """
     file_path = decode_from_base64(folder)
+    logger.info(f"User {user.first_name}: download file {filename}")
     return FileResponse(file_path, media_type="application/octet-stream", filename=filename)
 
 
@@ -89,13 +111,11 @@ async def show_form(request: Request, user: User = Depends(get_current_user_from
     return templates.TemplateResponse("form.html", {"request": request})
 
 
-
 @app.post("/form", response_class=HTMLResponse)
 async def process_form(file: UploadFile, request: Request, user: User = Depends(get_current_user_from_token)):
     """
     Endpoint that processes the uploaded file and saves it to disk
     """    
-    # Save the uploaded file to disk
     contents = await file.read()
     filename = file.filename
     
@@ -131,286 +151,13 @@ async def process_form(data: dict, request: Request, user: User = Depends(get_cu
     """
     current_user = Person.find_by_id(user.id)
     current_conn = Connections.find_by_connname(current_user.currentconn)
-    current_conn_path = current_conn.path
-    current_conn_uuid = current_conn.uuid
-    base_folder_path = current_conn_path
-    option = list(data.keys())[0]
-    if option == "input_a_0":
-        data = {    
-                    "option": option, 
-                    "filename": data.get("input_a_0"), 
-                    "data_target_type": data.get("input_a_1"), 
-                    "data_target_key": data.get("input_a_2"),
-                    "company_code": data.get("input_a_3"),
-                    "enterprise_id": data.get("input_a_4"),
-                    "server_id": data.get("input_a_5"),
-                    "filter_type": data.get("input_a_6"),
-                    "filter_value": data.get("input_a_7")
-                }
-    elif option == "input_b_0":
-        data = {
-                    "option": option, 
-                    "filename": data.get("input_b_0"), 
-                    "status": data.get("input_b_1"), 
-                    "data_source_type": data.get("input_b_2"),
-                    "data_source_key": data.get("input_b_3"),          
-                    "company_code": data.get("input_b_4"),
-                    "company_country_code": data.get("input_b_5"),
-                    "company_country_name": data.get("input_b_6"),
-                    "company_name": data.get("input_b_7"),
-                    "data_provider": data.get("input_b_8"),
-                    "enterprise_id": data.get("input_b_9"),
-                    "server_id": data.get("input_b_10"),
-                    "event_time": data.get("input_b_11"),
-                    "event_type": data.get("input_b_12"),
-                    "is_estimate": UtilFunctions().is_empty(data.get("input_b_13", "") ,"false"),
-                    "attached_filename": data.get("input_b_14", "NO ATTACHED PDF DOCUMENT"),
-                    "image_data": data.get("input_b_15", "NO ATTACHED PDF DOCUMENT"),
-                    "document_type_code": data.get("input_b_16"),
-                    "document_type_description": data.get("input_b_17"),
-                    "document_id": data.get("input_b_18"),
-                    "is_published": UtilFunctions().is_empty(data.get("input_b_19", "") ,"false"),
-                    #"save_date_utc": data.get("input_b_20", ""),
-                    "save_date_utc": str(datetime.utcnow()),
-                    "document_saved_by_code": data.get("input_b_20"),
-                    "document_saved_by_name": data.get("input_b_21")                  
-                    }
-    elif option == "input_c_0":
-        data = {
-                    "option": option, 
-                    "filename": data.get("input_c_0"), 
-                    "data_target_type": data.get("input_c_1"), 
-                    "data_target_key": data.get("input_c_2"),
-                    "company_code": data.get("input_c_3"),
-                    "enterprise_id": data.get("input_c_4"),
-                    "server_id": data.get("input_c_5"),
-                    "event_time": str(datetime.now()),
-                    "event_type": data.get("input_c_6"),
-                    "event_reference": data.get("input_c_7"),
-                    "is_estimate": UtilFunctions().is_empty(data.get("input_c_8", "") ,"false"),
-                }
-    elif option == "input_d_0":
-        data = {
-                    "option": option, 
-                    "filename": data.get("input_d_0"), 
-                    "datatarget_type": data.get("input_d_1"),
-                    "datatarget_key": data.get("input_d_2"),
-                    "company_code": data.get("input_d_3"),
-                    "enterprise_id": data.get("input_d_4"),
-                    "server_id": data.get("input_d_5"),
-                    "event_time": str(datetime.now()), 
-                    "event_type": data.get("input_d_6"),
-                    "event_reference": data.get("input_d_7"),
-                    "is_estimate": UtilFunctions().is_empty(data.get("input_d_8", "") ,"false"),
+    current_conn_path, current_conn_uuid = current_conn.path, current_conn.uuid
 
-                }
-    elif option == "input_e_0":
-        data = {
-                    "option": option, 
-                    "filename": data.get("input_e_0"), 
-                    "datatarget_type": data.get("input_e_1"), 
-                    "datatarget_key": data.get("input_e_2"),
-                    "company_code": data.get("input_e_3"),
-                    "enterprise_id": data.get("input_e_4"),
-                    "server_id": data.get("input_e_5"),
-                    "description": data.get("input_e_6"),
-                    "iscustom_description": UtilFunctions().is_empty(data.get("input_e_7", "") ,"false"),
-                    "notetext": data.get("input_e_8"),
-                    "notecontext_code": data.get("input_e_9"),
-                    "visibility_code": data.get("input_e_10"),
-                    "address_type": data.get("input_e_11"),
-                    "organization_code": data.get("input_e_12"),
-                    "customizedfield_datatype": data.get("input_e_13"),
-                    "customizedfield_key": data.get("input_e_14"),
-                    "customizedfield_value": data.get("input_e_15")
-                } 
-    elif option == "input_f_0":
-        data = {
-                    "option": option, 
-                    "filename": data.get("input_f_0"), 
-                    "datatarget_type": data.get("input_f_1"), 
-                    "datatarget_key": data.get("input_f_2"),
-                    "company_code": data.get("input_f_3"),
-                    "enterprise_id": data.get("input_f_4"),
-                    "server_id": data.get("input_f_5"),
-                    "transportbooking_direction_code": data.get("input_f_6"),
-                    "transportbooking_direction_description": data.get("input_f_7"),
-                    "address_type": data.get("input_f_8"),
-                    "organization_code": data.get("input_f_9"),
-                    "branch_code": data.get("input_f_10"),
-                    "currency_code": data.get("input_f_11"),
-                    "department_code": data.get("input_f_12"),
-                    "chargeline_branch_code": data.get("input_f_13"),
-                    "chargeline_chargecode_code": data.get("input_f_14"),
-                    "chargeline_costlocal_amount": data.get("input_f_15"),
-                    "chargeline_costos_amount": data.get("input_f_16"),
-                    "chargeline_costoscurrency_code": data.get("input_f_17"),
-                    "chargeline_costosgstvat_amount": data.get("input_f_18"),
-                    "chargeline_creditor_type": data.get("input_f_19"),
-                    "chargeline_creditor_key": data.get("input_f_20"),
-                    "chargeline_department_code": data.get("input_f_21"),
-                    "chargeline_display_sequence": data.get("input_f_22"),
-                    "chargeline_importmetadata_instruction": data.get("input_f_23"),
-                    "chargeline_supplierreference": data.get("input_f_24"),
-                    "customizedfield_datatype": data.get("input_f_25"),
-                    "customizedfield_key": data.get("input_f_26"),
-                    "customizedfield_value": data.get("input_f_27")
-                }
-    elif option == "input_g_0":
-        data = {
-                    "option": option, 
-                    "filename": data.get("input_g_0"), 
-                    "datatarget_type": data.get("input_g_1"), 
-                    "datatarget_key": data.get("input_g_2"),
-                    "company_code": data.get("input_g_3"),
-                    "enterprise_id": data.get("input_g_4"),
-                    "server_id": data.get("input_g_5"),
-                    "transport_bookingdirection_code": data.get("input_g_6"),
-                    "transport_bookingdirection_description": data.get("input_g_7"),
-                    "address_type": data.get("input_g_8"),
-                    "organization_code": data.get("input_g_9"),
-                    "branch_code": data.get("input_g_10"),
-                    "currency_code": data.get("input_g_11"),
-                    "department_code": data.get("input_g_12"),
-                    "chargeline_branch_code": data.get("input_g_13"),
-                    "chargeline_charge_code": data.get("input_g_14"),
-                    "chargeline_costlocal_amount": data.get("input_g_15"),
-                    "chargeline_costos_amount": data.get("input_g_16"),
-                    "chargeline_costoscurrency_code": data.get("input_g_17"),
-                    "chargeline_costosgstvat_amount": data.get("input_g_18"),
-                    "chargeline_creditor_type": data.get("input_g_19"),
-                    "chargeline_creditor_key": data.get("input_g_20"),
-                    "chargeline_department_code": data.get("input_g_21"),
-                    "chargeline_display_sequence": data.get("input_g_22"),
-                    "chargeline_importmetadata_instruction": data.get("input_g_23"),
-                    "chargeline_supplier_reference": data.get("input_g_24"),
-                    "customizedfield_datatype": data.get("input_g_25"),
-                    "customizedfield_key": data.get("input_g_26"),
-                    "customizedfield_value": data.get("input_g_27")
-                }         
-    elif option == "input_h_0":
-        data = {
-                    "option": option, 
-                    "filename": data.get("input_h_0"), 
-                    "datatarget_type": data.get("input_h_1"), 
-                    "datatarget_key": data.get("input_h_2"),
-                    "company_code": data.get("input_h_3"),
-                    "enterpriseid": data.get("input_h_4"),
-                    "serverid": data.get("input_h_5"),
-                    "description": data.get("input_h_6"),
-                    "iscustom_description": UtilFunctions().is_empty(data.get("input_h_7", "") ,"false"),
-                    "notetext": data.get("input_h_8"),
-                    "notecontext_code": data.get("input_h_9"),
-                    "visibility_code": data.get("input_h_10"),
-                    "address_type": data.get("input_h_11"),
-                    "organization_code": data.get("input_h_12"),
-                    "customizedfield_datatype": data.get("input_h_13"),
-                    "customized_field_key": data.get("input_h_14"),
-                    "customized_field_value": data.get("input_h_15")
-                }
-    elif option == "input_i_0":
-        data = {
-                    "option": option, 
-                    "filename": data.get("input_i_0"), 
-                    "datatarget_type": data.get("input_i_1"), 
-                    "datatarget_key": data.get("input_i_2"),
-                    "company_code": data.get("input_i_3"),
-                    "enterpriseid": data.get("input_i_4"),
-                    "serverid": data.get("input_i_5"),
-                    "transportbookingdirection_code": data.get("input_i_6"),
-                    "transportbookingdirection_description": data.get("input_i_7"),
-                    "addresstype": data.get("input_i_8"),
-                    "organizationcode": data.get("input_i_9"),
-                    "branch_code": data.get("input_i_10"),
-                    "currency_code": data.get("input_i_11"),
-                    "department_code": data.get("input_i_12"),
-                    "chargeline_branch_code": data.get("input_i_13"),
-                    "chargeline_chargecode_code": data.get("input_i_14"),
-                    "chargeline_costlocalamount": data.get("input_i_15"),
-                    "chargeline_costosamount": data.get("input_i_16"),
-                    "chargeline_costoscurrency_code": data.get("input_i_17"),
-                    "chargeline_costosgstvatamount": data.get("input_i_18"),
-                    "chargeline_creditor_type": data.get("input_i_19"),
-                    "chargeline_creditor_key": data.get("input_i_20"),
-                    "chargeline_department_code": data.get("input_i_21"),
-                    "chargeline_displaysequence": data.get("input_i_22"),
-                    "chargeline_importmetadata_instruction": data.get("input_i_23"),
-                    "chargeline_supplierreference": data.get("input_i_24")
-                }  
-    elif option == "input_j_0":
-        data = {
-                    "option": option, 
-                    "filename": data.get("input_j_0"), 
-                    "status": data.get("input_j_1"), 
-                    "datasource_type": data.get("input_j_2"),
-                    "datasource_key": data.get("input_j_3"),
-                    "companycode": data.get("input_j_4"),
-                    "companycountry_code": data.get("input_j_5"),
-                    "companycountry_name": data.get("input_j_6"),
-                    "company_name": data.get("input_j_7"),
-                    "dataprovider": data.get("input_j_8"),
-                    "enterpriseid": data.get("input_j_9"),
-                    "serverid": data.get("input_j_10"),
-                    "eventtime": str(datetime.now()),
-                    "eventtype": data.get("input_j_11"),
-                    "isestimate": UtilFunctions().is_empty(data.get("input_j_12", "") ,"false"),
-                    "attacheddocument_filename": data.get("input_j_13"),
-                    "imagedata": data.get("input_j_14"),
-                    "type_code": data.get("input_j_15"),
-                    "type_description": data.get("input_j_16"),
-                    "documentid": data.get("input_j_17"),
-                    "ispublished": UtilFunctions().is_empty(data.get("input_j_18", "") ,"false"),
-                    "savedateutc": str(datetime.utcnow()),
-                    "savedby_code": data.get("input_j_19"),
-                    "savedby_name": data.get("input_j_20"),
-                    "source_code": data.get("input_j_21"),
-                    "source_description": data.get("input_j_22"),
-                    "visible_branch_code": data.get("input_j_23"),               
-                    "visible_company_code": data.get("input_j_24"),                   
-                    "visible_department_code": data.get("input_j_25"),
-                    "messagenumber": data.get("input_j_26")
-                }
-    elif option == "input_k_0":
-        data = {
-                    "option": option, 
-                    "filename": data.get("input_k_0"), 
-                    "datatarget_type": data.get("input_k_1"), 
-                    "datatarget_key": data.get("input_k_2"),
-                    "company_code": data.get("input_k_3"),
-                    "enterpriseid": data.get("input_k_4"),
-                    "serverid": data.get("input_k_5"),
-                    "description": data.get("input_k_6"),
-                    "iscustomdescription": UtilFunctions().is_empty(data.get("input_k_7", "") ,"false"),
-                    "notetext": data.get("input_k_8"),
-                    "notecontext_code": data.get("input_k_9"),
-                    "visibility_code": data.get("input_k_10"),
-                    "addresstype": data.get("input_k_11"),
-                    "organizationcode": data.get("input_k_12"),
-                    "customizedfield_datatype": data.get("input_k_13"),
-                    "customizedfield_key": data.get("input_k_14"),
-                    "customizedfield_value": data.get("input_k_15")
-                }
-        
-    elif option == "input_l_0":
-        data = {
-                    "option": option, 
-                    "filename": data.get("input_l_0"), 
-                    "datatarget_type": data.get("input_l_1"), 
-                    "datatarget_key": data.get("input_l_2"),
-                    "company_code": data.get("input_l_3"),
-                    "enterpriseid": data.get("input_l_4"),
-                    "serverid": data.get("input_l_5"),
-                    "eventtime": str(datetime.now()),
-                    "eventtype": data.get("input_l_6"),
-                    "eventreference": data.get("input_l_7"),
-                    "isestimate": UtilFunctions().is_empty(data.get("input_l_8", "") ,"false"),
-                }
-    
+    option = list(data.keys())[0]
+    data = UtilFunctions().get_input_to_write(data, option)
     xml_writer = getattr(business, UtilFunctions().get_write_func_filename(option))
     datafile = await xml_writer(data, current_conn_path)
-    filename = datafile.get("filename", "")
-    path = encode_to_base64(datafile.get("path", ""))
-    size = datafile.get("size", "")
+    filename, path, size = datafile.get("filename", ""), encode_to_base64(datafile.get("path", "")), datafile.get("size", "")
 
     newfile = Files(filename, path, current_conn_uuid, "pending", "1", size)
     newfile.save()
@@ -442,6 +189,7 @@ def login_get(request: Request):
         context = {
             "request": request,
         }
+        logger.info("Not Authenticated User redirected to login View")
         return templates.TemplateResponse("login.html", context)
     return RedirectResponse(url="/")
 
@@ -454,27 +202,32 @@ async def login_post(request: Request):
         try:
             response = RedirectResponse("/", status.HTTP_302_FOUND)
             login_for_access_token(response=response, form_data=form)
+            logger.info(f"Login succesfully: {form.username}")
             form.__dict__.update(msg="Login Successful!")
             return response
         except HTTPException:
             form.__dict__.update(msg="")
+            logger.info(f"Login error: {form.username}")
             form.__dict__.get("errors").append("Incorrect Email or Password")
             return templates.TemplateResponse("login.html", form.__dict__)
     return templates.TemplateResponse("login.html", form.__dict__)
 
 
 @app.get("/auth/logout", response_class=HTMLResponse)
-def login_get():
+def login_get(user: User = Depends(auth_method.get_current_user_from_cookie)):
     response = RedirectResponse(url="/auth/login")
     response.delete_cookie(settings.COOKIE_NAME)
+    logger.info(f"Logged out: {user.username}")
     return response
 
 @app.get("/profile", response_class=HTMLResponse)
-def index(request: Request, user: User = Depends(get_current_user_from_token)):
+def index(request: Request, user: User = Depends(auth_method.get_current_user_from_cookie)):
     context = {
         "user": user,
         "request": request
-    }
+    } 
+   
+    logger.info(f"User {user.first_name}: clicked the profile section")
     return templates.TemplateResponse("profile.html", context)
 
 @app.exception_handler(HTTPException)
@@ -484,9 +237,7 @@ async def http_exception_handler(request, exc):
     """
     if exc.status_code == status.HTTP_401_UNAUTHORIZED:
         return RedirectResponse(url="/auth/login")
-
     return exc
-
 
 @app.get("/view_xml/{filename}/{folder}/{status}", response_class=HTMLResponse)
 async def view_xml(request: Request, filename: str, folder: str, status: str):
@@ -505,13 +256,9 @@ async def view_xml(request: Request, filename: str, folder: str, status: str):
 async def create_connection(request: Request, user: User = Depends(auth_method.get_current_user_from_cookie)):
     if user:
         folder_path = "test_files"
-        print("Quiero ver aca hou")
         conn_asigned = [conn.connname for conn in Connections.find_conn_assignedto(user.id)]
-        #folder_names = [name for name in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, name))]
         return templates.TemplateResponse("connections.html", {"request": request, "folders": conn_asigned})
-        #return RedirectResponse(url="/")
     return RedirectResponse(url="/auth/login")
-
 
 @app.get("/folder/{folder_name}")
 async def folder_detail(request: Request, folder_name: str, user: User = Depends(auth_method.get_current_user_from_cookie)):
@@ -521,7 +268,6 @@ async def folder_detail(request: Request, folder_name: str, user: User = Depends
     if not os.path.isdir(folder_path):
         return responses.PlainTextResponse("Folder not found", status_code=404)
     return templates.TemplateResponse("folder.html", {"request": request, "folder_name": folder_name})
-
 
 @app.post("/create_connection")
 async def create_connection_post(request: Request,
@@ -534,18 +280,16 @@ async def create_connection_post(request: Request,
     assigned_to = user.id
     conn = Connections(name, ip, username, password, assigned_to)
     folder_path = "test_files"
-
     folder_name = f"test_files/{name}"
     conn.path = folder_name
     conn.save()
+    logger.info(f"Connection {name} created by {username}")
 
     required_subfolders = ["frombollore", "tobollore", "staging"]
     UtilFunctions().create_subdirectories(folder_name, required_subfolders)
-
     folders = [name for name in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, name))]
     context = {"request": request, "folders": folders}
 
-    #print("Ver filtering")
     gg = Connections.find_by_connname("testinghelloworld1234")
     return  {"message": "Successfully updated"}
 
@@ -556,24 +300,14 @@ async def perform_operation(request: Request, folder_path: str, user: User = Dep
     #await asyncio.gather(downloader.download_files(folder_path))
     #await asyncio.gather(download_new_files(folder_path))
 
-    #ddd.download_files(folder_path)
-    print("que hay aca")
-    print(user.currentconn)
     current_user = Person.find_by_id(user.id)
     current_conn = current_user.currentconn
     current_conn_uuid = Connections.find_by_connname(current_conn).uuid
-    print(current_conn_uuid)
     accepted_files = Files.find_by_status_assignedto("accepted", current_conn_uuid)
     rejected_files = Files.find_by_status_assignedto("rejected", current_conn_uuid)
     pending_files = Files.find_by_status_assignedto("pending", current_conn_uuid)
-    print("files",accepted_files, rejected_files, pending_files)
     encoded_text = encode_to_base64(folder_path)
     folder_level = folder_path.split("/")[-1]
-    print("HELLO WORLD")
-    print(folder_level, folder_path, encoded_text)
-    #accepted_files = UtilFunctions().get_files_by_condition(folder_path, encoded_text, "accepted")
-    #rejected_files = UtilFunctions().get_files_by_condition(folder_path, encoded_text, "rejected")
-    #pending_files = UtilFunctions().get_files_by_condition(folder_path, encoded_text, "pending")
     return templates.TemplateResponse("index.html", {"request": request, "accepted_files": accepted_files, 
             "rejected_files": rejected_files, "pending_files": pending_files, "folder_level": folder_level,
             "folder_path": f"{folder_path}/"})
@@ -581,6 +315,7 @@ async def perform_operation(request: Request, folder_path: str, user: User = Dep
 
 @app.get("/recover_password")
 async def recover_password(request: Request):
+    logger.info(f"User unk: clicked the recover password section")
     return templates.TemplateResponse("recover_password.html", {"request": request})
 
 @app.get("/new_password")
@@ -611,7 +346,8 @@ async def view_users(request: Request, date: str = None):
     return templates.TemplateResponse("view_users.html", {"request": request, "users": users})
 
 @app.get("/help")
-async def help(request: Request):
+async def help(request: Request, user: User = Depends(auth_method.get_current_user_from_cookie)):
+    logger.info(f"User {user.first_name}: clicked the help section")
     return templates.TemplateResponse("help.html", {"request": request})
 
 @app.get("/showfolder")
@@ -637,19 +373,15 @@ async def perform_operation1(data: dict, request: Request):
     return {"url": "/get_template", "data": 1, "files":  xml_files, "folder_path": folder_path}
 
 @app.post("/update_file_status")
-async def update_file_status(files: List[File]):
-    print("HORA DE VER ACA UPDATE")
-    print(files)
-    file_name = files[0].name
-    file_folder = decode_from_base64(files[0].folder)
-    file_status = files[0].status
-    file_currentstatus = files[0].currentstatus
-    source_file = file_folder
-    print(file_folder, file_status)
+async def update_file_status(files: List[File], user: User = Depends(auth_method.get_current_user_from_cookie)):
+    file_name, file_folder, file_status = files[0].name, decode_from_base64(files[0].folder), files[0].status
     destination_file = UtilFunctions().replace_path(file_folder, file_status)
     file_updated = Files.find_by_path(encode_to_base64(file_folder))
+    logger.info(f"User {user.first_name}: update status of file {file_updated.filename} from {file_updated.status} to {file_status}")
     file_updated.update({"status": file_status})
+    
     #decoded_text = decode_from_base64(files.folder)
+    #source_file = f"{decoded_text}/{files.currentstatus}/{files.name}"
     #destination_file =  f"{decoded_text}/{files.status}/{files.name}"
     #if files.name in os.listdir(f"{decoded_text}/{files.status}"):
     #    if files.name.split('.')[0]+'-2'+'.xml' in os.listdir(f"{decoded_text}/{files.status}"):
@@ -663,17 +395,13 @@ async def update_file_status(files: List[File]):
     #        n=3
     #    else:
     #        os.rename(source_file, destination_file.split('.')[0]+'-'+str(2)+'.xml')
-    #
     #else:
-    #os.rename(source_file, destination_file)
-    #await asyncio.to_thread(downloader.upload_files, destination_file, f"trufa/{files.status}/")
+    #    os.rename(source_file, destination_file)
     return {"message": "Successfully updated"}
 
 
 @app.post("/download_files_ftp")
 async def download_files_ftp(data: dict, user: User = Depends(auth_method.get_current_user_from_cookie)):
-    print("VER NOW")
-    print(data)
     received_files = ddd.download_files(data["folder_path"])
     current_user = Person.find_by_id(user.id)
     current_conn = Connections.find_by_connname(current_user.currentconn)
@@ -682,14 +410,61 @@ async def download_files_ftp(data: dict, user: User = Depends(auth_method.get_cu
         if not Files.find_by_filename_assignedto(cfile.get("filename"), current_conn_uuid):
             newfile = Files(cfile.get("filename"), encode_to_base64(cfile.get("path")), current_conn_uuid, "pending", "1", cfile.get("size"))
             newfile.save()
+            logger.info(f"User {user.first_name}: receive file from FTP server {cfile.get('filename')}")
     return {"message": "Successfully updated"}
 
 @app.post("/send_files_ftp")
-async def download_files_ftp(data: dict):
-    print("estoy aca")
+async def download_files_ftp(data: dict, user: User = Depends(auth_method.get_current_user_from_cookie)):
     folder_path = decode_from_base64(data["folder_path"])
-    print(folder_path)
-    #file_path = os.path.join(folder_path, f"{data['status']}/", data["filename"])
-    print("Corrio el post o no")
     ddd.upload_file(folder_path)
+    logger.info(f"User {user.first_name}: send {data.get('filename')} to FTP server")
     return {"message": "Successfully updated"}
+
+
+@app.get("/activity", response_class=HTMLResponse)
+async def display_logs(request: Request, date: str = None):
+
+    if date is not None:
+        try:
+            date = datetime.strptime(date, "%Y-%m-%d")
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid date format")
+        start_time = date
+        end_time = date + timedelta(days=100)
+    else:
+        start_time = datetime.min
+        end_time = datetime.max
+
+    logs = []
+    with open('app.log') as file:
+        for line in file:
+            try:
+                content = line.split(" - ")
+                timestamp_str, log_type, log_info = content[0],  content[2],  content[3] 
+                timestamp = datetime.strptime(timestamp_str.split(",")[0], "%Y-%m-%d %H:%M:%S")
+                if start_time <= timestamp <= end_time:
+                    logs.append({"timestamp": timestamp, "type": log_type, "info": log_info})
+            except (ValueError, IndexError):
+                pass
+
+    return templates.TemplateResponse("activity.html", {"request": request, "logs": logs})
+
+@app.post("/filter_logs")
+async def filter_logs(request: Request, data: dict, user: User = Depends(auth_method.get_current_user_from_cookie)):
+    flogs = []
+    logs = logger.logging_select('app.log', [[(data.get("datestart", ""), data.get("dateend", ""))], [data.get("level", "")], [data.get("user", "")]])
+    for sublog in logs:
+        content = sublog.split(" - ")
+        timestamp_str, log_type, log_info = content[0],  content[2],  content[3]                 
+        timestamp = datetime.strptime(timestamp_str.split(",")[0], "%Y-%m-%d %H:%M:%S")
+        flogs.append({"timestamp": timestamp, "type": log_type, "info": log_info})
+
+    print("Estos son los logs")
+    print(flogs)
+    return {"logs": flogs}
+
+
+@app.get("/filterview", response_class=HTMLResponse)
+async def filter_view(request: Request, date: str = None):
+    files = Files.find_all()
+    return templates.TemplateResponse("filterview.html", {"request": request, "files": files})

@@ -1,4 +1,4 @@
-from xmlapp_db import Person
+from xmlapp_db import Person, Files
 from base import Base
 from sqlalchemy import create_engine
 
@@ -27,3 +27,7 @@ p3.update
 print(p3.first_name)
 print(p3.last_name)
 print(p3.password)
+
+elements = Files.find_all()
+for elem in elements:
+    print(elem.filename, elem.size, elem.status, elem.assignedto, elem.sent, elem.stage)
