@@ -1,0 +1,75 @@
+<style>
+    body {
+         background-color: #f7f7f7;
+         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+         text-align: center;
+         margin: 0;
+         padding: 0;
+     }
+     h2 {
+         color: #333;
+         margin-top: 100px;
+         margin-bottom: 20px;
+     }
+     form {
+         display: inline-block;
+         text-align: left;
+         background-color: #fff;
+         border: 1px solid #ddd;
+         border-radius: 5px;
+         padding: 20px;
+         box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+     }
+     label {
+         display: block;
+         color: #333;
+         margin-bottom: 5px;
+     }
+     input[type="text"],
+     input[type="password"] {
+         display: block;
+         margin-bottom: 20px;
+         padding: 10px;
+         width: 100%;
+         border: 1px solid #ddd;
+         border-radius: 5px;
+         font-size: 16px;
+         color: #333;
+     }
+     input[type="submit"] {
+         padding: 10px 20px;
+         border: none;
+         border-radius: 5px;
+         background-color: #333;
+         color: #fff;
+         font-size: 16px;
+         cursor: pointer;
+     }
+     button {
+            background-color: #1f97bb;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 10px;
+            margin: 2px 1px;
+            cursor: pointer;
+            border-radius: 2px;
+        }
+
+ </style>
+ <body>
+     <h2>Super Admin</h2>
+     <p>This is an exclusive section for users with special permissions that allow them to perform advanced actions in the system.</p>
+     <p> Here, the user can create new users and manage existing accounts.</p>
+     <button onclick="window.location.href='/create_users'">Create Users</button>
+     <button onclick="window.location.href='/view_users'">View Users</button>
+
+    
+ </body>
+ {% for error in errors %}
+ <p style="color: red">{{ error }}</p>
+ {% endfor %}
+ {% include '_site_map.html' %}

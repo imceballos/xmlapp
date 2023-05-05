@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Browser</title>
+    <style>
+       body {
+            background-color: #f7f7f7;
+            color: #333333;
+            text-align: center;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        table {
+            border-collapse: collapse;
+            width: 40%;
+            margin: 0 auto;
+        }
+        td, th {
+            padding: 8px;
+            border: 1px solid #333333;
+        }
+        th {
+            background-color: #333333;
+            color: #F5F5F5;
+        }
+        a {
+            color: #333333;
+            text-decoration: none;
+        }
+        
+        h2 {
+        color: #333;
+        margin-top: 100px;
+        margin-bottom: 20px;
+        }
+        .download-button {
+            background-color: #F5F5F5;
+            border-radius: 5px;
+            border: 2px solid #333333;
+            color: #333333;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 10px 20px;
+            text-decoration: none;
+            margin-top: 20px;
+            display: inline-block;
+        }
+        .download-icon {
+            background-color: #333333;
+            border-radius: 5px;
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .download-icon::after {
+            content: "▼";
+            display: block;
+            text-align: center;
+            margin-top: 5px;
+            color: #F5F5F5;
+        }
+        form {
+            display: inline-block;
+            text-align: center;
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            text-align: left;
+        }
+        input[type="text"], input[type="password"], input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #333333;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .pending-table {
+            margin-bottom: 20px;
+        }
+        
+        .accepted-table {
+            float: left;
+            margin-top: 100px;
+            width: 50%;
+        }
+        .rejected-table {
+            float: right;
+            margin-top: 100px;
+            width: 50%;
+        }
+        
+        .accept-button, .reject-button, .delete-button, .downloadftp-button, .postform-button, .sendfile-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 10px;
+            margin: 2px 1px;
+            cursor: pointer;
+            border-radius: 2px;
+        }
+
+        .delete-button {
+            background-color: #c72222;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 10px;
+            margin: 2px 1px;
+            cursor: pointer;
+            border-radius: 2px;
+        }
+
+        .downloadftp-button {
+            position: absolute;
+            font-size: 15px;
+            top: 0;
+            left: 0;
+            }
+
+        .postform-button {
+            position: relative;
+            font-size: 15px;
+            z-index: 1;
+            }
+     
+        .accept-button:hover, .reject-button:hover, .delete-button:hover, .downloadftp-button:hover, .postform-button:hover, .sendfile-button:hover {
+            background-color: #3e8e41;
+        }
+        
+        .button-container {
+            position: absolute;
+            top: 200px;
+            right: 80px;
+        }
+
+        .confirmation-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .confirmation-overlay p {
+            font-size: 1.2em;
+            color: white;
+            margin-bottom: 1em;
+        }
+
+        .confirmation-overlay button {
+            font-size: 1.2em;
+            padding: 0.5em 1em;
+            margin: 0.5em;
+            border-radius: 5px;
+            background-color: white;
+            color: black;
+            border: none;
+            cursor: pointer;
+        }
+
+        .confirmation-overlay button:hover {
+            background-color: #eee;
+        }
+
+        .button-wrapper {
+            float: left;
+            margin-top: 100px;
+            margin-right: 50px;
+            width: 5%;
+        }
+        #loading, #sending {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        #loading p, #sending p  {
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            color: white;
+        }
+
+
+    </style>
+</head>
+<body>  
+    
+    <div class="container">
+        <h2>View Users</h2>
+                <table>
+                    <tr>
+                        <th>Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Change Password</th>
+                        <th>Delete</th>
+                    </tr>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.first_name }}</td>
+                            <td>{{ user.last_name }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                <a href="/new_password" class="accept-button" > Change </a>
+                            </td>
+                            <td>
+                                <a href="/delete_users" class="delete-button" > Delete </a>
+                                
+                                </a>
+                            </td>
+                            </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+    </script>
+</body>
+{% include '_site_map.html' %}
+</html>

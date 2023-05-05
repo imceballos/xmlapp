@@ -23,6 +23,7 @@ p1 = Person("Israel", "Ceballos", "israel@gmail.com", "password1", "", "spvrigo"
 #p1.save()
 
 p3 = Person.find_by_email("jesus@gmail.com")
+p3.update
 print(p3.first_name)
 print(p3.last_name)
 print(p3.password)

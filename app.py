@@ -318,12 +318,37 @@ async def recover_password(request: Request):
     logger.info(f"User unk: clicked the recover password section")
     return templates.TemplateResponse("recover_password.html", {"request": request})
 
+@app.get("/new_password")
+async def new_password(request: Request):
+    return templates.TemplateResponse("new_password.html", {"request": request})
+
+
+@app.get("/super_admin")
+async def super_admin(request: Request):
+    return templates.TemplateResponse("super_admin.html", {"request": request})
+
+
+@app.get("/create_users")
+async def create_users(request: Request):
+    return templates.TemplateResponse("create_users.html", {"request": request})
+
+@app.get("/delete_users")
+async def delete_users(request: Request):
+    return templates.TemplateResponse("delete_users.html", {"request": request})
+
+
+@app.get("/view_users")
+async def view_users(request: Request, date: str = None):
+    users = [{"first_name": "Gonzalo", "last_name": "Uribe", "email": "gonzalo@gmail.com"},
+             {"first_name": "Israel", "last_name": "Ceballos", "email": "israel@gmail.com"},
+             {"first_name": "Jesus", "last_name": "Martinez", "email": "jesus@gmail.com"}]
+    
+    return templates.TemplateResponse("view_users.html", {"request": request, "users": users})
 
 @app.get("/help")
 async def help(request: Request, user: User = Depends(auth_method.get_current_user_from_cookie)):
     logger.info(f"User {user.first_name}: clicked the help section")
     return templates.TemplateResponse("help.html", {"request": request})
-
 
 @app.get("/showfolder")
 async def show_folder(request: Request):
