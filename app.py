@@ -11,7 +11,7 @@ import os
 
 from utils.auth import OAuth2PasswordBearerWithCookie, AuthenticationMethods
 from utils.settings import Settings
-from utils.models import User, File
+from utils.models import User, File, UserCreate, UserEmail, UserChange
 from utils.login import LoginForm
 from utils.utils import UtilFunctions
 from utils.encrypt import decode_from_base64, encode_to_base64
@@ -214,11 +214,12 @@ async def login_post(request: Request):
 
 
 @app.get("/auth/logout", response_class=HTMLResponse)
-def login_get(user: User = Depends(auth_method.get_current_user_from_cookie)):
-    response = RedirectResponse(url="/auth/login")
-    response.delete_cookie(settings.COOKIE_NAME)
-    logger.info(f"Logged out: {user.username}")
-    return response
+def login_get(response: Response, user: User = Depends(auth_method.get_current_user_from_cookie)):
+    if user:
+        logger.info(f"Logged out: {user.email}")
+        response.delete_cookie(settings.COOKIE_NAME)
+    return RedirectResponse(url="/")
+
 
 @app.get("/profile", response_class=HTMLResponse)
 def index(request: Request, user: User = Depends(auth_method.get_current_user_from_cookie)):
@@ -320,7 +321,9 @@ async def recover_password(request: Request):
 
 @app.get("/new_password")
 async def new_password(request: Request):
-    return templates.TemplateResponse("new_password.html", {"request": request})
+    email = request.query_params.get("email")
+    print("el email", email)
+    return templates.TemplateResponse("new_password.html", {"request": request, "email": email})
 
 
 @app.get("/super_admin")
@@ -339,10 +342,7 @@ async def delete_users(request: Request):
 
 @app.get("/view_users")
 async def view_users(request: Request, date: str = None):
-    users = [{"first_name": "Gonzalo", "last_name": "Uribe", "email": "gonzalo@gmail.com"},
-             {"first_name": "Israel", "last_name": "Ceballos", "email": "israel@gmail.com"},
-             {"first_name": "Jesus", "last_name": "Martinez", "email": "jesus@gmail.com"}]
-    
+    users = Person.find_all()
     return templates.TemplateResponse("view_users.html", {"request": request, "users": users})
 
 @app.get("/help")
@@ -468,3 +468,25 @@ async def filter_logs(request: Request, data: dict, user: User = Depends(auth_me
 async def filter_view(request: Request, date: str = None):
     files = Files.find_all()
     return templates.TemplateResponse("filterview.html", {"request": request, "files": files})
+
+
+@app.post("/create_user")
+async def create_user(user: UserCreate):
+    Person(user.name, user.lastname, user.email, user.password, "", user.company).save()
+    logger.info(f"User {user.name} successfully created")
+    return {"message": "User created successfully"}
+
+@app.post("/delete_user")
+async def delete_user(usermail: UserEmail):
+    p = Person.find_by_email(usermail.email)
+    p.delete()
+    logger.info(f"User {usermail.email} has been deleted")
+    return {"message": f"User  {usermail.email} with has been deleted"}
+
+
+@app.post("/change_password")
+async def change_password(userchange: UserChange):
+    p = Person.find_by_email(userchange.email)
+    p.update({"password": userchange.password})
+    logger.info(f"User {userchange.email} password updated")
+    return {"message": f"User {userchange.email} password updated"}

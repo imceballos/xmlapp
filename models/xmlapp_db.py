@@ -73,6 +73,16 @@ class Person(Base):
         return session.query(cls).filter_by(company=company).first()
 
     @classmethod
+    def find_all(cls):
+        content = []
+        session = cls._session()
+        elements = session.query(cls).all()
+        for elem in elements:
+            content.append({"first_name": elem.first_name, "last_name": elem.last_name, "email": elem.email})
+        return content
+
+
+    @classmethod
     def _session(cls):
         return session
 
@@ -93,10 +103,10 @@ class Files(Base):
     size =  Column("size", Integer())
     assignedto = Column("assignedto", String, ForeignKey('connections.uuid'))
     status = Column(Enum('accepted', 'rejected', 'pending', name='status'), default='pending')
-    sent = Column("sent", Boolean, default=False)
+    #sent = Column("sent", Boolean, default=False)
     stage = Column("stage", String(length=80), nullable=False)
-    extension = Column("extension", String(length=32), nullable=False)
-    lastactivity = Column("lastactivity", DateTime(timezone=True), default=func.now())
+    #extension = Column("extension", String(length=32), nullable=False)
+    #lastactivity = Column("lastactivity", DateTime(timezone=True), default=func.now())
 
     def __init__(self, filename, path, assignedto, status,stage, size):
         self.uuid = str(uuid.uuid4())

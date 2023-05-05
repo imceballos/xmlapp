@@ -48,7 +48,7 @@
  </style>
  <body>
      <h2>Create New User</h2>
-     <form action="/auth/login" method="post">
+     <form method="post">
          <label for="name">Name:</label>
          <input type="text" name="name" id="name" required>
          <label for="lastname">Last Name:</label>
@@ -59,10 +59,38 @@
          <input type="text" name="email" id="email" required>
          <label for="password">Password:</label>
          <input type="password" name="password" id="password" required>
-         <input type="submit" value="create">
+         <button type="button" onclick="sendForm()">Create</button>
      </form>
  </body>
  {% for error in errors %}
  <p style="color: red">{{ error }}</p>
  {% endfor %}
+ <script>
+    function sendForm() {
+    const form = document.querySelector('form');
+    const formData = new FormData(form);
+
+    fetch('/create_user', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(Object.fromEntries(formData.entries()))
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Success:', data);
+        location.reload(); // reload the page to update the file list
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // handle error
+    });
+}
+ </script>
  {% include '_site_map.html' %}

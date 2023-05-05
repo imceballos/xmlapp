@@ -16,6 +16,19 @@ class File(BaseModel):
     status: str
     currentstatus: str
 
+class UserCreate(BaseModel):
+    name: str
+    lastname: str
+    company: str
+    email: str
+    password: str
+
+class UserEmail(BaseModel):
+    email: str
+
+class UserChange(BaseModel):
+    email: str
+    password: str
 
 DB = DataBase(
     user=[

@@ -227,18 +227,39 @@
                             <td>{{ user.last_name }}</td>
                             <td>{{ user.email }}</td>
                             <td>
-                                <a href="/new_password" class="accept-button" > Change </a>
+                                <a href="/new_password?email={{ user.email }}" class="accept-button" > Change pass </a>
                             </td>
                             <td>
-                                <a href="/delete_users" class="delete-button" > Delete </a>
-                                
-                                </a>
+                                <button type="button" class="delete-button" onclick="deleteUser('{{ user.email }}')">Delete</button>
                             </td>
                             </tr>
                     {% endfor %}
                 </table>
             </div>
-
+    <script>
+          function deleteUser(email) {
+            fetch('/delete_user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({"email": email})
+            }).then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Failed to update file status');
+                }
+            }).then(data => {
+                console.log(data.message);
+                location.reload(); // reload the page to update the file list
+            }).catch(error => {
+                console.error(error);
+                alert('Failed to update file status');
+            }).finally(() => {
+                sendingElement.style.display = "none";
+                });
+        }
     </script>
 </body>
 {% include '_site_map.html' %}
