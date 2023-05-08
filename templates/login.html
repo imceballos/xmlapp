@@ -1,7 +1,7 @@
 <style>
    body {
         background-color: #f7f7f7;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: Arial, sans-serif;
         text-align: center;
         margin: 0;
         padding: 0;
@@ -37,18 +37,35 @@
         color: #333;
     }
     input[type="submit"] {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        background-color: #333;
-        color: #fff;
-        font-size: 16px;
-        cursor: pointer;
+        background-color: #1f97bb;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 10px;
+            margin: 2px 1px;
+            cursor: pointer;
+            border-radius: 2px;
     }
+    button {
+            background-color: #1f97bb;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 10px;
+            margin: 2px 1px;
+            cursor: pointer;
+            border-radius: 2px;
+        }
 </style>
 <body>
     <h2>Login</h2>
-    <form action="/auth/login" method="post">
+    <form action="/auth/login" style="text-align: center;" method="post">
         <label for="username">Username:</label>
         <input type="text" name="username" id="username" required>
         <label for="password">Password:</label>

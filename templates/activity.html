@@ -3,6 +3,14 @@
 <head>
   <title>Logs</title>
   <style>
+    body {
+            background-color: #f7f7f7;
+            color: #333333;
+            text-align: center;
+            padding: 0;
+            margin: 0;
+            font-family: Arial, sans-serif;
+      }
 		h1 {
 			text-align: center;
 			margin-bottom: 20px;
@@ -19,6 +27,7 @@
     th, td {
       text-align: left;
       padding: 8px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     th {
@@ -36,12 +45,21 @@
       box-sizing: border-box;
       margin-top: 20px;
       margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-right: 10px;
     }
 
     label {
     font-size: 12px;
     font-weight: bold;
     margin-bottom: 2px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
 
     input, select {
@@ -61,7 +79,7 @@
       text-align: center;
       text-decoration: none;
       display: inline-block;
-      font-size: 12px;
+      font-size: 10px;
       margin-top: 3px;
       cursor: pointer;
       border-radius: 4px;
@@ -75,25 +93,29 @@
 </head>
 <body>
   <h1>Logs</h1>
-  <form method="post" style="display: flex; flex-direction: column; align-items: center;">
-    <label for="datestart">Start date:</label>
-    <input type="datetime-local" id="datestart" name="datestart">
-    <br>
-    <label for="dateend">End date :</label>
-    <input type="datetime-local" id="dateend" name="dateend">
-    <br>
-    <label for="user">Activity:</label>
-    <input type="text" id="user" name="user">
-    <br>
-    <label for="level">Level:</label>
-    <select id="level" name="level">
-      <option value="">All</option>
-      <option value="INFO">INFO</option>
-      <option value="WARN">WARN</option>
-      <option value="CRITICAL">CRITICAL</option>
-      <option value="ERROR">ERROR</option>
-    </select>
-    <br>
+  <form method="post" id="filter">
+    <div class="form-group">
+      <label for="datestart">Start date:</label>
+      <input type="datetime-local" id="datestart" name="datestart">
+    </div>
+    <div class="form-group">
+      <label for="dateend">End date :</label>
+      <input type="datetime-local" id="dateend" name="dateend" min="" onchange="updateEndDateMin()">
+    </div>
+    <div class="form-group">
+      <label for="user">Activity:</label>
+      <input type="text" id="user" name="user">
+    </div>
+    <div class="form-group">
+      <label for="level">Level:</label>
+      <select id="level" name="level">
+        <option value="">All</option>
+        <option value="INFO">INFO</option>
+        <option value="WARN">WARN</option>
+        <option value="CRITICAL">CRITICAL</option>
+        <option value="ERROR">ERROR</option>
+      </select>
+    </div>
     <button type="button" onclick="sendForm()">Filter</button>
   </form>
   <br>
@@ -145,7 +167,11 @@
     tableBody.appendChild(row);
   });
 }
-     
+var datestart = document.getElementById('datestart');
+    var dateend = document.getElementById('dateend');
+    datestart.addEventListener('input', function() {
+      dateend.min = datestart.value;
+    });     
   </script>
 </body>
 {% include '_site_map.html' %}

@@ -181,3 +181,69 @@
 2023-05-04 23:06:12,247 - app - INFO - User ian@gmail.com has been deleted
 2023-05-04 23:07:42,642 - app - INFO - User Israel: send testing.txt to FTP server
 2023-05-04 23:07:51,176 - app - INFO - User Israel: update status of file testing.txt from pending to accepted
+2023-05-05 15:16:47,364 - app - INFO - Logged out: jesus@gmail.com
+2023-05-05 15:16:50,599 - app - INFO - User Jesus: clicked the help section
+2023-05-05 15:18:05,485 - app - INFO - Not Authenticated User redirected to login View
+2023-05-05 15:18:17,776 - app - INFO - Login succesfully: jesus@gmail.com
+2023-05-05 15:18:57,074 - app - INFO - Connection testing created by testaccount@virgogroup.com.sg
+2023-05-07 21:39:05,056 - app - INFO - Not Authenticated User redirected to login View
+2023-05-07 21:39:22,955 - app - INFO - Login error: jesus@gmail.com
+2023-05-07 21:39:30,211 - app - INFO - Not Authenticated User redirected to login View
+2023-05-07 21:39:51,690 - app - INFO - Login succesfully: jesus@gmail.com
+2023-05-07 21:42:12,073 - app - INFO - User Jesus: clicked the profile section
+2023-05-07 21:57:34,642 - app - INFO - User Jesus: clicked the profile section
+2023-05-07 21:58:27,020 - app - INFO - User Jesus: clicked the profile section
+2023-05-07 22:24:29,323 - app - INFO - User Jesus: clicked the profile section
+2023-05-07 22:38:58,111 - app - INFO - User Jesus: clicked the help section
+2023-05-07 22:41:33,776 - app - INFO - User Jesus: clicked the profile section
+2023-05-07 23:39:30,503 - app - INFO - User Jesus: clicked the profile section
+2023-05-07 23:40:30,791 - app - INFO - User Jesus: clicked the help section
+2023-05-07 23:41:42,756 - app - INFO - User Jesus: clicked the profile section
+2023-05-07 23:50:31,368 - app - INFO - User Jesus: clicked the profile section
+2023-05-07 23:50:38,284 - app - INFO - User Jesus: clicked the help section
+2023-05-08 00:46:28,178 - app - INFO - Not Authenticated User redirected to login View
+2023-05-08 00:46:39,520 - app - INFO - Login succesfully: jesus@gmail.com
+2023-05-08 00:47:06,614 - app - INFO - User Jesus: clicked the help section
+2023-05-08 00:47:20,095 - app - INFO - User Jesus: clicked the profile section
+2023-05-08 00:47:40,673 - app - INFO - User Jesus: clicked the help section
+2023-05-08 00:47:54,228 - app - INFO - User Jesus: clicked the profile section
+2023-05-08 00:47:58,524 - app - INFO - User Jesus: clicked the help section
+2023-05-08 01:08:39,140 - app - INFO - User Jesus: clicked the profile section
+2023-05-08 01:09:39,153 - app - INFO - User Jesus: clicked the profile section
+2023-05-08 01:10:01,443 - app - INFO - User Jesus: clicked the profile section
+2023-05-08 01:11:53,826 - app - INFO - User Jesus: clicked the profile section
+2023-05-08 01:12:29,679 - app - INFO - User Jesus: clicked the profile section
+2023-05-08 01:13:58,463 - app - INFO - User Jesus: clicked the profile section
+2023-05-08 01:14:30,174 - app - INFO - User Jesus: clicked the profile section
+2023-05-08 01:16:20,786 - app - INFO - User Jesus: clicked the profile section
+2023-05-08 01:16:28,585 - app - INFO - User Jesus: clicked the help section
+2023-05-08 01:17:04,252 - app - INFO - User Jesus: clicked the profile section
+2023-05-08 01:17:15,497 - app - INFO - User Jesus: clicked the help section
+2023-05-08 01:17:23,445 - app - INFO - User Jesus: clicked the help section
+2023-05-08 01:17:37,065 - app - INFO - User Jesus: clicked the profile section
+2023-05-08 01:17:40,853 - app - INFO - User Jesus: clicked the profile section
+2023-05-08 01:17:42,720 - app - INFO - Logged out: jesus@gmail.com
+2023-05-08 01:17:50,360 - app - INFO - User Jesus: clicked the help section
+2023-05-08 01:18:19,170 - app - INFO - User Jesus: clicked the help section
+2023-05-08 01:18:56,433 - app - INFO - User Jesus: clicked the help section
+2023-05-08 01:19:04,194 - app - INFO - User Jesus: clicked the help section
+2023-05-08 01:19:34,141 - app - INFO - User Jesus: clicked the profile section
+2023-05-08 01:21:07,943 - app - INFO - User Jesus: clicked the profile section
+2023-05-08 01:21:16,921 - app - INFO - User Jesus: clicked the profile section
+2023-05-08 01:21:34,712 - app - INFO - User Jesus: clicked the profile section
+2023-05-08 01:21:43,326 - app - INFO - User Jesus: clicked the help section
+2023-05-08 01:21:51,981 - app - INFO - User Jesus: clicked the help section
+2023-05-08 01:22:10,324 - app - INFO - User Jesus: clicked the profile section
+2023-05-08 01:22:14,904 - app - INFO - User Jesus: clicked the help section
+2023-05-08 01:22:18,451 - app - INFO - User Jesus: clicked the help section
+2023-05-08 01:22:24,688 - app - INFO - User Jesus: clicked the help section
+2023-05-08 01:23:08,117 - app - INFO - User Jesus: clicked the help section
+2023-05-08 01:24:20,090 - app - INFO - User Jesus: clicked the help section
+2023-05-08 01:24:28,416 - app - INFO - User Jesus: clicked the profile section
+2023-05-08 13:45:20,192 - app - INFO - Not Authenticated User redirected to login View
+2023-05-08 13:45:41,835 - app - INFO - Login succesfully: jesus@gmail.com
+2023-05-08 13:52:57,079 - app - INFO - User Jesus: clicked the profile section
+2023-05-08 13:53:14,109 - app - INFO - User Jesus: clicked the profile section
+2023-05-08 13:53:29,771 - app - INFO - User Jesus: clicked the profile section
+2023-05-08 13:53:50,207 - app - INFO - User Jesus: clicked the help section
+2023-05-08 14:02:05,211 - app - INFO - User Jesus: clicked the help section

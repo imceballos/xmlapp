@@ -11,7 +11,7 @@
         box-sizing: border-box;
         box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
         display: flex; /* enable flexbox layout */
-        justify-content: flex-end; /* align menu items to the right */
+        justify-content: space-between; /* align menu items to the left and right */
         align-items: center; /* vertically center menu items */
     }
     .sidebar .left {
@@ -27,6 +27,11 @@
         padding: 10px;
         margin-right: 20px;
         cursor: pointer;
+    }
+    .sidebar .right {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
     }
     .sidebar a {
         display: block;
@@ -53,16 +58,18 @@
         <div>
             <button onclick="location.reload()">Refresh</button>
         </div>
+        <div>
+            <button onclick="window.history.back()">Back</button>
+        </div>
     </div>
-    <div class="left">
-        <button onclick="window.history.back()">Back</button>
-    </div>    
-    <a href="/">Home</a>
-    <a href="/auth/login">Login</a>
-    <a href="/activity">Activity</a>
-    <a href="/filterview">FilterView</a>
-    <a href="/profile">Profile</a>
-    <a href="/auth/logout">Logout</a>
-    <a href="/super_admin">Super Admin</a>
-    <a href="/help">Help</a>
+    <div class="right">
+        <a href="/">Home</a>
+        <a href="/auth/login">Login</a>
+        <a href="/activity">Activity</a>
+        <a href="/filterview">FilterView</a>
+        <a href="/profile">Profile</a>
+        <a href="/auth/logout">Logout</a>
+        <a href="/super_admin">Super Admin</a>
+        <a href="/help">Help</a>
+    </div>
 </div>
