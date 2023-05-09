@@ -4,6 +4,9 @@ from starlette.responses import RedirectResponse
 from fastapi.responses import FileResponse, HTMLResponse, Response
 from sqlalchemy import create_engine
 
+from models.xmlapp_db import Person, Files, Connections
+#from models.create_user import 
+
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from typing import List, Dict
@@ -280,19 +283,33 @@ async def create_connection_post(request: Request,
 ):
     assigned_to = user.id
     conn = Connections(name, ip, username, password, assigned_to)
-    folder_path = "test_files"
-    folder_name = f"test_files/{name}"
-    conn.path = folder_name
-    conn.save()
-    logger.info(f"Connection {name} created by {username}")
 
-    required_subfolders = ["frombollore", "tobollore", "staging"]
-    UtilFunctions().create_subdirectories(folder_name, required_subfolders)
-    folders = [name for name in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, name))]
-    context = {"request": request, "folders": folders}
+#-------------------------------------------------------------------
+    try:
+        conn_to_check=Connections.find_by_connname(conn.name)
+        name_to_check=conn_to_check.name
+        ip_to_check=conn_to_check.ip
+        if conn.ip==ip_to_check and conn.name==name_to_check :
+            return  {"message": "Conexión ya existe"}
+        else:
+    #-------------------------------------------------------------------
+            folder_path = "test_files"
+            folder_name = f"test_files/{name}"
+            conn.path = folder_name
+            conn.save()
+            logger.info(f"Connection {name} created by {username}")
 
-    gg = Connections.find_by_connname("testinghelloworld1234")
-    return  {"message": "Successfully updated"}
+            required_subfolders = ["frombollore", "tobollore", "staging"]
+            UtilFunctions().create_subdirectories(folder_name, required_subfolders)
+            folders = [name for name in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, name))]
+            context = {"request": request, "folders": folders}
+
+            gg = Connections.find_by_connname("testinghelloworld1234")
+            return  {"message": "Successfully updated"}
+    except:
+        logger.info("ERROR AL CREAR LA CONEXIÓN")
+        return  {"message": "ERROR AL CREAR LA CONEXIÓN"}
+
 
 @app.get("/get_template")
 async def perform_operation(request: Request, folder_path: str, user: User = Depends(auth_method.get_current_user_from_cookie)):
@@ -333,6 +350,7 @@ async def super_admin(request: Request):
 
 @app.get("/create_users")
 async def create_users(request: Request):
+    check_user=Person.find_by_email(Person.email)
     return templates.TemplateResponse("create_users.html", {"request": request})
 
 @app.get("/delete_users")
@@ -472,9 +490,17 @@ async def filter_view(request: Request, date: str = None):
 
 @app.post("/create_user")
 async def create_user(user: UserCreate):
-    Person(user.name, user.lastname, user.email, user.password, "", user.company).save()
-    logger.info(f"User {user.name} successfully created")
-    return {"message": "User created successfully"}
+    user_to_create = Person(user.name, user.lastname, user.email, user.password, "", user.company)
+    check_user = user_to_create.find_by_email(user_to_create.email)
+    
+    if user_to_create.mail != None and user_to_create.email == check_user.mail:
+        logger.info("Usuario ya existe")
+        return {"message": "User exist"}
+    else:
+        print("Usuario creado")
+        user_to_create.save()
+        logger.info(f"User {user.name} successfully created")
+        return {"message": "User created successfully"}
 
 @app.post("/delete_user")
 async def delete_user(usermail: UserEmail):
@@ -483,10 +509,15 @@ async def delete_user(usermail: UserEmail):
     logger.info(f"User {usermail.email} has been deleted")
     return {"message": f"User  {usermail.email} with has been deleted"}
 
-
 @app.post("/change_password")
 async def change_password(userchange: UserChange):
+
     p = Person.find_by_email(userchange.email)
-    p.update({"password": userchange.password})
-    logger.info(f"User {userchange.email} password updated")
-    return {"message": f"User {userchange.email} password updated"}
+
+    if p.password != None  and userchange.password == p.password:
+        logger.info("Contraseña nueva debe ser distinta a la antigua")        
+        return {"message": f"User {userchange.email} can not be changed"}
+    else:
+        p.update({"password": userchange.password})
+        logger.info(f"User {userchange.email} password updated")
+        return {"message": f"User {userchange.email} password updated"}

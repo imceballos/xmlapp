@@ -4,7 +4,7 @@ from sqlalchemy.sql import func
 import uuid
 import re
 
-from .base import Base, session
+from base import Base, session
 
 class Person(Base):
     __tablename__ = "person"
@@ -189,16 +189,17 @@ class Connections(Base):
     username = Column("username", String, ForeignKey('person.id'))
     password = Column("password", String(length=80), nullable=False)
     assignedto = Column("assignedto", String, ForeignKey('person.id'))
-    path = Column("path", String(length=80), nullable=False)
+    path = Column("path", String(length=80))
 
 
-    def __init__(self, connname, server, username, password, assignedto):
+    def __init__(self, connname, server, username, password, assignedto, path):
         self.uuid = str(uuid.uuid4())
         self.connname = connname
         self.server = server
         self.username = username
         self.password = password
         self.assignedto = assignedto
+        self.path = path
         self.session = self._session()
 
     def __repr__(self):
@@ -217,6 +218,8 @@ class Connections(Base):
     def find_conn_assignedto(cls, assignedto):
         session = cls._session()
         return session.query(cls).filter_by(assignedto=assignedto).all()
+    
+    
 
 #Session = sessionmaker(bind=engine)
 #session = Session()
